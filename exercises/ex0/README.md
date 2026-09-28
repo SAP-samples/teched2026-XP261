@@ -110,13 +110,13 @@ The solution diagram illustrates the key components and their interactions withi
   </p>
 
 4- To demonstrate real-world access control, you'll test the application using dedicated accounts with **precisely scoped** role collections. Unlike your **xp261-0xx@education.cloud.sap** training account's broad privileges, these users showcase how proper role assignments enforce **least privilege** in production:
-  - **bob.support@company.com** (Support user)
-  - **alice.support@company.com** (Support user)
-  - **david.admin@company.com** (Admin user)
+  - **bob.smith@bestrun.com** (Support user)
+  - **alice.jones@bestrun.com** (Support user)
+  - **david.miller@bestrun.com** (Admin user)
   - Check the user role collections in the SAP BTP cockpit for **Bob, Alice, and David**
   - Select a user. In the right frame, check the role collections assigned:
-      - Check if **bob.support@company.com** and **alice.support@company.com** are assigned to the role collection **Incident Management Support**. 
-      - Check if **david.admin@company.com** is assigned to the role collection **Incident Management Admin**.
+      - Check if **bob.smith@bestrun.com** and **alice.jones@bestrun.com** are assigned to the role collection **Incident Management Support**. 
+      - Check if **david.miller@bestrun.com** is assigned to the role collection **Incident Management Admin**.
 
  <p align="center">
     <img src="images/btp-configured_user_application.png" alt="" width="900"/>
@@ -330,7 +330,7 @@ Once you have SAP Business Application Studio open with your secure incident man
   <b></b>
 </p>
 
-3- When the **Incident Management tile** is displayed, **Sign Out** from your current user **xp261-0xx@education.cloud.sap** and login to the application with the **alice.support@company.com** user. 
+3- When the **Incident Management tile** is displayed, **Sign Out** from your current user **xp261-0xx@education.cloud.sap** and login to the application with the **alice.jones@bestrun.com** user. 
 
 <p align="center">
   <img src="images/btp-subaccount-open-SAP-Build-Work-Zone-sign-out.png" alt="" width="900"/>
