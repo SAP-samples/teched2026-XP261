@@ -97,14 +97,13 @@ The solution diagram illustrates the key components and their interactions withi
   - Locate and click on the business user representation in the user management interface.
   - Open the Role Collection Details in the right frame.
   - Confirm the Following Role Collections Are Assigned :
-      - **Business_Application_Studio_Administrator**
-      - **Business_Application_Studio_Developer**
-      - **Business_Application_Studio_Extension_Deployer**
+      - **BAS_Administrator**
+      - **BAS Developer**
       - **Launchpad_Admin**
-      - **Subaccount Viewer**
+      - **XP261**
 
   <p align="center">
-    <img src="images/btp-configured_user_platform.png" alt="" width="900"/>
+    <img src="images/btp-configured_platform_user.png" alt="" width="900"/>
     <br>
     <b></b>
   </p>
