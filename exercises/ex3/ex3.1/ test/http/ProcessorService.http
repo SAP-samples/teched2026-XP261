@@ -1,0 +1,223 @@
+@server=http://localhost:4004
+@username=alice
+@password=
+
+
+### Incidents
+# @name Incidents_GET
+GET {{server}}/odata/v4/processor/Incidents
+Authorization: Basic {{username}}:{{password}}
+
+
+### Incidents Drafts GET
+# @name Incidents_Drafts_GET
+GET {{server}}/odata/v4/processor/Incidents?$filter=(IsActiveEntity eq false)
+Authorization: Basic {{username}}:{{password}}
+
+
+### Incidents Draft POST
+# @name Incidents_Draft_POST
+POST {{server}}/odata/v4/processor/Incidents
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "customer": {
+    "ID": "Customers-21327445"
+  },
+  "title": "title-21344400",
+  "urgency": {
+    "code": "L"
+  },
+  "status": {
+    "code": "R"
+  },
+  "assignedTo": "assignedTo-21344400",
+  "conversation": [
+    {
+      "ID": "14349513-5d29-4c69-8d6f-e7793f4de3af",
+      "timestamp": "2009-11-22T00:00:00.000Z",
+      "author": "author.8jk5l@example.com",
+      "message": "message-14349513"
+    },
+    {
+      "ID": "14349514-e96c-483b-a261-ea67bf759633",
+      "timestamp": "2004-02-25T00:00:00.000Z",
+      "author": "author.8jk5m@example.com",
+      "message": "message-14349514"
+    }
+  ],
+  "createdAt": "2021-11-09T00:00:00.000Z",
+  "createdBy": "createdBy.cphg0@example.org",
+  "modifiedAt": "2000-11-19T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.cphg0@example.com"
+}
+
+
+### Result from POST request above
+@draftID={{Incidents_Draft_POST.response.body.$.ID}}
+
+
+### Incidents Draft PATCH
+# @name Incidents_Draft_Patch
+PATCH {{server}}/odata/v4/processor/Incidents(ID={{draftID}},IsActiveEntity=false)
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "customer": {
+    "ID": "Customers-21327445"
+  },
+  "title": "title-21344400",
+  "urgency": {
+    "code": "L"
+  },
+  "status": {
+    "code": "R"
+  },
+  "assignedTo": "assignedTo-21344400",
+  "conversation": [
+    {
+      "ID": "14349513-5d29-4c69-8d6f-e7793f4de3af",
+      "timestamp": "2009-11-22T00:00:00.000Z",
+      "author": "author.8jk5l@example.com",
+      "message": "message-14349513"
+    },
+    {
+      "ID": "14349514-e96c-483b-a261-ea67bf759633",
+      "timestamp": "2004-02-25T00:00:00.000Z",
+      "author": "author.8jk5m@example.com",
+      "message": "message-14349514"
+    }
+  ],
+  "createdAt": "2021-11-09T00:00:00.000Z",
+  "createdBy": "createdBy.cphg0@example.org",
+  "modifiedAt": "2000-11-19T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.cphg0@example.com"
+}
+
+
+### Incidents Draft Prepare
+# @name Incidents_Draft_Prepare
+POST {{server}}/odata/v4/processor/Incidents(ID={{draftID}},IsActiveEntity=false)/ProcessorService.draftPrepare
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{}
+
+
+### Incidents Draft Activate
+# @name Incidents_Draft_Activate
+POST {{server}}/odata/v4/processor/Incidents(ID={{draftID}},IsActiveEntity=false)/ProcessorService.draftActivate
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{}
+
+
+### Customers
+# @name Customers_GET
+GET {{server}}/odata/v4/processor/Customers
+Authorization: Basic {{username}}:{{password}}
+
+
+### Addresses
+# @name Addresses_GET
+GET {{server}}/odata/v4/processor/Addresses
+Authorization: Basic {{username}}:{{password}}
+
+
+### Addresses
+# @name Addresses_POST
+POST {{server}}/odata/v4/processor/Addresses
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "ID": "18217107-5c73-4dc3-a540-71284d8aba16",
+  "city": "city-18217107",
+  "postCode": "postCode-18217107",
+  "streetAddress": "streetAddress-18217107",
+  "createdAt": "2023-06-07T00:00:00.000Z",
+  "createdBy": "createdBy.auger@example.net",
+  "modifiedAt": "2003-04-17T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.auger@example.net"
+}
+
+
+### Addresses
+# @name Addresses_PATCH
+PATCH {{server}}/odata/v4/processor/Addresses/18217107-5c73-4dc3-a540-71284d8aba16
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "ID": "18217107-5c73-4dc3-a540-71284d8aba16",
+  "city": "city-18217107",
+  "postCode": "postCode-18217107",
+  "streetAddress": "streetAddress-18217107",
+  "createdAt": "2023-06-07T00:00:00.000Z",
+  "createdBy": "createdBy.auger@example.net",
+  "modifiedAt": "2003-04-17T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.auger@example.net"
+}
+
+
+### Addresses
+# @name Addresses_DELETE
+DELETE {{server}}/odata/v4/processor/Addresses/18217107-5c73-4dc3-a540-71284d8aba16
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+
+### Urgency
+# @name Urgency_GET
+GET {{server}}/odata/v4/processor/Urgency
+Authorization: Basic {{username}}:{{password}}
+
+
+### Status
+# @name Status_GET
+GET {{server}}/odata/v4/processor/Status
+Authorization: Basic {{username}}:{{password}}
+
+
+### Incidents.conversation
+# @name Incidentsconversation_GET
+GET {{server}}/odata/v4/processor/Incidents.conversation
+Authorization: Basic {{username}}:{{password}}
+
+
+### Incidents.conversation
+# @name Incidentsconversation_POST
+POST {{server}}/odata/v4/processor/Incidents.conversation
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "ID": "14349513-5d29-4c69-8d6f-e7793f4de3af",
+  "timestamp": "2009-11-22T00:00:00.000Z",
+  "author": "author.8jk5l@example.com",
+  "message": "message-14349513"
+}
+
+
+### Incidents.conversation
+# @name Incidentsconversation_PATCH
+PATCH {{server}}/odata/v4/processor/Incidents.conversation(up_=[object Object],ID=14349513-5d29-4c69-8d6f-e7793f4de3af)
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "ID": "14349513-5d29-4c69-8d6f-e7793f4de3af",
+  "timestamp": "2009-11-22T00:00:00.000Z",
+  "author": "author.8jk5l@example.com",
+  "message": "message-14349513"
+}
+
+
+### Incidents.conversation
+# @name Incidentsconversation_DELETE
+DELETE {{server}}/odata/v4/processor/Incidents.conversation(up_=[object Object],ID=14349513-5d29-4c69-8d6f-e7793f4de3af)
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}

@@ -1,0 +1,7 @@
+@server=http://localhost:4004
+@username=alice
+@password=
+
+### Get conversation details
+GET {{server}}/odata/v4/processor/Incidents?$expand=conversation
+Authorization: Basic {{username}}:{{password}}

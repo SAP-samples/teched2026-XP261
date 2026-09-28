@@ -1,0 +1,66 @@
+{
+  "name": "incident-management",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^2",
+    "@sap/cds": "^9",
+    "@sap/xssec": "^4.8.0",
+    "express": "^4"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^0.4.0",
+    "@cap-js/cds-types": "^0.11.0",
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": "^9.1.1",
+    "ui5-task-zipper": "^3.4.2"
+  },
+  "scripts": {
+    "test": "npx jest tests/test.js",
+    "start": "cds-serve",
+    "watch-incidents": "cds watch --open incidents/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "requires": {
+      "[development]": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+            "incident.support@tester.sap.com": {
+              "password": "initial",
+              "roles": [
+                "admin"
+              ]
+            },
+            "alice": {
+              "roles": [
+                "support"
+              ]
+            },
+            "bob": {
+              "roles": [
+                "support"
+              ]
+            }
+          }
+        }
+      },
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      },
+      "destinations": true,
+      "html5-runtime": true,
+      "workzone": true
+    }
+  },
+  "sapux": [
+    "app/incidents"
+  ]
+}
