@@ -1,51 +1,64 @@
-# Containing Files
+# XP261 - Build Secure Cloud Applications: From Code to Compliance
 
-1. The LICENSE file:
-In most cases, the license for SAP sample projects is `Apache 2.0`.
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/teched2026-XP261)](https://api.reuse.software/info/github.com/SAP-samples/teched2026-XP261)
 
-2. The REUSE.toml file: 
-The [Reuse Tool](https://reuse.software/) must be used for your samples project. You can find the REUSE.toml in the project initial. Please replace the parts inside the single angle quotation marks < > by the specific information for your repository.
+## 📝Description
 
-3. The README.md file (this file):
-Please edit this file as it is the primary description file for your project. You can find some placeholder titles for sections below.
+This repository contains the material for the SAP TechEd 2026 session called "XP261 - Build Secure Cloud Applications: From Code to Compliance Workshop".  
 
-# Session ID - Session Title
+## 🔎 Overview
 
-## Description
+Welcome to this hands-on workshop dedicated to embedding security into your SAP BTP applications. Try it out.
+In an era where data breaches and cyber threats are constant, building secure software is not an option - it's a requirement. This workshop is designed for developers working with the SAP Cloud Application Programming Model (CAP) and Node.js. 
 
-This repository contains the material for the SAP TechEd 2026 session called Session ID - Session Title.  
+By completing the exercises, you will gain the practical skills to identify and mitigate common security risks as defined by the [OWASP Top 10 vulnerabilities](https://owasp.org/Top10/). 
 
-## Overview
+<p align="center">
+  <img src="img/top10-owasp.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
+  <br>
+  <b>Top 10 OWASP Vulnerabilities</b>
+</p>
 
-This session introduces attendees to...
+### 🎯 Learning Objectives
 
-## Requirements
+-	**Identify and Mitigate** a critical OWASP Top 10 vulnerability in a real-world scenario.
+-	**Leverage**  the SAP Cloud Application Programming Model (CAP) for secure, cloud-native development.
+-	**Implement** SAP BTP's comprehensive, built-in security services to protect your data and business logic.
+-	**Validate** the effectiveness of security fixes through practical testing.
 
-The requirements to follow the exercises in this repository are...
 
-## Exercises
+## 📋 Requirements
 
-Provide the exercise content here directly in README.md using [markdown](https://guides.github.com/features/mastering-markdown/) and linking to the specific exercise pages, below is an example.
+You already have some experience with Node.js and GitHub. That is helpful.
 
-- [Getting Started](exercises/ex0/)
-- [Exercise 1 - First Exercise Description](exercises/ex1/)
-    - [Exercise 1.1 - Exercise 1 Sub Exercise 1 Description](exercises/ex1#exercise-11-sub-exercise-1-description)
-    - [Exercise 1.2 - Exercise 1 Sub Exercise 2 Description](exercises/ex1#exercise-12-sub-exercise-2-description)
-- [Exercise 2 - Second Exercise Description](exercises/ex2/)
-    - [Exercise 2.1 - Exercise 2 Sub Exercise 1 Description](exercises/ex2#exercise-21-sub-exercise-1-description)
-    - [Exercise 2.2 - Exercise 2 Sub Exercise 2 Description](exercises/ex2#exercise-22-sub-exercise-2-description)
+💡In some of the exercises, you will be asked to switch from one user to another. This works more reliably if you use the Incognito mode of your browser. Without the Incognito mode, you may run into situations where you are authenticated automatically with the wrong user.
 
-  
-**OR** Link to the Tutorial Navigator for example...
+## 💻Exercises
 
-Start the exercises [here](https://developers.sap.com/tutorials/abap-environment-trial-onboarding.html).
+Every exercise module is a self-contained lab focused on a specific vulnerability. All modules adhere to the following standard structure:
 
-**IMPORTANT**
+- 📖 **1. Overview:** A high-level description of the vulnerability, its impact, and why it's a security risk.
+- 🚨 **2. Vulnerable Code:** A snippet of code containing the specific security flaw. We'll analyze why it's insecure.
+- 💥 **3. Exploitation:** A step-by-step guide on how to exploit the vulnerability, demonstrating its real-world impact.
+- 🛡️ **4. Remediation:** The corrected version of the code that patches the vulnerability, along with an explanation of the fix.
+- ✅ **5. Verification:** A simple procedure to confirm that the patch has successfully mitigated the vulnerability and the exploit no longer works.
+- 📌 **6. Summary:** A practical recap that consolidates the exercise outcomes with actionable takeaways.
 
-Your repo must contain the .reuse and LICENSES folder and the License section below. DO NOT REMOVE the section or folders/files. Also, remove all unused template assets(images, folders, etc) from the exercises folder. 
+💡In step 4, you will replace the vulnerable version of the code with a corrected version. In most cases you will have to open the corrected file and copy the full content into the development environment. If you only copy the code snippet explaining the fixes, your application won't work. To copy the content of the file, use the button "Copy raw file" in the toolbar above the file content.
 
-## Contributing
-Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) to understand the contribution guidelines.
+This structure is designed to help you understand a vulnerability from an attacker's perspective and a defender's, see how it can impact a CAP application, and learn actionable steps to mitigate it with SAP BTP best practices. 
+
+- [Getting Started](exercises/ex0#getting-started)
+- [Exercise 1 - Broken Access Control](exercises/ex1#exercise-1---broken-access-control)
+    - [Exercise 1.1 - Horizontal Privilege Escalation](exercises/ex1/ex1.1/README.md#exercise-11---horizontal-privilege-escalation)
+    - [Exercise 1.2 - Vertical Privilege Escalation](exercises/ex1/ex1.2/README.md#exercise-12---vertical-privilege-escalation)
+- [Exercise 2 - SQL Injection](exercises/ex2/README.md#exercise-2---sql-injection)
+- [Exercise 3 - Security Logging and Monitoring Failures](exercises/ex3/README.md)
+    - [Exercise 3.1 - Audit Logging for Sensitive Data Access in Local Development](exercises/ex3/ex3.1/README.md)
+    - [Exercise 3.2 - Security Event Monitoring in SAP BTP Production Environment](exercises/ex3/ex3.2/README.md)
+- [Additional Resources](exercises/resources/README.md)
+
+
 
 ## Code of Conduct
 Please read the [SAP Open Source Code of Conduct](https://github.com/SAP-samples/.github/blob/main/CODE_OF_CONDUCT.md).
@@ -55,4 +68,4 @@ Please read the [SAP Open Source Code of Conduct](https://github.com/SAP-samples
 Support for the content in this repository is available during the actual time of the online session for which this content has been designed. Otherwise, you may request support via the [Issues](../../issues) tab.
 
 ## License
-Copyright (20xx-)20xx SAP SE or an SAP affiliate company and <your-project> contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/SAP/<your-project>).
+Copyright (c) 2025 SAP SE or an SAP affiliate company. All rights reserved. This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSES/Apache-2.0.txt) file.
