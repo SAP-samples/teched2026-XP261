@@ -14,7 +14,7 @@ In an era where data breaches and cyber threats are constant, building secure so
 By completing the exercises, you will gain the practical skills to identify and mitigate common security risks as defined by the [OWASP Top 10 vulnerabilities](https://owasp.org/Top10/). 
 
 <p align="center">
-  <img src="img/top10-owasp.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
+  <img src="image/top10-owasp.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
   <br>
   <b>Top 10 OWASP Vulnerabilities</b>
 </p>
