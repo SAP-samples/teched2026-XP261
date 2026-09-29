@@ -1,5 +1,5 @@
 # Exercise 1.1 - Horizontal Privilege Escalation
-Vulnerability: [A01:2021 – Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+Vulnerability: [A01:2025 – Broken Access Control](https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/)
 
 ## Table of Contents
 - [📖  1. Overview](./README.md#--1-overview)
@@ -27,7 +27,9 @@ Horizontal Privilege Escalation occurs when a user accesses resources belonging 
 - Reinforce business logic by preventing unauthorized actions.  
 
 ## 🚨 2. Vulnerable Code
-⚠️ Note: Do not copy the code from the **Vulnerabile Code** section into your project.
+⚠️ Note: Do not copy the code from the **Vulnerable Code** section into your project.
+
+💡 Reminder: Make sure you have opened SAP Business Application Studio (BAS) before starting this exercise. See [Exercise 0, Step 5](../../ex0/README.md#step-5-launch-sap-bas-import-project-and-deploy-to-cloud-foundry)
 
 **File**: `db/schema.cds`
 ```cds
@@ -55,6 +57,7 @@ entity Incidents : cuid, managed {
 
 **File**: `srv/services.cds`
 ```cds
+// VULNERABLE CODE - No access restrictions
 using { sap.capire.incidents as my } from '../db/schema';
 
 /**
@@ -73,7 +76,6 @@ service ProcessorService {
 
 annotate ProcessorService.Incidents with @odata.draft.enabled;
 annotate ProcessorService with @(requires: 'authenticated-user');  // ✅ Any logged-in user can load $metadata
-
 ```
 **Why this is vulnerable:**
 - The database schema lacks an 'assignedTo' field to track incident ownership.
@@ -85,9 +87,14 @@ annotate ProcessorService with @(requires: 'authenticated-user');  // ✅ Any lo
 
 ### 🪜 Step 1: Login as Alice (Support User) 
 
-- Access SAP Build Work Zone.
-- Login with alice.jones@bestrun.com.
-- Navigate to the Incident Management application.
+**Prerequisites:**
+- Ensure the **SAP HANA Database** is **Running**. Refer to section [Getting Started - 6.6.1. Check and Start SAP HANA Database](../../ex0/README.md#661-check-and-start-sap-hana-database)
+- Ensure the **incident-management-srv** application is started. Refer to section [Getting Started - 6.6.2. Check and Start the incident-management-srv Application](../../ex0/README.md#662-check-and-start-the-incident-management-srv-application)
+
+- ▶️ Action:
+  - Access the launchpad of SAP Build Work Zone.
+  - Login with alice.jones@bestrun.com.
+  - Navigate to the Incident Management application.
 
 ### 🪜 Step 2: Exploit Modifying an Incident
 
@@ -132,9 +139,9 @@ annotate ProcessorService with @(requires: 'authenticated-user');  // ✅ Any lo
 ### 🪜 Step 5: Test with Another User
 
 - ▶️ Action:
-  - Log out as Alice and log in as bob.support@company.com (another support user).
+  - Log out as Alice and log in as bob.smith@bestrun.com (another support user).
   - Repeat the update and delete actions on any incidents.
-  - 
+    
 - ✅ Result: ❌ The system allows Bob to perform the same unauthorized updates and deletions, confirming that all support users have unrestricted access to all open incidents.
 
 ### 📌 Critical Vulnerability Summary
@@ -147,6 +154,12 @@ annotate ProcessorService with @(requires: 'authenticated-user');  // ✅ Any lo
 The fix requires both database schema changes and service-level security implementation.
 
 ### 🪜 Step 1: Add Assignment Tracking to Database Schema
+- 💡 Tip: Use GitHub's "Copy Raw File" function to easily copy the code (see screenshot below).
+  <p align="center">
+    <img src="images/github-copy-raw-button.png" alt="" width="900"/>
+    <br>
+    <b></b>
+  </p>
 
 - Copy the contents of [schema.cds](./db/schema.cds) into your project’s db/schema.cds file.
 - Ensure the following corrected code is included in the file:
@@ -185,19 +198,18 @@ entity Incidents : cuid, managed {
 - Ensure the following data is included in the file:
 
 File: `db/data/sap.capire.incidents-Incidents.csv`
- *   Add the 'assignedTo' column and assign incidents to our test users.
- *   **Note:** Use the actual user IDs from your identity provider (IdP). For this workshop, we'll use their email addresses as a stand-in.
 
 ```
 ID,customer_ID,title,urgency_code,status_code,assignedTo
-3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1004155,Inverter not functional,H,C,bob.support@company.com
-3a4ede72-244a-4f5f-8efa-b17e032d01ee,1004161,No current on a sunny day,H,N,bob.support@company.com
-3ccf474c-3881-44b7-99fb-59a2a4668418,1004161,Strange noise when switching off Inverter,M,N,alice.support@company.com
-3583f982-d7df-4aad-ab26-301d4a157cd7,1004100,Solar panel broken,H,I,alice.support@company.com
+3b23bb4b-4ac7-4a24-ac02-aa10cabd842c,1004155,Inverter not functional,H,C,bob.smith@bestrun.com
+3a4ede72-244a-4f5f-8efa-b17e032d01ee,1004161,No current on a sunny day,H,N,bob.smith@bestrun.com
+3ccf474c-3881-44b7-99fb-59a2a4668418,1004161,Strange noise when switching off Inverter,M,N,alice.jones@bestrun.com
+3583f982-d7df-4aad-ab26-301d4a157cd7,1004100,Solar panel broken,H,I,alice.jones@bestrun.com
 3583f982-d7df-4aad-ab45-301d4a157cc7,1004100,Door lock broken,H,N,
 
 ```
-
+ *   This adds the 'assignedTo' column and assigns incidents to our test users.
+ 
 ### 🪜 Step 3: Implement Service-Level Security
 
 - Copy the contents of [services.cds](./srv/services.cds) into your project’s **srv/services.cds** file.
@@ -235,7 +247,7 @@ using { sap.capire.incidents as my } from '../db/schema';
 }
 
     annotate ProcessorService.Incidents with @odata.draft.enabled; 
-    annotate ProcessorService with @(requires: ['support']);
+    annotate ProcessorService with @(requires: 'authenticated-user');
 
 ... // Other methods
 ```
@@ -278,11 +290,11 @@ class ProcessorService extends cds.ApplicationService {
       .columns('status_code')
       .where({ ID: req.data.ID })
 
-    if (!result) return req.reject(404, `Incident ${req.data.ID} not found`)
+    if (!result) return req.error(404, `Incident ${req.data.ID} not found`)
     // 'C' : Closed incident
     if (result.status_code === 'C') { 
       const action = req.event === 'UPDATE' ? 'modify' : 'delete'
-      return req.reject(403, `Cannot ${action} a closed incident`)
+      return req.error(403, `Cannot ${action} a closed incident`)
     }
   }
 
@@ -386,6 +398,8 @@ AssignedTo=Assigned To
 ## ✅ 5. Verification
 This section outlines the steps to confirm that the remediation for the Horizontal Privilege Escalation vulnerability has been successfully implemented. The goal is to verify that support users can only modify or delete incidents assigned to them or unassigned incidents, and that updates or deletions on closed incidents are blocked.
 
+⚠️ Before deploying the application, ensure the SAP HANA Database is **Running**, Refer to section [Getting Started - 6.6.1. Check and Start SAP HANA Database](../../ex0/README.md#661-check-and-start-sap-hana-database)
+
 ### 🪜 Step 1: Deploy the Updated Application to Cloud Foundry
 - Open a terminal window.
   - In the Explorer Pane, right-click on the project name to open the context menu.
@@ -396,21 +410,25 @@ This section outlines the steps to confirm that the remediation for the Horizont
   ```  
 - Unless you already logged-in in the "Getting Started" section, login with the Cloud Foundry command line interface.
   ```
-  cf login -a https://api.cf.eu10-004.hana.ondemand.com  --origin akihlqzx8-platform
+  cf login --sso
   ```
-  - Enter your credentials, email "XP260***@education.cloud.sap" and the corresponding password.
+  - Click on provided URL to get a one-time passcode.
+  - If prompted for login, select your **Sign in with alternative identity provider**.
+  - Return to terminal and type/paste the code.
   - As you are only assigned to one org and one space, these are selected automatically.
-- Start the build and deploy the new version. These steps may take a few minutes.  
+  - Start the build and deploy the new version. These steps may take a few minutes.
+   
   ```
   mbt build
   cf deploy mta_archives/incident-management_1.0.0.mtar
   ```
+⚠️ After deployment, if you run into issues when trying to open the application from the SAP Build Work Zone Launchpad, first of all ensure that you logged your test user out and then back in. If this does not help, ensure that the Work Zone content is up to date. Follow the instructions in [Update Content](../../ex0/README.md#61-update-content).
 
 ### 🪜 Step 2: Login as Alice (Support User)
 - ▶️ Action:
-  - Access SAP Build Work Zone and log in with alice.support@company.com. (Note: Make sure to refresh the application first.)
+  - Access SAP Build Work Zone and log in with alice.jones@bestrun.com.
   - In the incident list, locate an incident assigned to Alice (e.g., "Strange noise when switching off Inverter").
-  - Confirm the 'Assigned To' column displays alice.support@company.com.
+  - Confirm the 'Assigned To' column displays alice.jones@bestrun.com.
   - Click on the incident to open its details.
   - Click "Edit", modify the title (e.g., change to "UPDATED BY ALICE - Test"), add a conversation entry, and save.
 - ✅ Result:
@@ -424,16 +442,16 @@ This section outlines the steps to confirm that the remediation for the Horizont
 - ✅ Result:
   - ❌ The system blocks the edit attempt.
   - ❌ The UI shows a 403 Forbidden error (or "Access denied" message).
-  - ✅ This confirms that the where: 'assignedTo = $user' condition is effectively enforced — Alice cannot access Bob’s incident, even though both are support users. 👉 This resolves the Horizontal Privilege Escalation vulnerability.
+  - ✅ This confirms that the **where: 'assignedTo = $user'** condition is effectively enforced — Alice cannot access Bob’s incident, even though both are support users. 👉 This resolves the Horizontal Privilege Escalation vulnerability.
  
 ### 🪜 Step 4: Verify Alice Cannot Modify or Delete a Closed Incident that is on Alice's Name
 - Action:
-  - Locate a closed incident (e.g., one with status "Closed").
+  - Locate a closed incident (e.g., one with status "Closed") or close an incident on Alice's name
   - Click "Edit" and make changes.
   - Click "Save". If editing is not possible, attempt to select the incident and click "Delete".
 - ✅ Result:
   - ❌ For updates: The system blocks the edit with an error (e.g., "Cannot modify a closed incident" from services.js).
-  - ❌ For deletions: The system prevents deletion with a similar error. This confirms the combined effect of @restrict and the onModify handler in services.js.
+  - ❌ For deletions: The system prevents deletion with a similar error. This confirms the combined effect of `@restrict` and the onModify handler in services.js.
 
 ### 🪜 Step 5: Verify Alice Can Modify an Unassigned Incident
 - ▶️ Action:
@@ -444,7 +462,7 @@ This section outlines the steps to confirm that the remediation for the Horizont
 ## 📌 Verification Summary
 The remediation is successful as a combination of:
 - Adding the 'assignedTo' field in schema.cds.
-- Implementing @restrict with where: 'assignedTo = $user'.
+- Implementing `@restrict` with where: 'assignedTo = $user'.
 - Enforcing business rules in services.js
 
 This eliminates Horizontal Privilege Escalation and enforces the principle of least privilege.
@@ -454,7 +472,7 @@ This eliminates Horizontal Privilege Escalation and enforces the principle of le
 In these exercises, you have learned how:
 
 * To address Horizontal Privilege Escalation by implementing the crucial data ownership field (assignedTo) and enforcing granular authorization rules.
-* To leverage CAP's native @restrict annotation and the $user context to declaratively define and enforce security policies directly within the service definition.
+* To leverage CAP's native `@restrict` annotation and the $user context to declaratively define and enforce security policies directly within the service definition.
 * To secure the application by ensuring support users can only modify/delete incidents assigned to them, thereby reinforcing business logic and mitigating a critical OWASP Top 10 vulnerability.
 
 👉 Next up: [Exercise 1.2 - Vertical Privilege Escalation](../ex1.2/README.md), where we prevent low-privilege users from exploiting authorization gaps to assume elevated administrative rights and perform restricted operations.
