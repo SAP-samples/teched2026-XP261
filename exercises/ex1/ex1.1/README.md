@@ -86,7 +86,7 @@ annotate ProcessorService with @(requires: 'authenticated-user');  // ✅ Any lo
 ### 🪜 Step 1: Login as Alice (Support User) 
 
 - Access SAP Build Work Zone.
-- Login with alice.support@company.com.
+- Login with alice.jones@bestrun.com.
 - Navigate to the Incident Management application.
 
 ### 🪜 Step 2: Exploit Modifying an Incident
