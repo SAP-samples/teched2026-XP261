@@ -1,8 +1,8 @@
 # Exercise 1 - Broken Access Control
-Vulnerability: [A01:2021 – Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+Vulnerability: [A01:2025 – Broken Access Control](https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/)
 
 ## 📖 Overview
-Broken Access Control  is the most critical web application security risk, according to the [OWASP Top 10 2021 list (A01)](https://owasp.org/Top10/A01_2021-Broken_Access_Control/). It occurs when an application fails to enforce proper authorization, allowing users to view or modify resources they are not permitted to access. When access control is broken, threat actors can act outside of their intended permissions. This can manifest itself in several ways:
+Broken Access Control  is the most critical web application security risk, according to the [OWASP Top 10 2025 list (A01)](https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/). It occurs when an application fails to enforce proper authorization, allowing users to view or modify resources they are not permitted to access. When access control is broken, threat actors can act outside of their intended permissions. This can manifest itself in several ways:
 
 - **Horizontal Privilege Escalation :** When a user gains access to another user’s data or actions at the same privilege level.
 - **Vertical Privilege Escalation :** When a user gains higher‑level privileges, such as performing admin‑level operations.
@@ -13,7 +13,7 @@ Broken Access Control  is the most critical web application security risk, accor
 ## ⚠️ Why This Matters
 
 * **Business Impact:** Unauthorized modifications could lead to incorrect incident handling, data tampering, and workflow disruption.
-* **Compliance Risk:** Violates [OWASP Top 10 A01](https://owasp.org/Top10/A01_2021-Broken_Access_Control/) and the principle of least privilege.
+* **Compliance Risk:** Violates [OWASP Top 10 A01](https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/) and the principle of least privilege.
 * **Security Risk:** Malicious or careless users could alter other peoples' work, close tickets improperly, or delete evidence.
 
 ## 🔐 CAP Security Concept 
