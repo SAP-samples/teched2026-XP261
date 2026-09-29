@@ -546,8 +546,6 @@ When the scan completed, Claude Code displayed the following summary in the term
 
 **Severity Summary:** 4 Critical, 1 High, 3 Medium
 
-> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
-
 ```
  Top Priorities
 
@@ -584,6 +582,8 @@ secure_incident_management/
 ```
 
 **Expected result:** The `.owasp-scan` folder contains 10 files. If the folder is missing or empty, notify your session instructor.
+
+> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
 
 ### Step 2 — Open the Reviewed Findings Report
 
