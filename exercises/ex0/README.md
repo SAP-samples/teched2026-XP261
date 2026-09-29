@@ -529,101 +529,27 @@ When the scan completed, Claude Code displayed the following summary in the term
 
   Final Results: 8 Findings
 
+  The scan identified **8 security findings** across 8 OWASP Top 10 (2025) categories. Review the findings table below:
 
-### Step 6 — Understand the Findings
+```
 
-The scan identified **8 security findings** across 8 OWASP Top 10 (2025) categories. Review the findings table below:
-
-| # | Severity | Finding | OWASP Category | Component |
+| # | Severity   | Finding | OWASP Category | Component |
 |:-:|:---------|---------|---------------|-----------|
 | 1 | 🔴 Critical | SQL Injection via raw string concatenation in `fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
 | 2 | 🔴 Critical | Missing row-level access control on Incidents — any support user sees all records | **A01 Broken Access Control** | Backend (`srv/services.cds`) |
 | 3 | 🔴 Critical | Hardcoded mock credentials and auth bypass (`password: "initial"` in `package.json`) | **A07 Authentication Failures**, **A02 Security Misconfiguration** | Configuration (`package.json`) |
-| 4 | 🟠 High | Pre-built `.mtar` binary artifacts committed to the repository | **A03 Supply Chain Failures** | Repository (`mta_archives/`) |
+| 4 | 🟠 High   | Pre-built `.mtar` binary artifacts committed to the repository | **A03 Supply Chain Failures** | Repository (`mta_archives/`) |
 | 5 | 🔴 Critical | PII and credit card data stored and served without encryption | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
-| 6 | 🟡 Medium | No structured security logging or alerting — zero audit trail | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
-| 7 | 🟡 Medium | Dev sandbox CDN scripts loaded without Subresource Integrity (SRI) | **A08 Data Integrity Failures** | Frontend (`webapp/index.html`) |
-| 8 | 🟡 Medium | No rate limiting or brute-force protection on any endpoint | **A06 Insecure Design** | Backend (`srv/services.js`) |
+| 6 | 🟡 Medium   | No structured security logging or alerting — zero audit trail | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
+| 7 | 🟡 Medium   | Dev sandbox CDN scripts loaded without Subresource Integrity (SRI) | **A08 Data Integrity Failures** | Frontend (`webapp/index.html`) |
+| 8 | 🟡 Medium   | No rate limiting or brute-force protection on any endpoint | **A06 Insecure Design** | Backend (`srv/services.js`) |
 
 **Severity Summary:** 4 Critical, 1 High, 3 Medium
 
+> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-The scan identified **8 security findings** across 8 OWASP Top 10 (2025) categories. Review the findings table below:
-
-| # | Severity | Finding | OWASP Category | Component |
-|:-:|:---------|---------|---------------|-----------|
-| 1 | 🔴 Critical | SQL Injection via raw string concatenation in `fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
-| 2 | 🔴 Critical | Missing row-level access control on Incidents — any support user sees all records | **A01 Broken Access Control** | Backend (`srv/services.cds`) |
-| 3 | 🔴 Critical | Hardcoded mock credentials and auth bypass (`password: "initial"` in `package.json`) | **A07 Authentication Failures**, **A02 Security Misconfiguration** | Configuration (`package.json`) |
-| 4 | 🟠 High | Pre-built `.mtar` binary artifacts committed to the repository | **A03 Supply Chain Failures** | Repository (`mta_archives/`) |
-| 5 | 🔴 Critical | PII and credit card data stored and served without encryption | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
-| 6 | 🟡 Medium | No structured security logging or alerting — zero audit trail | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
-| 7 | 🟡 Medium | Dev sandbox CDN scripts loaded without Subresource Integrity (SRI) | **A08 Data Integrity Failures** | Frontend (`webapp/index.html`) |
-| 8 | 🟡 Medium | No rate limiting or brute-force protection on any endpoint | **A06 Insecure Design** | Backend (`srv/services.js`) |
-
-
-
-**Severity Summary:** 4 Critical, 1 High, 3 Medium
-
-
-  +-----+-------------+----------------------------------------------------+----------+
-  |  #  |  Severity   |                       Threat                       |  OWASP   |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 1   |  Critical   | SQL Injection via Raw String Concatenation          | A05      |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 2   |  Critical   | Missing Row-Level Access Control on Incidents       | A01      |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 3   |  Critical   | Hardcoded Mock Credentials and Auth Bypass          | A07, A02 |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 4   |  High       | Pre-Built Binary Artifacts Committed to Repository  | A03      |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 5   |  Critical   | PII and Credit Card Data Stored Without Encryption  | A04      |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 6   |  Medium     | No Structured Security Logging or Alerting          | A09      |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 7   |  Medium     | Dev Sandbox CDN Scripts Without SRI                 | A08      |
-  +-----+-------------+----------------------------------------------------+----------+
-  | 8   |  Medium     | No Rate Limiting or Brute-Force Protection          | A06      |
-  +-----+-------------+----------------------------------------------------+----------+
-
-  4 Critical · 1 High · 3 Medium · 0 Low
-
-  Top Priorities
+```
+ Top Priorities
 
   1. Fix the SQL injection immediately — srv/services.js fetchCustomer has two
      deliberately vulnerable code paths with a working exploit. Replace raw SQL
@@ -638,7 +564,7 @@ The scan identified **8 security findings** across 8 OWASP Top 10 (2025) categor
 
 The sections below walk through the generated report files in detail.
 
-### Step 4 — Locate the Scan Results
+### Step 1 — Locate the Scan Results
 
 In the BAS Explorer, expand the following path:
 
@@ -659,7 +585,7 @@ secure_incident_management/
 
 **Expected result:** The `.owasp-scan` folder contains 10 files. If the folder is missing or empty, notify your session instructor.
 
-### Step 5 — Open the Reviewed Findings Report
+### Step 2 — Open the Reviewed Findings Report
 
 Click on **`2026-09-29_secure_incident_management_REVIEWED_FINDINGS.md`** to open the curated security report. This is the final output of the three-phase AI scan pipeline:
 
@@ -671,26 +597,7 @@ Click on **`2026-09-29_secure_incident_management_REVIEWED_FINDINGS.md`** to ope
 
 The review phase consolidated overlapping findings and validated each against the source code. The final report contains **8 confirmed findings** — all validated with code-level evidence.
 
-### Step 6 — Understand the Findings
-
-The scan identified **8 security findings** across 8 OWASP Top 10 (2025) categories. Review the findings table below:
-
-| # | Severity | Finding | OWASP Category | Component |
-|:-:|:---------|---------|---------------|-----------|
-| 1 | 🔴 Critical | SQL Injection via raw string concatenation in `fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
-| 2 | 🔴 Critical | Missing row-level access control on Incidents — any support user sees all records | **A01 Broken Access Control** | Backend (`srv/services.cds`) |
-| 3 | 🔴 Critical | Hardcoded mock credentials and auth bypass (`password: "initial"` in `package.json`) | **A07 Authentication Failures**, **A02 Security Misconfiguration** | Configuration (`package.json`) |
-| 4 | 🟠 High | Pre-built `.mtar` binary artifacts committed to the repository | **A03 Supply Chain Failures** | Repository (`mta_archives/`) |
-| 5 | 🔴 Critical | PII and credit card data stored and served without encryption | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
-| 6 | 🟡 Medium | No structured security logging or alerting — zero audit trail | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
-| 7 | 🟡 Medium | Dev sandbox CDN scripts loaded without Subresource Integrity (SRI) | **A08 Data Integrity Failures** | Frontend (`webapp/index.html`) |
-| 8 | 🟡 Medium | No rate limiting or brute-force protection on any endpoint | **A06 Insecure Design** | Backend (`srv/services.js`) |
-
-**Severity Summary:** 4 Critical, 1 High, 3 Medium
-
-> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
-
-### Step 7 — Identify the Exercise Targets
+### Step 3 — Identify the Exercise Targets
 
 Three of the 8 findings map directly to the hands-on exercises you will complete next. These are the vulnerabilities you will learn to exploit and remediate:
 
@@ -710,7 +617,7 @@ For reference, the pre-populated scan was produced using the following command i
 /owasp-analysis
 ```
 
-This invokes the OWASP Scanner plugin at `owasp-scanner/skills/owasp-scan/`, which reads the `secure_incident_management` codebase and executes the three-phase pipeline. The command file is located at `.claude/commands/owasp-analysis.md`.
+This invokes the OWASP Scanner plugin at `owasp-scan/skills/`, which reads the `secure_incident_management` codebase and executes the three-phase pipeline. The command file is located at `.claude/commands/owasp-analysis.md`.
 
 If you wish to **re-run the scan** at any point during the workshop (for example, after applying fixes), delete the existing results and run the command again:
 
@@ -724,7 +631,7 @@ Then in Claude Code:
 /owasp-analysis
 ```
 
-> **Note:** A live scan takes 5-8 minutes and consumes AI Core credits. The pre-generated results are sufficient for all exercises.
+> **Note:** A live scan takes 10-20 minutes and consumes AI Core credits. The pre-generated results are sufficient for all exercises.
 
 ### Key Takeaway
 
