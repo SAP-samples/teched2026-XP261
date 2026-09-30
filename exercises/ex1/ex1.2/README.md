@@ -1,5 +1,5 @@
 # Exercise 1.2 - Vertical Privilege Escalation
-Vulnerability: [A01:2021 – Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+Vulnerability: [A01:2025 – Broken Access Control](https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/)
 
 ## Table of Contents
 - [📖 1. Overview](./README.md#-1-overview)
@@ -11,7 +11,7 @@ Vulnerability: [A01:2021 – Broken Access Control](https://owasp.org/Top10/A01_
 
 ## 📖 1. Overview
 
-After addressing in [Exercise 1.1 - Horizontal Privilege Escalation](../ex1.1/README.md), the next step is to tackle Vertical Privilege Escalation, which occurs when a user gains access to higher-privileged functions they shouldn't have. 
+After addressing Horizontal Privilege Escalation in [Exercise 1.1](../ex1.1/README.md), the next step is to tackle Vertical Privilege Escalation, which occurs when a user gains access to higher-privileged functions they shouldn't have. 
 In our Incident Management system, this means a support user could perform actions that are reserved for administrators, such as closing high-urgency incidents, or modifying or deleting closed incidents. 
 This violates critical business rules and poses significant risks to the integrity and compliance of the system.
 
@@ -38,7 +38,7 @@ This violates critical business rules and poses significant risks to the integri
 ## 🚨 2. Vulnerable Code
 We will use exactly the [remediated code from Exercise 1.1](../ex1.1#%EF%B8%8F-4-remediation). It correctly prevents support users from touching other users’ incidents, but it does not yet enforce admin‑only rules (e.g. closing high‑urgency incidents, modifying closed incidents, deleting any incident).
 
-⚠️ Note: Do not copy the code from the **Vulnerabile Code** section into your project.
+⚠️ Note: Do not copy the code from the **Vulnerable Code** section into your project.
 
 **File**: `srv/services.cds`
 ```cds
@@ -48,7 +48,7 @@ service ProcessorService {
   @restrict: [
     { grant: ['READ', 'CREATE'], to: 'support' },        // ✅ Support users can view all incidents
     { grant: ['UPDATE', 'DELETE'],                       // ✅ UPDATE, DELETE granted to support users
-      to: 'support',
+      to: 'support',                                     // ❌ Only support role required, admins excluded 
       where: 'assignedTo is null or assignedTo = $user'  // ✅ Horizontal control (correct)
     }
   ]
@@ -57,7 +57,8 @@ service ProcessorService {
     entity Customers as projection on my.Customers;     
 }
 
-annotate ProcessorService with @(requires: 'support');  // ❌ Only support role required, admins excluded
+annotate ProcessorService.Incidents with @odata.draft.enabled; 
+annotate ProcessorService with @(requires: 'authenticated-user');
 
 ```
 **File**: `srv/services.js`
@@ -101,8 +102,8 @@ class ProcessorService extends cds.ApplicationService {
 
 ### 🪜 Step 1: Login as Alice (Support User) 
 - Access SAP Build Work Zone.
-- Login with alice.support@company.com. This user is set up from the previous exercise.
-- Navigate to the Incident Management application.
+- Login with alice.jones@bestrun.com
+- Navigate to the Incident Management application
 
 ### 🪜 Step 2: Exploit Closing High-Urgency Incident
 - ▶️ Action: 
@@ -116,10 +117,10 @@ class ProcessorService extends cds.ApplicationService {
 ### 🪜 Step 3: Login as Admin User
 
 - ▶️ Action:
-  - Log out and log in as david.admin@company.com (admin role).
+  - Log out and log in as david.miller@bestrun.com (admin role).
   - Try to open the incident management application (which will fail).
 - ✅ Result:
-  - ❌ UI displays a blank loading screen (no error message).
+  - ❌ UI displays 'Forbidden' error message..
   - ❌ Root Cause: @requires: 'support' in services.cds blocks admin access to the service.
 
 ### 📌Critical Vulnerability Summary
@@ -163,8 +164,8 @@ service ProcessorService {
 
 }
 
-annotate ProcessorService with @(requires: ['support', 'admin']);  // ✅ NEW: Allow both roles, support and admin, at service level.
-
+annotate ProcessorService.Incidents with @odata.draft.enabled; 
+annotate ProcessorService with @(requires: 'authenticated-user');
 ...
 
 ```
@@ -172,7 +173,6 @@ annotate ProcessorService with @(requires: ['support', 'admin']);  // ✅ NEW: A
 Key Changes:
 
 * ✅ Admin Full Access: { grant: '*', to: 'admin' } grants admins complete CRUD permissions.
-* ✅ Service-Level Role Requirements: @requires: ['support', 'admin'] allows both roles to access the service.
 
 ### 🪜 Step 2: Update Services.js
 The initial remediation code from [Exercise 1.1]((../ex1.1/README.md)) secured against Horizontal Privilege Escalation (support users interfering with other support users' incidents). 
@@ -188,7 +188,7 @@ Here is the updated services.js with added checks to enforce the admin-only rule
 
 ... // Other methods
 
- // ✅ NEW : Enforce admin-only operations (vertical ESC)
+// ✅ NEW: Enforce admin-only operations (vertical ESC)
   async onModify(req) {
     // Fetch current incident state (status + urgency)
     const result = await SELECT.one.from(req.subject)
@@ -199,22 +199,22 @@ Here is the updated services.js with added checks to enforce the admin-only rule
 
     // Check if incident is already closed
     if (result.status_code === 'C') {
-    // ✅ NEW : Allow only admins to modify/delete closed incidents
-      if (!req.user.isAdmin()) {
+      // ✅ NEW : Allow only admins to modify/delete closed incidents
+      if (!req.user || !req.user.is('admin')) {
         const action = req.event === 'UPDATE' ? 'modify' : 'delete';
-        return req.reject(403, `Cannot ${action} a closed incident`);
+        req.error(403, `Cannot ${action} a closed incident`);
       }
       // Admins can proceed
       return;
     }
+
     // ✅ UPDATE : Check if user is attempting to close the incident (status_code set to 'C')
     if (req.data.status_code === 'C') {
-    // ✅ NEW : Block support users from closing high-urgency incidents
-      if (result.urgency_code === 'H' && !req.user.isAdmin()) {
-        return req.reject(403, 'Only administrators can close high-urgency incidents');
+      // ✅ NEW : Block support users from closing high-urgency incidents
+      if (result.urgency_code === 'H' && (!req.user || !req.user.is('admin'))) {
+        req.error(403, 'Only administrators can close high-urgency incidents');
       }
     }
-
 ... // Other methods
 
 module.exports = { ProcessorService }
@@ -246,8 +246,8 @@ cf deploy mta_archives/incident-management_1.0.0.mtar
 
 ### 🪜 Step 2: Login as Alice (Support User)
 - ▶️ Action:
-  - Access SAP Build Work Zone and log in with alice.support@company.com.
-  - Locate a high-urgency incident assigned to Alice or unassigned.
+  - Access SAP Build Work Zone and log in with alice.jones@bestrun.com.
+  - Locate a high-urgency incident assigned to Alice or unassigned or create a new one.
   - Confirm the urgency is set to "High" and the status is not closed.
   - Click "Edit" and try to set the status to "Closed" (status_code = 'C').
   - Save the changes.
@@ -266,7 +266,7 @@ cf deploy mta_archives/incident-management_1.0.0.mtar
  
 ### 🪜 Step 4: Login as David (Admin User)
   - ▶️ Action:
-    - Log in with david.admin@company.com.
+    - Log in with david.miller@bestrun.com
     - Locate a high-urgency open incident (assigned to anyone or unassigned).
     - Click "Edit", change status to "Closed", and save.
   - ✅ Result:
@@ -284,7 +284,7 @@ cf deploy mta_archives/incident-management_1.0.0.mtar
 
 ### 📌 Verification Summary
 
-The remediation successfully addresses Vertical Privilege Escalation by
+The remediation successfully addresses Vertical Privilege Escalation by:
 
 **1. Restricting Support Users:**
 
@@ -303,7 +303,7 @@ The remediation successfully addresses Vertical Privilege Escalation by
 
 ## 📌 6. Summary
 
-In these exercises, you have learned how to
+In these exercises, you have learned how to:
   - Mitigate Vertical Privilege Escalation by explicitly defining admin-only operations in `@restrict` rules.
   - Leverage CAP’s Role-Based Access Control (RBAC) to separate support and admin tasks.
   - Combine Declarative and Imperative Security for comprehensive protection:
@@ -311,4 +311,4 @@ In these exercises, you have learned how to
     * JavaScript Handlers (e.g., `onModify`) for fine-grained business logic enforcement.
   - Test Security Rules by validating both allowed and denied operations for each role.
     
-👉 Next up: [Exercise 2 - SQL injection](../../ex2/README.md), where we address critical  [OWASP Top 10 2021 list (A03)](https://owasp.org/Top10/A03_2021-Injection/).
+👉 Next up: [Exercise 2 - SQL injection](../../ex2/README.md), where we address the critical security risk [OWASP Top 10 A05:2025 Injection](https://owasp.org/Top10/2025/A05_2025-Injection/).
