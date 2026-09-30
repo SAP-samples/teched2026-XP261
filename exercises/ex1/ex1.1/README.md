@@ -333,46 +333,50 @@ add the following parts in the code:
 **File**: app/incidents/annotations.cds changes:
 
 ```
-UI.FieldGroup #GeneratedGroup : {
-
-    $Type : 'UI.FieldGroupType',
-    Data : [
+    UI.FieldGroup #GeneratedGroup : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : title,
+            },
+            // ✅ ADDED: Use consistent i18n label for assigned user in general info
+            {
+                $Type : 'UI.DataField',
+                Label : '{i18n>AssignedTo}',
+                Value : assignedTo,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : '{i18n>Customer}',
+                Value : customer_ID,
+            },
+        ],
+    },
+    ...
+    UI.LineItem : [
         {
             $Type : 'UI.DataField',
             Value : title,
+            Label : '{i18n>Title}',
+            // 🔄 NEW: Added UI annotations for dynamic resizing
+            UI.LineItem : {
+                $Type : 'UI.LineItemType',
+                Width : 'auto', // Set to auto to allow dynamic resizing
+            }
         },
+        // ✅ ADDED: Show assigned user in the list view
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>Customer}',
-            Value : customer_ID,
-        },
-        // ✅ NEW: 'assignedTo' field to UI.FieldGroup #GeneratedGroup
-        {
-            $Type : 'UI.DataField',
-            Label : '{i18n>AssignedTo}', // Use consistent i18n label for assigned user in general info
             Value : assignedTo,
+            Label : '{i18n>AssignedTo}',
+            UI.LineItem : {
+                $Type : 'UI.LineItemType',
+                Width : 'auto',
+            }
         },
-    ],
-},
-...
-  UI.LineItem : [
-      ...
-      {
-          $Type : 'UI.DataField',
-          Value : urgency.descr,
-          Label : '{i18n>Urgency}',
-      },
-      // ✅ NEW: Show assigned user in the list view
-      {
-          $Type : 'UI.DataField',
-          Value : assignedTo,
-          Label : '{i18n>AssignedTo}',
-          @UI.Importance : #High   // ✅ NEW: ensures visible by default
-      },
 
-  ],
-
-  // ✅ ADDED: Add 'assignedTo' field to selection fields for filtering/sorting
+  //  ✅ ADDED: assignedTo field to UI.FieldGroup #GeneratedGroup
   UI.SelectionFields : [
       status_code,
       urgency_code,
