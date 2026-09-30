@@ -317,6 +317,29 @@ Once you have SAP Business Application Studio open with your secure incident man
 
 ## Launch SAP Build Work Zone
 
+### Check and Start the incident-management-srv Application
+
+Before launching SAP Build Work Zone, verify that the backend application is running:
+
+1. Navigate to your subaccount in the SAP BTP cockpit.
+
+2. In the left navigation, go to **Cloud Foundry** > **Spaces**.
+
+3. Select your space **XP261-0XX**.
+
+4. In the **Applications** list, locate **incident-management-srv**.
+
+5. Check the **Requested State** column:
+
+   | State        | Meaning                                          | Action                                                                 |
+   |:-------------|:-------------------------------------------------|:-----------------------------------------------------------------------|
+   | 🟢 Started   | The application is active and ready.             | No action needed — proceed to the next step.                           |
+   | 🔴 Stopped   | The application is not running.                  | Click the **Start** button under the **Actions** column to start it.   |
+
+   > If you started the application, wait until the state changes to 🟢 **Started** before continuing.
+
+### Open SAP Build Work Zone
+
 1- Go back to **Services > Instances and Subscriptions** in the **SAP BTP cockpit**. Click on the **Go to Application** icon next to the **SAP Build Work Zone, standard edition** subscription to open the SAP Build Work Zone Site. 
 
 <p align="center">
