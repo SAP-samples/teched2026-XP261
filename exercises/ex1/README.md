@@ -34,7 +34,7 @@ There are two exercises related to this topic. Please ensure your environment is
 - Completed [Environment Setup and Initial Deployment](../ex0#environment-setup-and-initial-deployment).
 - Ensure the following systems are active:
     * **SAP Business Application Studio (BAS):** Launch BAS and verify that your development space is in a "Running" state.
-    * **Cloud Foundry Space:** The application incident-management-srv is started and running in your space. see section [Check and Start the incident-management-srv Application](../ex0/README.md#662-check-and-start-the-incident-management-srv-application)
+    * **Cloud Foundry Space:** The application incident-management-srv is started and running in your space. see section [Check and Start the incident-management-srv Application](../ex0/README.md#check-and-start-the-incident-management-srv-application)
 
 Once your systems are verified, proceed with the following exercises:
 
