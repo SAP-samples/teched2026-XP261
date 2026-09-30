@@ -22,7 +22,7 @@ class ProcessorService extends cds.ApplicationService {
     });
   }
 
-  // ✅ UPDATED: Enforce admin-only operations (vertical ESC)
+  // ✅ NEW: Enforce admin-only operations (vertical ESC)
   async onModify(req) {
     // Fetch current incident state (status + urgency)
     const result = await SELECT.one.from(req.subject)
@@ -31,9 +31,9 @@ class ProcessorService extends cds.ApplicationService {
 
     if (!result) return req.reject(404, `Incident ${req.data.ID} not found`);
 
-    // 1️⃣ Check if incident is already closed
+    // Check if incident is already closed
     if (result.status_code === 'C') {
-      // Allow only admins to modify/delete closed incidents
+      // ✅ NEW : Allow only admins to modify/delete closed incidents
       if (!req.user || !req.user.is('admin')) {
         const action = req.event === 'UPDATE' ? 'modify' : 'delete';
         req.error(403, `Cannot ${action} a closed incident`);
@@ -42,9 +42,9 @@ class ProcessorService extends cds.ApplicationService {
       return;
     }
 
-    // 2️⃣ Check if user is attempting to close the incident (status_code set to 'C')
+    // ✅ UPDATE : Check if user is attempting to close the incident (status_code set to 'C')
     if (req.data.status_code === 'C') {
-      // Block support users from closing high-urgency incidents
+      // ✅ NEW : Block support users from closing high-urgency incidents
       if (result.urgency_code === 'H' && (!req.user || !req.user.is('admin'))) {
         req.error(403, 'Only administrators can close high-urgency incidents');
       }
