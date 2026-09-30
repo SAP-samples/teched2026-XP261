@@ -227,7 +227,7 @@ module.exports = { ProcessorService }
 
 Key Changes:
 
-* ✅ Implements role-based access control using req.user.isAdmin().
+* ✅ Implements role-based access control using !req.user.is('admin').
 * ✅ Allows administrators to modify/delete closed incidents.
 * ✅ Returns 403 Forbidden with descriptive error message.
 * ✅ Prevents support users from closing high-urgency incidents (urgency_code === 'H').
