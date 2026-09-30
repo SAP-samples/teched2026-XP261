@@ -29,7 +29,7 @@ Horizontal Privilege Escalation occurs when a user accesses resources belonging 
 ## 🚨 2. Vulnerable Code
 ⚠️ Note: Do not copy the code from the **Vulnerable Code** section into your project.
 
-💡 Reminder: Make sure you have opened SAP Business Application Studio (BAS) before starting this exercise. See [Exercise 0, Step 5](../../ex0/README.md#launch-sap-business-application-studio)
+💡 Reminder: Make sure you have opened SAP Business Application Studio (BAS) before starting this exercise. See see section [Check and Start the incident-management-srv Application](../../ex0/README.md#check-and-start-the-incident-management-srv-application)
 
 **File**: `db/schema.cds`
 ```cds
