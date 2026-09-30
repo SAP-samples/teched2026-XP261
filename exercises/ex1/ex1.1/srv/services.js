@@ -28,11 +28,11 @@ class ProcessorService extends cds.ApplicationService {
       .columns('status_code')
       .where({ ID: req.data.ID })
 
-    if (!result) return req.reject(404, `Incident ${req.data.ID} not found`)
+    if (!result) return req.error(404, `Incident ${req.data.ID} not found`)
     // 'C' : Closed incident
     if (result.status_code === 'C') { 
       const action = req.event === 'UPDATE' ? 'modify' : 'delete'
-      return req.reject(403, `Cannot ${action} a closed incident`)
+      return req.error(403, `Cannot ${action} a closed incident`)
     }
   }
   
@@ -52,4 +52,3 @@ class ProcessorService extends cds.ApplicationService {
 }
 
 module.exports = { ProcessorService }
-
