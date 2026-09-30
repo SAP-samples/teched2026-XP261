@@ -161,11 +161,15 @@ service ProcessorService {
     { grant: '*', to: 'admin' }  // ✅ NEW: Explicit full access for admins (CREATE, READ, UPDATE, DELETE)
   ]
   entity Incidents as projection on my.Incidents;
+  
+  @readonly
+    entity Customers as projection on my.Customers;     
 
 }
 
 annotate ProcessorService.Incidents with @odata.draft.enabled; 
 annotate ProcessorService with @(requires: 'authenticated-user');
+
 ...
 
 ```
