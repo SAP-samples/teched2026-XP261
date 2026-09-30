@@ -170,7 +170,7 @@ service ProcessorService {
 annotate ProcessorService.Incidents with @odata.draft.enabled; 
 annotate ProcessorService with @(requires: 'authenticated-user');
 
-...
+... other methods
 
 ```
 
