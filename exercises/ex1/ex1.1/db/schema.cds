@@ -11,7 +11,7 @@ title        : String  @title : 'Title';
 urgency        : Association to Urgency default 'M';
 status         : Association to Status default 'N';
 
-// ✅ ADD: User assignment fields
+// ✅ NEW: ADD User assignment fields
 assignedTo   : String(255);  // Email of assigned support user
 
 conversation  : Composition of many {
