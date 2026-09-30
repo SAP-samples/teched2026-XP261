@@ -71,22 +71,22 @@ class ProcessorService extends cds.ApplicationService {
 ... // Other methods...
 
 // ❌ VULNERABILITY:
-// No check for admin role and for high-urgency incidents when status is changed to 'closed'
-// No check that only admins can modify closed incidents
-// No updates or deletes on closed incidents
-  async onModify(req) {
+//  No check for admin role — admins are blocked too, but should be allowed
+//  No check for high-urgency incidents when status is changed to 'closed'
+//  Any user can close any incident regardless of urgency
+
+async onModify(req) {
     const result = await SELECT.one.from(req.subject)
       .columns('status_code')
       .where({ ID: req.data.ID })
 
-    if (!result) return req.reject(404, `Incident ${req.data.ID} not found`)
-
-    if (result.status_code === 'C') {
+    if (!result) return req.error(404, `Incident ${req.data.ID} not found`)
+    // 'C' : Closed incident
+    if (result.status_code === 'C') { 
       const action = req.event === 'UPDATE' ? 'modify' : 'delete'
-      return req.reject(403, `Cannot ${action} a closed incident`)
+      return req.error(403, `Cannot ${action} a closed incident`)
     }
-  }
-  
+  }  
 }
 
 ... // Other methods
