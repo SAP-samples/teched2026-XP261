@@ -297,7 +297,7 @@ Once you have SAP Business Application Studio open with your secure incident man
    
 2. **Run the following command to log in:**
   ```
-  cf login -a https://api.cf.eu10-004.hana.ondemand.com  --origin akihlqzx8-platform
+  cf login -a https://api.cf.eu10-005.hana.ondemand.com  --origin akihlqzx8-platform
   ```
 3. When prompted enter:
     * Email: xp261-0XX@education.cloud.sap
