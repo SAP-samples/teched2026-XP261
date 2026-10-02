@@ -39,11 +39,10 @@ We’ll build upon [Exercise 1.2 - Vertical Privilege Escalation](../ex1/ex1.2/R
 1. **CDS Service Definition (srv/services.cds):** A new **fetchCustomer** function in AdminService that accepts unvalidated input
 2. **Vulnerable Implementation (srv/services.js):** Raw SQL query with direct string insertion
 
-**Updated File:** srv/services.cds
-- The updated **services.cds** file now includes a new function called **fetchCustomer** in the AdminService. This function is intentionally designed to be vulnerable to SQL Injection for demonstration purposes.
+**File:** srv/services.cds
+- The **services.cds** file includes a new function called **fetchCustomer** in the AdminService. This function is intentionally designed to be vulnerable to SQL Injection for demonstration purposes.
 
-- Copy the contents of [services.cds](./srv/services.cds) into your project’s **srv/services.cds** file.
-- Ensure the following corrected code is included in the file:
+- Ensure the following ode is included in the file:
 
 ```
 ... Other methods
@@ -51,26 +50,28 @@ We’ll build upon [Exercise 1.2 - Vertical Privilege Escalation](../ex1/ex1.2/R
 annotate ProcessorService.Incidents with @odata.draft.enabled; 
 annotate ProcessorService with @(requires: ['support', 'admin']);  // ✅ NEW: Allow both roles support and admin at service level.
 
+```
 /**
  * Service used by administrators to manage customers and incidents.
  */
 service AdminService {
     entity Customers as projection on my.Customers;
     entity Incidents as projection on my.Incidents;
-  
-  // ✅ Add Custom Vulnerable Operation fetchCustomer to AdminService
-  // ✅ Exposed via HTTP GET  {{server}}/odata/v4/admin/fetchCustomer with JSON body
+
+    // ❌ OWASP A03: SQL Injection — both query methods are vulnerable
     @tags: ['security', 'vulnerable']
-    @summary: 'Returns customer data using unvalidated input (for testing only)'
-    function fetchCustomer(customerID: String) returns array of Customers;
+    function fetchCustomer(
+        customerID: String,
+        method: String    // concat (default), tagged — both vulnerable to injection
+    ) returns array of Customers;
 }
+
 annotate AdminService with @(requires: 'admin');
 
 ```
 
-**Updated File:** srv/services.js
-- The updated **services.js** file now includes a new function handler for **fetchCustomer** in the AdminService class.
-- Copy the contents of [services_vulnerable.js](./srv/services_vulnerable.js) into your project’s **srv/services.js** file.
+**File:** srv/services.js
+- The **services.js** file includes a new function handler for **fetchCustomer** in the AdminService class.
 - Ensure the following corrected code is included in the file:
 
 ```
@@ -78,25 +79,41 @@ const cds = require('@sap/cds');
 
 ... Other methods
 
-// AdminService Implementation
 class AdminService extends cds.ApplicationService {
   init() {
-    // ❌ VULNERABLE: fetchCustomer (SQL Injection)
     this.on('fetchCustomer', async (req) => {
-      const { customerID } = req.data;
+      const { customerID, method = 'concat' } = req.data;
 
-      // ❌ VULNERABLE CODE: // Direct string embedding in query
-      const query = `SELECT * FROM sap_capire_incidents_Customers WHERE ID = '${customerID}'`;
-      const results = await cds.run(query);
-      return results;
-    });
+      // ❌ VULNERABLE: Direct string concatenation (OWASP A03)
+      if (method === 'concat') {
+        console.log('⚠️ Using INSECURE string concatenation method.');
+        const vulnerableQuery =
+          `SELECT * FROM sap_capire_incidents_Customers WHERE ID = '${customerID}'`;
+        console.log('❌ Vulnerable query constructed:', vulnerableQuery);
+        
+        ... Other methods
+      }
 
-    return super.init();
-  }
+      // ❌ VULNERABLE: Parenthesized tagged template (OWASP A03)
+      if (method === 'tagged') {
+        console.log('⚠️ Using INSECURE parenthesized tagged template method.');
+        const sql = (strings) => {
+          if (typeof strings === 'string') {
+            console.log('❌ PARENTHESES DETECTED: strings is plain string, not array!');
+            return strings;
+          }
+        };
+        const vulnerableQuery =
+          sql(`SELECT * FROM sap_capire_incidents_Customers WHERE ID = '${customerID}'`);
+        console.log('❌ Vulnerable query constructed:', vulnerableQuery);
+
+        ... Other methods
+
+      }
+        ... Other methods
+
 }
-// Export both services
-module.exports = {ProcessorService, AdminService};
-```
+module.exports = { ProcessorService, AdminService }```
 
 **Why this is vulnerable:**
 - ❌ **No Input Validation:** The user-supplied customerID is concatenated directly into the SQL query without validation, making it possible for an attacker to inject malicious SQL code.
