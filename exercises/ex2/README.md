@@ -113,7 +113,9 @@ class AdminService extends cds.ApplicationService {
         ... Other methods
 
 }
-module.exports = { ProcessorService, AdminService }```
+module.exports = { ProcessorService, AdminService }
+
+```
 
 **Why this is vulnerable:**
 - ❌ **No Input Validation:** The user-supplied customerID is concatenated directly into the SQL query without validation, making it possible for an attacker to inject malicious SQL code.
