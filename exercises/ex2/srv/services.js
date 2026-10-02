@@ -1,16 +1,16 @@
 const cds = require('@sap/cds');
 
 class ProcessorService extends cds.ApplicationService {
-  init() {
-    // Expanded to handle CLOSE action (if implemented as a custom action)
-    this.before(['UPDATE', 'DELETE'], 'Incidents', req => this.onModify(req));
+init() {
+    // ✅ Guard UPDATE, DELETE and draft activation — prevents support users from modifying,
+    // deleting, or activating drafts of closed or high-urgency incidents
+    this.before(['UPDATE', 'DELETE', 'draftActivate'], 'Incidents', req => this.onModify(req));
 
-    // Retain horizontal ESC fixes (auto-assignment, urgency handling)
+    // ✅ Retain horizontal ESC fixes (auto-assignment, urgency handling)
     this.before("CREATE", "Incidents", req => this.onBeforeCreate(req));
     return super.init();
   }
-
-  /** Helper: Adjust urgency based on title (unchanged) */
+  /** ✅ Helper: Adjust urgency based on title (unchanged) */
   changeUrgencyDueToSubject(data) {
     if (!data) return;
     const incidents = Array.isArray(data) ? data : [data];
@@ -21,33 +21,43 @@ class ProcessorService extends cds.ApplicationService {
     });
   }
 
-  // Enforce admin-only operations (vertical ESC)
-  async onModify(req) {
-    // Fetch current incident state (status + urgency)
-    const result = await SELECT.one.from(req.subject)
-      .columns('status_code', 'urgency_code')
-      .where({ ID: req.data.ID });
+// ✅ NEW: Enforce admin-only operations (vertical ESC)
+async onModify(req) {
+  // Fetch current incident state (status + urgency)
+  const id = req.data?.ID ?? req.params?.[0]?.ID;
 
-    if (!result) return req.error(404, `Incident ${req.data.ID} not found`);
+  if (!id) return req.reject(400, 'Missing incident ID');
 
-    // 1️⃣ Check if incident is already closed
-    if (result.status_code === 'C') {
-      if (!req.user.is('admin')) {
-        const action = req.event === 'UPDATE' ? 'modify' : 'delete';
-        return req.error(403, `Cannot ${action} a closed incident`);
-      }
-      return;
+  const result = await SELECT.one.from(req.subject)
+    .columns('status_code', 'urgency_code')
+    .where({ ID: id });
+
+  if (!result) return req.reject(404, `Incident ${id} not found`);
+
+  // ✅ NEW: Allow only admins to modify/delete/activate closed incidents
+  if (result.status_code === 'C') {
+    if (!req.user || !req.user.is('admin')) {
+      const action = req.event === 'UPDATE'        ? 'modify'
+                   : req.event === 'draftActivate' ? 'activate a draft of'
+                   : 'delete';
+      return req.error(403, `Cannot ${action} a closed incident`);
     }
+    return; // admin — allowed to proceed
+  }
 
-    // 2️⃣ Check if user is attempting to close the incident (status_code set to 'C')
-    if (req.data.status_code === 'C') {
-      if (result.urgency_code === 'H' && !req.user.is('admin')) {
-        return req.error(403, 'Only administrators can close high-urgency incidents');
-      }
+  // ✅ UPDATE: Check if user is attempting to close the incident
+  // For draftActivate, read status from draft data (req.data.status_code)
+  const incomingStatus = req.data?.status_code;
+  if (incomingStatus === 'C') {
+    // ✅ NEW: Block support users from closing high-urgency incidents
+    if (result.urgency_code === 'H' && (!req.user || !req.user.is('admin'))) {
+      return req.error(403, 'Only administrators can close high-urgency incidents');
     }
   }
 
-  // Retain auto-assignment logic (unchanged)
+  // ✅ Additional business rules (if any) can go here
+}
+  // ✅ Retain auto-assignment logic (unchanged)
   async onBeforeCreate(req) {
     const incident = req.data;
     if (incident.status_code === 'A' && req.user) {
@@ -57,7 +67,6 @@ class ProcessorService extends cds.ApplicationService {
     this.changeUrgencyDueToSubject(incident);
   }
 }
-// AdminService Implementation
 class AdminService extends cds.ApplicationService {
   init() {
     // ✅ SECURE: Parameterized query using CAP’s fluent API
@@ -74,8 +83,5 @@ class AdminService extends cds.ApplicationService {
     return super.init();
   }
 }
-// Export both services
-module.exports = {
-  ProcessorService,
-  AdminService
-};
+
+module.exports = { ProcessorService, AdminService }
