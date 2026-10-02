@@ -63,5 +63,52 @@ class ProcessorService extends cds.ApplicationService {
     this.changeUrgencyDueToSubject(incident);
   }
 }
+class AdminService extends cds.ApplicationService {
+  init() {
+    this.on('fetchCustomer', async (req) => {
+      const { customerID, method = 'concat' } = req.data;
 
-module.exports = { ProcessorService };
+      // ❌ VULNERABLE: Direct string concatenation (OWASP A03)
+      if (method === 'concat') {
+        console.log('⚠️ Using INSECURE string concatenation method.');
+        const vulnerableQuery =
+          `SELECT * FROM sap_capire_incidents_Customers WHERE ID = '${customerID}'`;
+        console.log('❌ Vulnerable query constructed:', vulnerableQuery);
+        try {
+          const results = await cds.run(vulnerableQuery);
+          console.log('✅ Results count:', results.length);
+          return results;
+        } catch (error) {
+          console.error('❌ Error:', error.message);
+          return req.error(400, 'Invalid customer identifier');
+        }
+      }
+
+      // ❌ VULNERABLE: Parenthesized tagged template (OWASP A03)
+      if (method === 'tagged') {
+        console.log('⚠️ Using INSECURE parenthesized tagged template method.');
+        const sql = (strings) => {
+          if (typeof strings === 'string') {
+            console.log('❌ PARENTHESES DETECTED: strings is plain string, not array!');
+            return strings;
+          }
+        };
+        const vulnerableQuery =
+          sql(`SELECT * FROM sap_capire_incidents_Customers WHERE ID = '${customerID}'`);
+        console.log('❌ Vulnerable query constructed:', vulnerableQuery);
+        try {
+          const results = await cds.run(vulnerableQuery);
+          console.log('✅ Results count:', results.length);
+          return results;
+        } catch (error) {
+          console.error('❌ Error:', error.message);
+          return req.error(400, 'Invalid customer identifier');
+        }
+      }
+
+      return req.error(400, `Unknown method: ${method}. Available: concat, tagged`);
+    });
+    return super.init();
+  }
+}
+module.exports = { ProcessorService, AdminService }
