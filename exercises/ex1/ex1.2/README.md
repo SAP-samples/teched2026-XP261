@@ -190,6 +190,14 @@ Here is the updated services.js with added checks to enforce the admin-only rule
 ```
 // Updated srv/services.js
 
+const cds = require('@sap/cds');
+
+class ProcessorService extends cds.ApplicationService {
+init() {
+    // ✅ Guard UPDATE, DELETE and draft activation — prevents support users from modifying,
+    // deleting, or activating drafts of closed or high-urgency incidents
+    this.before(['UPDATE', 'DELETE', 'draftActivate'], 'Incidents', req => this.onModify(req));
+
 ... // Other methods
 
 // ✅ NEW: Enforce admin-only operations (vertical ESC)
@@ -232,6 +240,7 @@ Key Changes:
 * ✅ Returns 403 Forbidden with descriptive error message.
 * ✅ Prevents support users from closing high-urgency incidents (urgency_code === 'H').
 * ✅ Allows administrators to close any incident, including high-urgency ones.
+* ✅ Prevents support users from modifying, deleting, or activating drafts of closed or high-urgency incidents.
 
 ## ✅ 5. Verification
 This section outlines the steps to confirm that the remediation for the Vertical Privilege Escalation vulnerability has been successfully implemented. The goal is to verify that:
