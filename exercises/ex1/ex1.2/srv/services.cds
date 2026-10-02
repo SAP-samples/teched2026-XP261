@@ -27,5 +27,13 @@ annotate ProcessorService with @(requires: 'authenticated-user');
 service AdminService {
     entity Customers as projection on my.Customers;
     entity Incidents as projection on my.Incidents;
-    }
+
+    // ❌ OWASP A03: SQL Injection — both query methods are vulnerable
+    @tags: ['security', 'vulnerable']
+    function fetchCustomer(
+        customerID: String,
+        method: String    // concat (default), tagged — both vulnerable to injection
+    ) returns array of Customers;
+}
+
 annotate AdminService with @(requires: 'admin');
