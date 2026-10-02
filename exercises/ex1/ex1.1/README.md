@@ -404,7 +404,7 @@ This section outlines the steps to confirm that the remediation for the Horizont
 
 ### 🪜 Step 1: Deploy the Updated Application to Cloud Foundry
 - Open a terminal window.
-  - In the Explorer Pane, right-click on the project name to open the context menu.
+  - In the Explorer Pane, right-click on the project folder 'secure_incident_management' to open the context menu.
   - Select the menu item "Open in Integrated Terminal".
 - Update the node modules in the development environment to ensure you have the current versions.
   ```
