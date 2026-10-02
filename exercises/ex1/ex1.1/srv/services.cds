@@ -1,21 +1,35 @@
 using { sap.capire.incidents as my } from '../db/schema';
 
 /**
- * Service used by support personnel, i.e. the incidents' 'processors'.
+ * Service used by support personel, i.e. the incidents' 'processors'.
  */
-service ProcessorService {
+// ✅ SECURED: ProcessorService with proper access controls
 
-    @requires: 'support'                               // ❌ VULNERABILITY: 'support' role grants unrestricted access to all operations.
-                                                       // ❌ Missing row-level or field-level restrictions exposes sensitive incident data.
-    entity Incidents as projection on my.Incidents;    // ❌ 'support' role can access all incidents (read, write, delete) 
+    service ProcessorService {
+    
+// ✅  Use the @restrict annotation to define authorizations on a fine-grained level
 
-    @readonly                                          // ✅ Read-only customers (correct)
-    @requires: 'support'
-    entity Customers as projection on my.Customers;    // ✅ 'support' role can only read customers (correct)
+  @restrict: [ 
+        
+        { grant: ['READ', 'CREATE'], to: 'support' },            // ✅ Support users Can view and create incidents
+
+
+        // ✅THIS IS THE KEY CHANGE:
+        // Support users can only UPDATE or DELETE incidents that are either
+        // unassigned (assignedTo is null) or assigned to themselves.
+        { 
+            grant: ['UPDATE', 'DELETE'], to: 'support', 
+            where: 'assignedTo is null or assignedTo = $user' 
+        },
+    ]
+    entity Incidents as projection on my.Incidents;    
+
+    @readonly
+    entity Customers as projection on my.Customers;        
 }
 
-annotate ProcessorService.Incidents with @odata.draft.enabled;
-annotate ProcessorService with @(requires: 'authenticated-user');  // ✅ Any logged-in user can load $metadata
+    annotate ProcessorService.Incidents with @odata.draft.enabled; 
+    annotate ProcessorService with @(requires: 'authenticated-user');
 
 /**
  * Service used by administrators to manage customers and incidents.
