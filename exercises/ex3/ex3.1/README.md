@@ -393,16 +393,9 @@ This section evaluates the implementation of audit logging and data protection i
 - ✅ Result: Audit logs generate **SecurityEvent** for one customer entity. In your log, the timestamp matches the current timestamp.
 ```
 [odata] - POST /odata/v4/admin/Customers 
-[odata] - 403 - Error: User 'alice' is lacking required roles: [admin]
-    at ODataAdapter.check_roles [as authorize] (/home/user/projects/workshop-xp261/secure_incident_management/node_modules/@sap/cds/lib/srv/protocols/http.js:83:16)
-
-    at requires_check (/home/user/projects/incident-management/node_modules/@sap/cds/lib/srv/protocols/http.js:54:32)
-    at http_log (/home/user/projects/incident-management/node_modules/@sap/cds/lib/srv/protocols/http.js:42:59) {
-  code: '403',
-  reason: "User 'alice' is lacking required roles: [admin]",
-  user: User { id: 'alice', roles: { support: 1 } },
-  required: [ 'admin' ],
-  '@Common.numericSeverity': 4
+[odata] - 403 - [Error: User 'alice' is lacking required roles: [admin]] {
+  status: 403,
+  code: '403'
 }
 [audit-log] - SecurityEvent: {
   data: {
@@ -410,10 +403,11 @@ This section evaluates the implementation of audit logging and data protection i
     action: 'Attempt to access restricted resource "/odata/v4/admin/Customers" with insufficient authority'
   },
   ip: '::ffff:127.0.0.1',
-  uuid: 'f76c4ab8-edcd-4334-a7ee-6e971c4cb415',
+  uuid: '9eb6bf5f-12c2-4fbe-bf9a-f38de7e92df6',
   tenant: undefined,
   user: 'alice',
-  time: 2025-08-29T22:54:27.493Z
+  time: 2026-10-04T13:59:51.692Z
+}
 ```
 - ✅ Audit logs generate a **SecurityEvent** entry for the unauthorized write attempt.
 - ✅ No **PersonalDataModified** entry is created.
