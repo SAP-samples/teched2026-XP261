@@ -1,35 +1,39 @@
+// Updated srv/services.cds
+
 using { sap.capire.incidents as my } from '../db/schema';
 
 service ProcessorService {
   @restrict: [
-    { grant: ['READ', 'CREATE'], to: 'support' },
+    { grant: ['READ', 'CREATE'], to: 'support' },  // Support can view and create
     { grant: ['UPDATE', 'DELETE'], 
       to: 'support',
-      where: 'assignedTo is null or assignedTo = $user'
+      where: 'assignedTo is null or assignedTo = $user'  // Horizontal control for support
     },
-    { grant: '*', to: 'admin' }
+    { grant: '*', to: 'admin' }  // ✅ NEW: Explicit full access for admins (CREATE, READ, UPDATE, DELETE)
   ]
   entity Incidents as projection on my.Incidents;
   
   @readonly
-  entity Customers as projection on my.Customers;
+    entity Customers as projection on my.Customers;     
+
 }
 
 annotate ProcessorService.Incidents with @odata.draft.enabled; 
-annotate ProcessorService with @(requires: ['support', 'admin']);
+annotate ProcessorService with @(requires: 'authenticated-user');
 
+/**
+ * Service used by administrators to manage customers and incidents.
+ */
 service AdminService {
-  @restrict: { grant: '*', to: 'admin' }
-  @odata
-  
-  entity Customers as projection on my.Customers;
-  entity Incidents as projection on my.Incidents;
-  
-  // ✅ Add Custom Vulnerable Operation fetchCustomer to AdminService
-  // ✅ Exposed via HTTP GET  {{server}}/odata/v4/admin/fetchCustomer with JSON body
-    @tags: ['security', 'vulnerable']
-    @summary: 'Returns incident data using unvalidated input (for testing only)'
-    function fetchCustomer(customerID: String) returns array of Customers;
+    entity Customers as projection on my.Customers;
+    entity Incidents as projection on my.Incidents;
+ 
+ /* safe    → ✅ SECURE: Parameterized query  */   
+ 
+    function fetchCustomer(
+        customerID: String,
+        method: String    // method = safe,  Input automatically sanitize
+    ) returns array of Customers;
 }
 
 annotate AdminService with @(requires: 'admin');
