@@ -1,1 +1,37 @@
+@server = http://localhost:4004
+@username = incident.support@tester.sap.com
+@password = initial
 
+### 🔒 SQL INJECTION DEMO (matches your current services.js)
+# =====================================================
+# Methods implemented in services.js:
+#   - safe    → ✅ SECURE: parameterized query (WHERE ID = ?) + [customerID]
+# =====================================================
+
+### ============================================
+### PART C — SECURE (method=safe)
+### ============================================
+
+### ✅ Test C1: Legitimate Request (safe) → expect 1 row
+GET {{server}}/odata/v4/admin/fetchCustomer
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "customerID": "1004100",
+  "method": "safe"
+}
+
+### 🛡️ Test C2: Injection attempt (safe) → expect 0 rows (treated as literal parameter)
+GET {{server}}/odata/v4/admin/fetchCustomer
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "customerID": "1004100' OR '1'='1",
+  "method": "safe"
+}
+
+### 🛡️ Test C3: Multi-statement attempt (safe) → expect 0 rows (treated as literal parameter)
+GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100''; DELETE FROM sap_capire_incidents_Customers;--',method='safe')
+Authorization: Basic {{username}} {{password}}
