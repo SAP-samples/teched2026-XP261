@@ -71,60 +71,7 @@ service ProcessorService {
   entity Customers as projection on my.Customers;  // ❌ Exposes all customers data to support users.
 }
 
-annotate ProcessorService with @(requires: ['support', 'admin']); 
-
-service AdminService {
-  entity Customers as projection on my.Customers;
-  entity Incidents as projection on my.Incidents;
-}
-annotate AdminService with @(requires: 'admin');
-
-```
-
-**File**: `srv/services.js`
-```javascript
-const cds = require('@sap/cds')
-
-class ProcessorService extends cds.ApplicationService {
-  init() {
-
-    // ✅ Vertical privilege escalation fixed from Exercise 1.2
-    this.before(['UPDATE', 'DELETE'], 'Incidents', this.onModify)
-    
-    return super.init()
-  }
-
-  async onModify(req) {
-    // Fetch current incident state (status + urgency)
-    const result = await SELECT.one.from(req.subject)
-      .columns('status_code', 'urgency_code')
-      .where({ ID: req.data.ID });
-
-    if (!result) return req.reject(404, `Incident ${req.data.ID} not found`); 
-    // Check if incident is already closed
-    if (result.status_code === 'C') {
-      if (!req.user.isAdmin()) {
-        const action = req.event === 'UPDATE' ? 'modify' : 'delete';
-        return req.reject(403, `Cannot ${action} a closed incident`);
-      }
-      return;
-    }
-    
-    // Check if user is attempting to close the incident
-    if (req.data.status_code === 'C') {
-      if (result.urgency_code === 'H' && !req.user.isAdmin()) {
-        return req.reject(403, 'Only administrators can close high-urgency incidents'); 
-      }
-    }
-   
-// ❌ VULNERABILITY: Missing Audit Logging for sensitive data.
-// ❌ CRITICAL: No tracking of user access to customer records (who, what, when)
-// → Prevents security monitoring, incident investigation, and forensic analysis
-   
-  }
-}
-
-module.exports = { ProcessorService }
+... Other methods
 
 ```
 
@@ -142,7 +89,7 @@ In this workshop, a **Security Logging and Monitoring Failures** vulnerability i
 
 ### 🪜 Step 1: Start Local Development Server
 
-- ▶️ Action : Run the following command in your terminal (within SAP Business Application Studio or your local environment):
+- ▶️ Action : Open a Terminal under folder secure_incident_management and run the following command (within SAP Business Application Studio or your local environment):
   
 ```
  cds watch 
@@ -214,7 +161,7 @@ To address the identified vulnerabilities and data privacy risks, this section i
 
 ### 🪜 Step 1: Add Audit Logging Dependency
 
-- ▶️ Action : Terminate the cds watch command. Then add the `@cap-js/audit-logging` plugin to your project.
+- ▶️ Action : Terminate the cds watch command (ctrl + C). Then add the `@cap-js/audit-logging` plugin to your project.
 
 ```
 npm install @cap-js/audit-logging
@@ -446,7 +393,9 @@ This section evaluates the implementation of audit logging and data protection i
 - ✅ Result: Audit logs generate **SecurityEvent** for one customer entity. In your log, the timestamp matches the current timestamp.
 ```
 [odata] - POST /odata/v4/admin/Customers 
-[error] - 403 - Error: Forbidden
+[odata] - 403 - Error: User 'alice' is lacking required roles: [admin]
+    at ODataAdapter.check_roles [as authorize] (/home/user/projects/workshop-xp261/secure_incident_management/node_modules/@sap/cds/lib/srv/protocols/http.js:83:16)
+
     at requires_check (/home/user/projects/incident-management/node_modules/@sap/cds/lib/srv/protocols/http.js:54:32)
     at http_log (/home/user/projects/incident-management/node_modules/@sap/cds/lib/srv/protocols/http.js:42:59) {
   code: '403',
