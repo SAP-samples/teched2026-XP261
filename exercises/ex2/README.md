@@ -234,6 +234,24 @@ Authorization: Basic {{username}}:{{password}}
 
 ## 🛡️ 4. Remediation
 Now that you've identified the SQL Injection vulnerability, let's fix it by implementing secure database queries using CAP's built-in protections.
+
+- Copy the contents of [services.cds](./srv/services.cds) into your project’s srv/services.cds file.
+- Ensure the following corrected code is included in the file:
+
+'''
+  service AdminService {
+      entity Customers as projection on my.Customers;
+      entity Incidents as projection on my.Incidents;
+   
+   /* safe    → ✅ SECURE: Parameterized query  */   
+   
+      function fetchCustomer(
+          customerID: String,
+          method: String    // method = safe,  Input automatically sanitize
+      ) returns array of Customers;
+  }
+'''
+
 - Copy the contents of [services.js](./srv/services.js) into your project’s srv/services.js file.
 - Ensure the following corrected code is included in the file:
 
@@ -275,8 +293,8 @@ This section outlines the steps to confirm that the remediation for the SQL Inje
 ```
 * 💡**Note:** Ensure the deployment includes the updated [services.js](./srv/services.js) file with the secure parameterized query implementation.
 
-- Open the sql-injection-demo.http file.
-- Execute the **Test 1: Legitimate Request** by clicking on "Send Request" above line 17:
+- Open the fetchCustomer-sqlinject-remediate.http file.
+- Execute the **Test C1: Legitimate Request** by clicking on "Send Request" above line 16:
 
 ```
 GET http://localhost:4004/odata/v4/admin/fetchCustomer
@@ -285,14 +303,20 @@ Authorization: Basic incident.support@tester.sap.com:initial
 {
   "customerID": "1004100"
 }
+
+[odata] - GET /odata/v4/admin/fetchCustomer 
+✅ Using SECURE parameterized query method.
+✅ Secure parameterized query constructed (input treated as literal parameter)
+✅ Results count: 1
+
 ```
 - ✅ Result:
-  - The system returns a single customer record for ID = 1004100.
-  - This confirms that legitimate functionality remains intact after the fix.
+- The system returns a single customer record for ID = 1004100.
+- This confirms that legitimate functionality remains intact after the fix.
 
 ### 🪜 Step 2: Test Basic SQL Injection (True-Clause Attack)
 - ▶️ Action:
-  - Execute the **Test 2: Basic SQL Injection** by clicking on "Send Request" above line 29:
+  - Execute the **Test C2: Injection attempt (safe)** by clicking on "Send Request" above line 26:
 ```
   GET http://localhost:4004/odata/v4/admin/fetchCustomer
   Content-Type: application/json
@@ -300,9 +324,7 @@ Authorization: Basic incident.support@tester.sap.com:initial
   {
     "customerID": "1004100' OR '1'='1"
   }
-```
-- Result:
-```
+
   HTTP/1.1 200 OK  
   X-Powered-By: Express  
   X-Correlation-ID: 5dea2017-7c3a-46cd-9e45-0b119edce4ff  
@@ -316,22 +338,28 @@ Authorization: Basic incident.support@tester.sap.com:initial
     "@odata.context": "$metadata#Customers",
     "value": []
   }
+
+  [odata] - GET /odata/v4/admin/fetchCustomer 
+  ✅ Using SECURE parameterized query method.
+  ✅ Secure parameterized query constructed (input treated as literal parameter)
+  ✅ Results count: 0
+
 ```
-- ✅ Empty array [] returned.
-- ✅ The malicious payload ' OR '1'='1 is treated as a literal string value rather than executable SQL.
-- ✅ This confirms that the SQL Injection vulnerability has been successfully mitigated.
+- ✅ Result:
+  - Empty array [] returned.
+  - The malicious payload ' OR '1'='1 is treated as a literal string value rather than executable SQL.
+  - This confirms that the SQL Injection vulnerability has been successfully mitigated.
 
 ### 🪜 Step 3: SQL Injection -  multiple sql statements
-- ▶️ Action: Execute the **Test 3** by clicking on "Send Request" above line 42:
+- ▶️ Action: Execute the **Test C3** by clicking on "Send Request" above line 42:
 
 ```
-  GET  {{server}}/odata/v4/admin/fetchCustomer
-  Content-Type: application/json
-  Authorization: Basic {{username}}:{{password}}
+### 🛡️ Test C3: Multi-statement attempt (safe) → expect 0 rows (treated as literal parameter)
+[odata] - GET /odata/v4/admin/fetchCustomer(customerID='1004100''; DELETE FROM sap_capire_incidents_Customers;--',method='safe') 
+✅ Using SECURE parameterized query method.
+✅ Secure parameterized query constructed (input treated as literal parameter)
+✅ Results count: 0
 
-  {
-     "customerID": "1004100'; SELECT * from sap_capire_incidents_Customers;-- "
-  }
 ```
 - ✅ Result:
   - All malicious payloads fail to return unintended data or alter query behavior.
