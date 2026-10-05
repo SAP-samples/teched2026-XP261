@@ -184,7 +184,7 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
      - Click the **Edit** button.
      - In the **Roles** sections, add the 2 roles with the role name "Auditlog_Auditor". One has the application identifier "auditlog-management*", the other "auditlog-viewer*".
      - In the **Users** section, add your user as Business User:
-       -  Enter the user ID: "xp260-0XY@education.cloud.sap"
+       -  Enter the user ID: "xp261-0XY@education.cloud.sap"
        -  Select "akihlqzx8.accounts.ondemand.com (**business users**)" as Identity Provider
      - Click Save.
 
@@ -201,7 +201,7 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
 #### 🪜 Step 6. Use the SAP Audit Log Viewer service to Verify Insufficient Logging
 
 - ▶️ **Action:**
-  - Log in to the SAP BTP cockpit with your subaccount user **XP260-0xx@education.cloud.sap** and navigate to the SAP Audit Log Viewer service.
+  - Log in to the SAP BTP cockpit with your subaccount user **XP261-0xx@education.cloud.sap** and navigate to the SAP Audit Log Viewer service.
   - Apply filters for **data-modification** and **data-access** events.
   - Set the date/time range to match when the support user modified the incident record (e.g., Oct 20, 2025, 5:00 PM to Oct 20, 2025, 5:10 PM).
   - Execute the filter query
@@ -349,7 +349,7 @@ In this section, you will verify that the remediation has successfully resolved 
 - ✅**Result: The incident record is successfully updated without any access denied errors.**
 
 - ▶️ **Action: Access the SAP Audit Log Viewer service and Verify Detailed Logging**
-  - Log in  with your user (e.g., **XP260-0xx@education.cloud.sap**) to the SAP BTP cockpit and navigate to the **SAP Audit Log Viewer service**.
+  - Log in  with your user (e.g., **XP261-0xx@education.cloud.sap**) to the SAP BTP cockpit and navigate to the **SAP Audit Log Viewer service**.
   - Apply the following filters:
      - Event Type: **data-modification, data-access**
      - Date/Time Range: **Set the range to match when you performed the modification** (e.g., Oct 20, 2025, 5:00 PM to 5:10 PM)
