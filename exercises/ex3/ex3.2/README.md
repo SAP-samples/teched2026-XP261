@@ -328,7 +328,7 @@ In this section, you will verify that the remediation has successfully resolved 
   - Apply the following filters:
      - Event Type: **data-modification, data-access**
      - Date/Time Range: **Set the range to match when you performed the modification** (e.g., Oct 20, 2025, 5:00 PM to 5:10 PM)
-     - User: **Filter** by the support user account (e.g., alice.support@company.com)
+     - User: **Filter** by the support user account (e.g., alice.jones@bestrun.com)
   - Execute the filter query to retrieve the log entries.
   - Locate the log entry corresponding to your incident modification.
   - ⚠️ **Note:**: If the log entries do not show up immediately, you may have to wait a few seconds. 
@@ -339,7 +339,7 @@ In this section, you will verify that the remediation has successfully resolved 
   - Complete traceability achieved – Each modification entry includes:
     - The specific fields that were changed.
     - The exact values before and after modification.
-    - The user who made the change (alice.support@company.com).
+    - The user who made the change (alice.jones@bestrun.com).
     - The precise timestamp of the modification.
     - The DataSubjectDetails **ProcessorService.Incidents** and DataSubjectID **ProcessorService.Customers**.
 
@@ -375,7 +375,7 @@ In this section, you will verify that the remediation has successfully resolved 
   </p>
 
   - This entry clearly documents the unauthorized access attempt, including:
-    - The user trying to modify the resource (alice.support@company.com).
+    - The user trying to modify the resource (alice.jones@bestrun.com).
     - The exact resource the user tried to access.
     - The timestamp and IP address of the request.
     - The event category (audit.security-events), confirming the attempt was logged as a security event.
