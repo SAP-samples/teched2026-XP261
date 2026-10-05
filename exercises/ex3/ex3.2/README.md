@@ -182,10 +182,10 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
 - ▶️ **Action: Add Roles to the Role Collection and Assign the Role Collection to Your User**
      - In the Role Collections list, locate and click on the **auditlog-viewer role collection** you just created.
      - Click the **Edit** button.
-     - In the **Roles** sections, add the 2 roles with the role name "Auditlog_Auditor". One has the application identifier "auditlog-management*", the other "auditlog-viewer*".
+     - In the **Roles** sections, add the 3 roles with the role name "Auditlog_Auditor". One has the application identifier "auditlog-management*", the others "auditlog-viewer*".
      - In the **Users** section, add your user as Business User:
        -  Enter the user ID: "xp261-0XY@education.cloud.sap"
-       -  Select "akihlqzx8.accounts.ondemand.com (**business users**)" as Identity Provider
+       -  Select "akihlqzx8.accounts.ondemand.com (**platform users**)" as Identity Provider
      - Click Save.
 
 - ✅ **Result: Roles Successfully Assigned**
