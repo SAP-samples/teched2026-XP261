@@ -354,9 +354,9 @@ In this section, you will verify that the remediation has successfully resolved 
 #### 🪜 Step 4. Attempt Unauthorized Modification and Verify Security Event Logging
      
 - ▶️ **Action: Attempt to Modify an Incident Not Assigned to You**
-  - Log in to the incident management application UI using a support account (e.g., alice.support@company.com).
+  - Log in to the incident management application UI using a support account (e.g., alice.jones@bestrun.com).
   - Navigate to the list of incidents.
-  - Attempt to select and modify an incident that is **NOT** assigned to you (e.g., an incident assigned to bob.support@company.com).
+  - Attempt to select and modify an incident that is **NOT** assigned to you (e.g., an incident assigned to bob.smith@bestrun.com).
   
 - ✅ **Result:** The modification is **blocked** with a **403 Forbidden** error, and the incident remains unchanged.
 
