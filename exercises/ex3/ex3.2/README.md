@@ -158,7 +158,7 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
 #### 🪜 Step 4. Simulate a Support User Accessing and Updating Sensitive Incident Data
 
 - ▶️ **Action: Modify a record using the Application UI:**
-  - Log in to the incident management application UI using a support account (e.g., alice.support@company.com).
+  - Log in to the incident management application UI using a support account (e.g., alice.jones@bestrun.com).
   - Navigate to the list of incidents and select a record.
   - Modify one or more fields (e.g., Customer, Title, Urgency, Status, Message) within the record and save your updates.
 
@@ -169,7 +169,7 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
 
 - ⚠️ Note: To retrieve the audit logs for your subaccount using the SAP Audit Log Viewer service, you need to have proper authorizations. Complete the following steps before accessing the SAP Audit Log Viewer service.
 - ▶️ **Action: Create a Role Collection for SAP Audit Log Viewer service Access**
-  - Log in to the SAP BTP cockpit with your assigned user **XP260-0xx@education.cloud.sap** and navigate to your subaccount.
+  - Log in to the SAP BTP cockpit with your assigned user **XP261-0xx@education.cloud.sap** and navigate to your subaccount.
   - Go to Security > Role Collections.
   - Click the Create button.
   - Enter the following details:
