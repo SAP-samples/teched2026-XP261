@@ -241,7 +241,7 @@ annotate my.Incidents.conversation with @PersonalData : {
     - ✅ Enhanced Audit Trail: Any create, read, update, or delete operation on conversation messages will now generate detailed audit log entries, providing a forensic record for compliance audits and threat detection.
 
 ## ✅ 5. Verification
-In this section, you will verify that the remediation has successfully resolved the  [A09:2021-Security Logging and Monitoring Failures](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/) vulnerability. This verification is organized into three key areas:
+In this section, you will verify that the remediation has successfully resolved the  [A09:2021-Security Logging and Monitoring Failures](https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/) vulnerability. This verification is organized into three key areas:
  
  - *(Optional)* Verify conversation data retrieval and logging,  in your local development environment.
  - Verify that authorized modifications to sensitive data are correctly logged with full detail, capturing the context of the change.
