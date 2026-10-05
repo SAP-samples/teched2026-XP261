@@ -154,7 +154,6 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
     <b></b>
   </p>
 
-
 #### 🪜 Step 4. Simulate a Support User Accessing and Updating Sensitive Incident Data
 
 - ▶️ **Action: Modify a record using the Application UI:**
@@ -164,44 +163,20 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
 
 - ✅ **Result: The incident record is successfully updated**, and the UI reflects the changes.
 
+#### 🪜 Step 6. Use the SAP Audit Log Viewer service to Verify Insufficient Logging
 
-#### 🪜 Step 5. Configure SAP Audit Log Viewer service Access Permissions
+-  ⚠️ **Note:** SAP Audit Log Viewer is automatically available in Cloud Foundry subaccounts. Administrators no longer normally need to assign an Audit Log Viewer entitlement or create a separate subscription. Users need the relevant standard subaccount authorization, such as Subaccount Administrator or Subaccount Viewer.
 
-- ⚠️ Note: To retrieve the audit logs for your subaccount using the SAP Audit Log Viewer service, you need to have proper authorizations. Complete the following steps before accessing the SAP Audit Log Viewer service.
-- ▶️ **Action: Create a Role Collection for SAP Audit Log Viewer service Access**
-  - Log in to the SAP BTP cockpit with your assigned user **XP261-0xx@education.cloud.sap** and navigate to your subaccount.
-  - Go to Security > Role Collections.
-  - Click the Create button.
-  - Enter the following details:
-    - Role Collection Name: **auditlog-viewer**
-    - Description: **Access to Audit Log Viewer** (optional)
-  - Click Create.
+- ▶️ **Action:**
 
-- ✅ **Result: A new role collection named auditlog-viewer is created.**
+  - Log in to the SAP BTP cockpit with your subaccount user **XP261-0xx@education.cloud.sap** and navigate to  Subaccount Overview → Open in Audit Log Viewer.
 
-- ▶️ **Action: Add Roles to the Role Collection and Assign the Role Collection to Your User**
-     - In the Role Collections list, locate and click on the **auditlog-viewer role collection** you just created.
-     - Click the **Edit** button.
-     - In the **Roles** sections, add the 3 roles with the role name "Auditlog_Auditor". One has the application identifier "auditlog-management*", the others "auditlog-viewer*".
-     - In the **Users** section, add your user as Business User:
-       -  Enter the user ID: "xp261-0XY@education.cloud.sap"
-       -  Select "akihlqzx8.accounts.ondemand.com (**platform users**)" as Identity Provider
-     - Click Save.
-
-- ✅ **Result: Roles Successfully Assigned**
-    - The required roles have been added to the **auditlog-viewer** role collection, which is now assigned to your user account. This enables you to access the **SAP Audit Log Viewer service**. See screenshot:
-      
-    <p align="center">
-    <img src="images/audit-log-application-role-collections.png" alt="" width="900"/>
+  <p align="center">
+    <img src="images/open-in-audit-log-viewer.png" alt="" width="900"/>
     <br>
     <b></b>
   </p>
-
-
-#### 🪜 Step 6. Use the SAP Audit Log Viewer service to Verify Insufficient Logging
-
-- ▶️ **Action:**
-  - Log in to the SAP BTP cockpit with your subaccount user **XP261-0xx@education.cloud.sap** and navigate to the SAP Audit Log Viewer service.
+  
   - Apply filters for **data-modification** and **data-access** events.
   - Set the date/time range to match when the support user modified the incident record (e.g., Oct 20, 2025, 5:00 PM to Oct 20, 2025, 5:10 PM).
   - Execute the filter query
@@ -210,7 +185,7 @@ In this section, you will demonstrate the exploitation of the vulnerability thro
   - **You will notice that there are no entries for user Alice in the audit log.**
   - **This reveals the vulnerability:** Without @PersonalData annotations, sensitive data modifications are not properly logged for audit and compliance purposes. See screenshot:
 
-    <p align="center">
+  <p align="center">
     <img src="images/audit-log-application-no-personal-annotation.png" alt="" width="900"/>
     <br>
     <b></b>
