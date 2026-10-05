@@ -298,7 +298,7 @@ In this section, you will verify that the remediation has successfully resolved 
   
   - Log in to your SAP BTP, Cloud Foundry environment (if not already logged in):
   ```
-   cf login -a https://api.cf.eu10-005.hana.ondemand.com  --origin akihlqzx8-platform
+   cf login -a https://api.cf.eu10-005.hana.ondemand.com  --sso
   ```
   
   - Deploy the MTA to your SAP BTP, Cloud Foundry environment:
@@ -312,7 +312,7 @@ In this section, you will verify that the remediation has successfully resolved 
 #### 🪜 Step 3. Simulate Authorized Data Modification and Verify Comprehensive Logging
 
 - ▶️ **Action: Perform an Authorized Modification**
-  - Log in to the incident management application UI using a support account (e.g., alice.support@company.com).
+  - Log in to the incident management application UI using a support account (e.g., alice.jones@bestrun.com).
   - Navigate to the list of incidents and select an incident assigned to you.
   - Modify one or more sensitive fields:
      - Title – Change the incident title
