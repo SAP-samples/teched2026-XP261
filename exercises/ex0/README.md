@@ -348,8 +348,7 @@ Before launching SAP Build Work Zone, verify that the backend application is run
   <b></b>
 </p>
 
-2-  Update Content - Optional - 
-  Ensure SAP Build Work Zone has the latest content from your HTML5 application.
+2-  Update Content - Optional - : Ensure SAP Build Work Zone has the latest content from your HTML5 application.
   1. In the left navigation menu, choose the **Channel Manager** icon.
   2. Choose **Update Content** to sync the latest application metadata.
 
