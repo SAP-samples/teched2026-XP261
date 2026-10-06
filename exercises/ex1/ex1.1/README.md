@@ -424,7 +424,7 @@ This section outlines the steps to confirm that the remediation for the Horizont
   mbt build
   cf deploy mta_archives/incident-management_1.0.0.mtar
   ```
-⚠️ After deployment, if you run into issues when trying to open the application from the SAP Build Work Zone Launchpad, first of all ensure that you logged your test user out and then back in. If this does not help, ensure that the Work Zone content is up to date. Follow the instructions in [Update Content](../../ex0/README.md#61-update-content).
+⚠️ After deployment, if you run into issues when trying to open the application from the SAP Build Work Zone Launchpad, first of all ensure that you logged your test user out and then back in. If this does not help, ensure that the Work Zone content is up to date. Follow the instructions in [Update Content](../../ex0/README.md#open-sap-build-work-zone).
 
 ### 🪜 Step 2: Login as Alice (Support User)
 - ▶️ Action:
