@@ -255,6 +255,7 @@ Now that you've identified the SQL Injection vulnerability, let's fix it by impl
 - Copy the contents of [services.js](./srv/services.js) into your project’s srv/services.js file.
 - Ensure the following corrected code is included in the file:
 
+```
 // ✅ SECURE: Parameterized query using CAP’s fluent API
 this.on('fetchCustomer', async (req) => {
   const { customerID } = req.data;
