@@ -2,10 +2,10 @@ const cds = require('@sap/cds');
 
 class ProcessorService extends cds.ApplicationService {
   init() {
-    //  Validate business rules
+    // ✅ Validate business rules
     this.before(['UPDATE', 'DELETE'], 'Incidents', req => this.onModify(req));
 
-    //  Enrich before CREATE (auto‑assignment + urgency handling)
+    // ✅ Enrich before CREATE (auto‑assignment + urgency handling)
     this.before("CREATE", "Incidents", req => this.onBeforeCreate(req));
 
     return super.init();
