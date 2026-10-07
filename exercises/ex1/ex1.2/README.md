@@ -200,33 +200,35 @@ init() {
 
 ... // Other methods
 
-// ✅ NEW: Enforce admin-only operations (vertical ESC)
+  // ✅ Enforce admin-only operations (vertical ESC) on UPDATE / DELETE
   async onModify(req) {
-    // Fetch current incident state (status + urgency)
+    // ✅ Fetch current incident state (status + urgency)
     const result = await SELECT.one.from(req.subject)
       .columns('status_code', 'urgency_code')
       .where({ ID: req.data.ID });
 
     if (!result) return req.reject(404, `Incident ${req.data.ID} not found`);
 
-    // Check if incident is already closed
+    const isAdmin = req.user?.is('admin');
+
+    // ✅ Only admins can modify/delete an already-closed incident
     if (result.status_code === 'C') {
-      // ✅ NEW : Allow only admins to modify/delete closed incidents
-      if (!req.user || !req.user.is('admin')) {
+      if (!isAdmin) {
         const action = req.event === 'UPDATE' ? 'modify' : 'delete';
-        req.error(403, `Cannot ${action} a closed incident`);
+        return req.error(403, `Cannot ${action} a closed incident`); // ✅ return added
       }
-      // Admins can proceed
-      return;
+      return; // admin — allowed
     }
 
-    // ✅ UPDATE : Check if user is attempting to close the incident (status_code set to 'C')
-    if (req.data.status_code === 'C') {
-      // ✅ NEW : Block support users from closing high-urgency incidents
-      if (result.urgency_code === 'H' && (!req.user || !req.user.is('admin'))) {
-        req.error(403, 'Only administrators can close high-urgency incidents');
-      }
+    // Block support from closing a high-urgency incident.
+    // ✅ Use the INCOMING urgency (user may be changing it in this same request);
+    //         fall back to the current stored value if not supplied.
+    const incomingStatus   = req.data.status_code;
+    const effectiveUrgency = req.data.urgency_code ?? result.urgency_code;
+    if (incomingStatus === 'C' && effectiveUrgency === 'H' && !isAdmin) {
+      return req.error(403, 'Only administrators can close high-urgency incidents'); // ✅ return added
     }
+  }
 ... // Other methods
 
 module.exports = { ProcessorService }
