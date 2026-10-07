@@ -238,7 +238,7 @@ Now that you've identified the SQL Injection vulnerability, let's fix it by impl
 - Copy the contents of [services.cds](./srv/services.cds) into your project’s srv/services.cds file.
 - Ensure the following corrected code is included in the file:
 
-'''
+```
   service AdminService {
       entity Customers as projection on my.Customers;
       entity Incidents as projection on my.Incidents;
@@ -250,12 +250,11 @@ Now that you've identified the SQL Injection vulnerability, let's fix it by impl
           method: String    // method = safe,  Input automatically sanitize
       ) returns array of Customers;
   }
-'''
 
+```
 - Copy the contents of [services.js](./srv/services.js) into your project’s srv/services.js file.
 - Ensure the following corrected code is included in the file:
 
-```
 // ✅ SECURE: Parameterized query using CAP’s fluent API
 this.on('fetchCustomer', async (req) => {
   const { customerID } = req.data;
