@@ -1,15 +1,16 @@
 const cds = require('@sap/cds');
 
 class ProcessorService extends cds.ApplicationService {
-init() {
-    // ✅ Guard UPDATE, DELETE and draft activation — prevents support users from modifying,
-    // deleting, or activating drafts of closed or high-urgency incidents
-    this.before(['UPDATE', 'DELETE', 'draftActivate'], 'Incidents', req => this.onModify(req));
+  init() {
+    // ✅ Validate business rules
+    this.before(['UPDATE', 'DELETE'], 'Incidents', req => this.onModify(req));
 
-    // ✅ Retain horizontal ESC fixes (auto-assignment, urgency handling)
+    // ✅ Enrich before CREATE (auto‑assignment + urgency handling)
     this.before("CREATE", "Incidents", req => this.onBeforeCreate(req));
+
     return super.init();
   }
+
   /** ✅ Helper: Adjust urgency based on title (unchanged) */
   changeUrgencyDueToSubject(data) {
     if (!data) return;
@@ -21,51 +22,58 @@ init() {
     });
   }
 
-// ✅ NEW: Enforce admin-only operations (vertical ESC)
-async onModify(req) {
-    const id = req.data?.ID ?? req.params?.[0]?.ID;
-    if (!id) return req.reject(400, 'Missing incident ID');
-
-    // ✅ select assignedTo, used if Support user activates draft of another user's incident 
+  // ✅ Enforce admin-only operations (vertical ESC) on UPDATE / DELETE
+  async onModify(req) {
+    // Fetch current incident state (status + urgency)
     const result = await SELECT.one.from(req.subject)
-      .columns('status_code', 'urgency_code', 'assignedTo')
-      .where({ ID: id });
-    if (!result) return req.reject(404, `Incident ${id} not found`);
+      .columns('status_code', 'urgency_code')
+      .where({ ID: req.data.ID });
+
+    if (!result) return req.reject(404, `Incident ${req.data.ID} not found`);
 
     const isAdmin = req.user?.is('admin');
 
-    // ✅ NEW: Ownership enforcement — covers UPDATE, DELETE *and* draftActivate
-    //    Mirrors the @restrict where-clause: 'assignedTo is null or assignedTo = $user'
-    if (!isAdmin && result.assignedTo && result.assignedTo !== req.user.id) {
-      return req.error(403, 'You can only modify or save incidents assigned to you');
-    }
-
-    // --- existing closed-status rule ---
+    // ✅ NEW : Only admins can modify/delete an already-closed incident
     if (result.status_code === 'C') {
       if (!isAdmin) {
-        const action = req.event === 'UPDATE'        ? 'modify'
-                     : req.event === 'draftActivate' ? 'activate a draft of'
-                     : 'delete';
+        const action = req.event === 'UPDATE' ? 'modify' : 'delete';
         return req.error(403, `Cannot ${action} a closed incident`);
       }
-      return;
+      return; // admin — allowed
     }
 
-    // --- existing high-urgency close rule ---
-    if (req.data?.status_code === 'C' && result.urgency_code === 'H' && !isAdmin) {
-      return req.error(403, 'Only administrators can close high-urgency incidents');
+    // ✅ NEW :Block support from closing a high-urgency incident.
+    //  Use the INCOMING urgency (user may be changing it in this same request);
+    //  fall back to the current stored value if not supplied.
+    const incomingStatus   = req.data.status_code;
+    const effectiveUrgency = req.data.urgency_code ?? result.urgency_code;
+    if (incomingStatus === 'C' && effectiveUrgency === 'H' && !isAdmin) {
+      return req.error(403, 'Only administrators can close high-urgency incidents'); 
     }
-}
-  // ✅ Retain auto-assignment logic (unchanged)
+  }
+
+  // ✅ CREATE: auto-assignment + block support creating a Closed + High-urgency incident
   async onBeforeCreate(req) {
     const incident = req.data;
+    const isAdmin = req.user?.is('admin');
+
+    // Auto-assign to the creating support user
     if (incident.status_code === 'A' && req.user) {
       incident.assignedTo = req.user.id;
       console.log(`📝 Auto-assigned incident to ${req.user.id}`);
     }
+
+    // Title-driven urgency (may set urgency to High)
     this.changeUrgencyDueToSubject(incident);
+
+    // ✅ NEW : block support from CREATING a Closed + High-urgency incident
+    const urgencyCode = incident.urgency?.code ?? incident.urgency_code;
+    if (!isAdmin && incident.status_code === 'C' && urgencyCode === 'H') {
+      return req.error(403, 'Only administrators can close high-urgency incidents');
+    }
   }
 }
+
 class AdminService extends cds.ApplicationService {
   init() {
     this.on('fetchCustomer', async (req) => {
