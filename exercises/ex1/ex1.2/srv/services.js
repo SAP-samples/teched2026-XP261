@@ -37,7 +37,7 @@ class ProcessorService extends cds.ApplicationService {
     if (result.status_code === 'C') {
       if (!isAdmin) {
         const action = req.event === 'UPDATE' ? 'modify' : 'delete';
-        return req.error(403, `Cannot ${action} a closed incident`); // ✅ return added
+        return req.error(403, `Cannot ${action} a closed incident`);
       }
       return; // admin — allowed
     }
@@ -48,7 +48,7 @@ class ProcessorService extends cds.ApplicationService {
     const incomingStatus   = req.data.status_code;
     const effectiveUrgency = req.data.urgency_code ?? result.urgency_code;
     if (incomingStatus === 'C' && effectiveUrgency === 'H' && !isAdmin) {
-      return req.error(403, 'Only administrators can close high-urgency incidents'); // ✅ return added
+      return req.error(403, 'Only administrators can close high-urgency incidents'); 
     }
   }
 
