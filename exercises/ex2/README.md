@@ -157,7 +157,7 @@ Authorization: Basic {{username}}:{{password}}
 GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='concat')
 Authorization: Basic {{username}}:{{password}}
 
-... other method
+... other methods
 
 ### 🚨 Test B2: True-clause injection (tagged) → may return many/all rows
 GET {{server}}/odata/v4/admin/fetchCustomer(customerID='1004100'' OR ''1''=''1',method='tagged')
@@ -171,7 +171,7 @@ Authorization: Basic {{username}}:{{password}}
 
 ### 🪜 Step 2: Exploit the SQL Injection Vulnerability
 - ▶️ Action:
-  - Go to the integrated terminal. If you no longer have it open, right-click in the Explorer Pane on the project name to open the context menu. Then select the menu item "Open in Integrated Terminal".
+  - Go to the integrated terminal. If you no longer have it open, right-click in the Explorer Pane on the project secure_incident_management to open the context menu. Then select the menu item "Open in Integrated Terminal".
   - Run the following commands from the integrated terminal:
 
 ```
