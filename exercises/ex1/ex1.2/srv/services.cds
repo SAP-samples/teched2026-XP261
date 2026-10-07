@@ -28,7 +28,7 @@ service AdminService {
     entity Customers as projection on my.Customers;
     entity Incidents as projection on my.Incidents;
 
-    // ❌ OWASP A03: SQL Injection — both query methods are vulnerable
+    // ❌ OWASP A05: SQL Injection — both query methods are vulnerable
     @tags: ['security', 'vulnerable']
     function fetchCustomer(
         customerID: String,
