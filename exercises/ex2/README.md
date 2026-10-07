@@ -386,7 +386,7 @@ Whenever there’s user input involved:
   - **Test Remediation:** Verify the fix via the HTTP endpoint by testing that valid inputs succeed and SQL Injection attempts are blocked.
 
 - 🎉 **Congratulations!**
-    You have successfully remediated the  [A03:2021-Injection](https://owasp.org/Top10/A03_2021-Injection/) vulnerability and fortified your application against one of the most critical security risks. Your application now follows secure coding best practices that prevent attacker-controlled input from compromising your database. 
+    You have successfully remediated the [OWASP Top 10 A05 - Injection](https://top10.owasp.org/2025/A05_2025-Injection/) vulnerability and fortified your application against one of the most critical security risks. Your application now follows secure coding best practices that prevent attacker-controlled input from compromising your database. 
 
 👉 Next up: [Exercise 3 - Security Logging and Monitoring Failures](../ex3/README.md), where we address critical [OWASP Top 10 2021 list (A09)](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/) risks by implementing CAP's audit logging framework to detect unauthorized data access, track sensitive information flow, and ensure regulatory compliance through comprehensive security monitoring in enterprise environments.
 
