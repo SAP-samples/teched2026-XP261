@@ -226,61 +226,74 @@ As part of audit logs, there can be cases where you want to generate custom audi
   - Open 'server.js' from your project and make sure that the 403-audit logic (non-batch + batch sub-requests) are present exactly as shown here:
 
   ```
-  const cds = require('@sap/cds')
+const cds = require('@sap/cds')
+const LOG = cds.log('security')   // ✅ structured logger for audit-pipeline failures
 
-  let audit
-  
-  cds.on('served', async () => {
-    audit = await cds.connect.to('audit-log')
+let audit
+
+cds.on('served', async () => {
+  audit = await cds.connect.to('audit-log')
+})
+
+const audit_log_403 = (resource, ip) => {
+  // Guard: audit may not be initialized on the very first request
+  if (!audit) {
+    LOG.warn('audit-log service not ready; SecurityEvent not persisted for', resource)
+    return
+  }
+  // we need to start our own tx because the default tx may be burnt
+  audit.tx(async () => {
+    await audit.log('SecurityEvent', {
+      data: {
+        user: cds.context?.user?.id || 'unknown',   // ✅ null-safe context
+        action: `Attempt to access restricted resource "${resource}" with insufficient authority`
+      },
+      ip
+    })
+  }).catch(err =>
+    // ✅ never drop audit failures silently — surface via structured logger
+    LOG.error('FAILED to persist SecurityEvent audit log', err)
+  )
+}
+
+// log for non-batch requests
+cds.on('bootstrap', app => {
+  app.use((req, res, next) => {
+    req.on('close', () => {
+      if (res.statusCode == 403) {
+        const { originalUrl, ip } = req
+        audit_log_403(originalUrl, ip)
+      }
+    })
+    next()
   })
-  
-  const audit_log_403 = (resource, ip) => {
-    // we need to start our own tx because the default tx may be burnt
-    audit.tx(async () => {
-      await audit.log('SecurityEvent', {
-        data: {
-          user: cds.context.user?.id || 'unknown',
-          action: `Attempt to access restricted resource "${resource}" with insufficient authority`
-        },
-        ip
-      })
+})
+
+// log for batch subrequests
+cds.on('serving', srv => {
+  if (srv instanceof cds.ApplicationService) {
+    srv.on('error', (err, req) => {
+      if (err.code == 403) {
+        const { originalUrl, ip } = req.http.req
+        if (originalUrl.endsWith('/$batch')) audit_log_403(originalUrl.replace('/$batch', req.req.url), ip)
+      }
     })
   }
-  
-  // log for non-batch requests
-  cds.on('bootstrap', app => {
-    app.use((req, res, next) => {
-      req.on('close', () => {
-        if (res.statusCode == 403) {
-          const { originalUrl, ip } = req
-          audit_log_403(originalUrl, ip)
-        }
-      })
-      next()
-    })
-  })
-  
-  // log for batch subrequests
-  cds.on('serving', srv => {
-    if (srv instanceof cds.ApplicationService) {
-      srv.on('error', (err, req) => {
-        if (err.code == 403) {
-          const { originalUrl, ip } = req.http.req
-          if (originalUrl.endsWith('/$batch')) audit_log_403(originalUrl.replace('/$batch', req.req.url), ip)
-        }
-      })
-    }
-  })
-  
-  module.exports = cds.server
-  ```
+})
+
+module.exports = cds.server
+
+```
 - ✅ Result:
-  - The `audit_log_403` function is configured to capture **SecurityEvent** logs for all 403 Forbidden responses.
+
   - Three event handlers are implemented to enable comprehensive audit logging for security incidents like 403 Forbidden responses:
-    - `cds.on('served')`: Establishes connections to services like 'audit-log' after initialization, preparing resources for global event processing.
-    - `cds.on('bootstrap')`: Monitors HTTP response status codes for non-batch requests and triggers audit logging when a 403 error occurs.
-    - `cds.on('serving')`: Captures 403 errors within OData batch operations and logs them appropriately for service-specific events.
+      - `cds.on('served')`: Establishes connections to services like 'audit-log' after initialization, preparing resources for global event processing.
+      - `cds.on('bootstrap')`: Monitors HTTP response status codes for non-batch requests and triggers audit logging when a 403 error occurs.
+      - `cds.on('serving')`: Captures 403 errors within OData batch operations and logs them appropriately for service-specific events.
    
+  - Structured, level-controlled, production-ready output — cds.log('security') emits source-tagged entries ([security]) with proper log levels (warn/error) that integrate with SAP BTP Application Logging / Cloud Logging, unlike console.* which is unstructured stdout with no level, correlation, or retention control.
+  - The `audit_log_403` function is configured to capture **SecurityEvent** logs for all 403 Forbidden responses.
+  
 
 ## ✅ 5. Verification
 
