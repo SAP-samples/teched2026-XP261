@@ -459,7 +459,11 @@ This section evaluates the implementation of audit logging and data protection i
 - ✅ Result: Audit logs generate **SecurityEvent** for one customer entity. In your log, the timestamp matches the current timestamp.
 ```
 [odata] - POST /odata/v4/admin/Customers 
-[odata] - 403 - [Error: User 'alice' is lacking required roles: [admin]] {
+[odata] - 403 - [Error: User 'alice' is lacking required roles: [admin]
+
+... stack log
+
+{
   status: 403,
   code: '403'
 }
