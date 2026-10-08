@@ -225,7 +225,7 @@ As part of audit logs, there can be cases where you want to generate custom audi
   - Copy the contents of [server.js](./srv/server.js) into the '/srv/server.js' file.
   - Open 'server.js' from your project and make sure that the 403-audit logic (non-batch + batch sub-requests) are present exactly as shown here:
 
-  ```
+```
     const cds = require('@sap/cds')
     const LOG = cds.log('security')   // ✅ structured logger for audit-pipeline failures
     
@@ -284,6 +284,7 @@ As part of audit logs, there can be cases where you want to generate custom audi
     module.exports = cds.server
 
 ```
+
 - ✅ Result:
 
   - Three event handlers are implemented to enable comprehensive audit logging for security incidents like 403 Forbidden responses:
