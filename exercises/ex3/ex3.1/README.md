@@ -361,7 +361,7 @@ This section evaluates the implementation of audit logging and data protection i
 - ▶️ Action:
   - Open the file test/http/AdminService.http.
   - Change the username to 'incident.support@tester.sap.com' (admin role), password : 'initial'.
-  - Scroll to line 25 and replace the value of the "creditCardNo" field with "1234567890123456".
+  - Scroll to line 24 and replace the value of the "creditCardNo" field with "1234567890123456".
   - Scroll to line 13 and and click on 'Send Request' to run the 'POST {{server}}/odata/v4/admin/Customers' request.
  
 - ✅ Results: Here is a sample audit log **PersonalDataModified** for one customer entity. In your log, the timestamp matches the current timestamp.
