@@ -1,5 +1,5 @@
 # Exercise 3.1 - Audit Logging for Sensitive Data Access in Local Development
-Vulnerability: [A09:2021-Security Logging and Monitoring Failures](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/)
+Vulnerability: [A09:2021-Security Logging & Alerting Failures](https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/)
 
 ## Table of Contents
 - [📖  1. Overview](./README.md#--1-overview)
