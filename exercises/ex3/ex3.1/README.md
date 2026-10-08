@@ -126,6 +126,13 @@ In this workshop, a **Security Logging and Monitoring Failures** vulnerability i
 - ▶️ Action: 
   - Click on the link to **localhost:4004** in the terminal window to connect to your locally running CAP server.
   - Click on Customers under the Service Endpoints: **/odata/v4/processor/$metadata** section.
+
+  <p align="center">
+    <img src="images/cds-server.png" alt="" width="900"/>
+    <br>
+    <b></b>
+  </p>
+
   - Use the following credentials if required : **Username = 'alice'**,  **Password: [leave empty — no password required]**
 - Result:
   - Note: You might want to enable the checkbox **"Pretty-print"** for better readability.
