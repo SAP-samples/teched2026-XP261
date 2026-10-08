@@ -369,27 +369,86 @@ This section evaluates the implementation of audit logging and data protection i
 [odata] - POST /odata/v4/admin/Customers 
 [audit-log] - PersonalDataModified: {
   data_subject: {
-    id: { ID: 'Customers-3328541' },
+    id: { ID: 'Customers-20802721' },
     role: 'Customer',
     type: 'AdminService.Customers'
   },
-  object: { type: 'AdminService.Customers', id: { ID: 'Customers-3328541' } },
+  object: {
+    type: 'AdminService.Addresses',
+    id: { ID: '19987045-c3b4-4115-8427-59808d91e7ff' }
+  },
   attributes: [
-    { name: 'firstName', new: 'firstName-3328538' },
-    { name: 'lastName', new: 'lastName-3328538' },
-    { name: 'email', new: 'email-3328538' },
-    { name: 'phone', new: 'phone-3328538' },
-    { name: 'creditCardNo', new: '***' }
+    { name: 'city', new: 'city-19987045' },
+    { name: 'postCode', new: 'postCode-19987045' },
+    { name: 'streetAddress', new: 'streetAddress-19987045' }
   ],
-  uuid: 'dfef4d88-1d68-49e2-aa16-e198228ea14d',
+  uuid: '87973499-52eb-4539-9b7e-54ded16673dd',
   tenant: undefined,
   user: 'incident.support@tester.sap.com',
-  time: 2025-09-19T21:57:09.944Z
+  time: 2026-10-08T08:15:33.319Z
 }
+[audit-log] - PersonalDataModified: {
+  data_subject: {
+    id: { ID: 'Customers-20802721' },
+    role: 'Customer',
+    type: 'AdminService.Customers'
+  },
+  object: { type: 'AdminService.Customers', id: { ID: 'Customers-20802721' } },
+  attributes: [
+    { name: 'firstName', new: 'firstName-20802721' },
+    { name: 'lastName', new: 'lastName-20802721' },
+    { name: 'email', new: 'email-20802721' },
+    { name: 'phone', new: 'phone-20802721' },
+    { name: 'creditCardNo', new: '***' }
+  ],
+  uuid: '1e47ce02-f921-4398-96a1-7a74f0a47df7',
+  tenant: undefined,
+  user: 'incident.support@tester.sap.com',
+  time: 2026-10-08T08:15:33.319Z
+}
+[audit-log] - PersonalDataModified: {
+  data_subject: {
+    id: { ID: 'Customers-20802721' },
+    role: 'Customer',
+    type: 'AdminService.Customers'
+  },
+  object: {
+    type: 'AdminService.Addresses',
+    id: { ID: '19987046-4d1d-49e1-9b04-04ab3524d8c4' }
+  },
+  attributes: [
+    { name: 'city', new: 'city-19987046' },
+    { name: 'postCode', new: 'postCode-19987046' },
+    { name: 'streetAddress', new: 'streetAddress-19987046' }
+  ],
+  uuid: '4bd0af4f-e642-497f-9183-7acf2d5ee4b0',
+  tenant: undefined,
+  user: 'incident.support@tester.sap.com',
+  time: 2026-10-08T08:15:33.319Z
+}
+[audit-log] - SensitiveDataRead: {
+  data_subject: {
+    id: { ID: 'Customers-20802721' },
+    role: 'Customer',
+    type: 'AdminService.Customers'
+  },
+  object: { type: 'AdminService.Customers', id: { ID: 'Customers-20802721' } },
+  attributes: [ { name: 'creditCardNo' } ],
+  uuid: 'f6a9787e-1e80-4c1e-97dd-f0f4b3329984',
+  tenant: undefined,
+  user: 'incident.support@tester.sap.com',
+  time: 2026-10-08T08:15:33.319Z
+}
+
 ```
-  - ✅ Audit log generates **PersonalDataModified** entries for changes to annotated fields with @PersonalData.
-  - ✅ Audit log masks only fields explicitly annotated as sensitive.
-  - ✅ This behavior is regulated by the `@cap-js/audit-logging` plugin. For details on configuring the audit log plugin, see the [documentation](https://cap.cloud.sap/docs/guides/data-privacy/audit-logging).
+  - ✅ A single POST /odata/v4/admin/Customers automatically triggers four audit log entries — no custom code required.
+  - ✅ **PersonalDataModified** entries are generated for every field annotated with **@PersonalData.IsPotentiallyPersonal** (firstName, lastName, email, phone, city, postCode, streetAddress) showing the new value.
+  - ✅ **PersonalDataModified** entries for fields annotated with **@PersonalData.IsPotentiallySensitive** (creditCardNo) are automatically masked as *** — the value is never exposed in the audit log.
+  - ✅ An additional **SensitiveDataRead** entry is generated whenever a IsPotentiallySensitive field is read, including in POST response bodies.
+  - ✅ The data_subject block links all entries to the same individual via **@PersonalData.FieldSemantics**: 'DataSubjectID' — required for [SAP Personal Data Manager integration](https://cap.cloud.sap/docs/guides/security/dpp-pdm#cap-service-model-for-sap-personal-data-manager)
+  - ✅ Address fields are logged as DataSubjectDetails and linked back to the DataSubject (Customer), matching the EntitySemantics declared in data-privacy.cds.
+  - ✅ This behavior is regulated by the @cap-js/audit-logging plugin and the @PersonalData annotations in data-privacy.cds. see the [documentation Reference App Sample](https://cap.cloud.sap/docs/guides/security/dpp-annotations#annotated-model).
+
 
 #### 🪜 Step 5: Test Write Access to Customer Data with Support User
 - ▶️ Action:
