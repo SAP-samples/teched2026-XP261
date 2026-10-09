@@ -1,4 +1,5 @@
 const cds = require('@sap/cds');
+const LOG = cds.log('incidents');
 
 class ProcessorService extends cds.ApplicationService {
   init() {
@@ -34,7 +35,7 @@ class ProcessorService extends cds.ApplicationService {
 
     const isAdmin = req.user?.is('admin');
 
-    // ✅ NEW : Only admins can modify/delete an already-closed incident
+    // ✅ Only admins can modify/delete an already-closed incident
     if (result.status_code === 'C') {
       if (!isAdmin) {
         const action = req.event === 'UPDATE' ? 'modify' : 'delete';
@@ -43,7 +44,7 @@ class ProcessorService extends cds.ApplicationService {
       return; // admin — allowed
     }
 
-    // ✅ NEW :Block support from closing a high-urgency incident.
+    // ✅ Block support from closing a high-urgency incident.
     //  Use the INCOMING urgency (user may be changing it in this same request);
     //   fall back to the current stored value if not supplied.
     const incomingStatus   = req.data.status_code;
@@ -61,13 +62,13 @@ class ProcessorService extends cds.ApplicationService {
     // Auto-assign to the creating support user
     if (incident.status_code === 'A' && req.user) {
       incident.assignedTo = req.user.id;
-      console.log(`📝 Auto-assigned incident to ${req.user.id}`);
+      LOG.info(`📝 Auto-assigned incident to ${req.user.id}`);
     }
 
     // Title-driven urgency (may set urgency to High)
     this.changeUrgencyDueToSubject(incident);
 
-    // ✅ NEW : block support from CREATING a Closed + High-urgency incident
+    // ✅ block support from CREATING a Closed + High-urgency incident
     const urgencyCode = incident.urgency?.code ?? incident.urgency_code;
     if (!isAdmin && incident.status_code === 'C' && urgencyCode === 'H') {
       return req.reject(403, 'Only administrators can close high-urgency incidents');
@@ -80,7 +81,7 @@ class AdminService extends cds.ApplicationService {
     this.on('fetchCustomer', async (req) => {
       const { customerID } = req.data;
 
-      console.log('✅ Using SECURE parameterized query method.');
+      LOG.info('✅ Using SECURE parameterized query method.');
 
       try {
         // ✅ SECURE: Parameterized query using CAP's fluent API
@@ -88,13 +89,13 @@ class AdminService extends cds.ApplicationService {
         const query = SELECT.from('sap.capire.incidents.Customers')
                            .where({ ID: customerID });
 
-        console.log('✅ Secure parameterized query constructed (input treated as literal parameter)');
+        LOG.info('✅ Secure parameterized query constructed (input treated as literal parameter)');
 
         const results = await cds.run(query);
-        console.log('✅ Results count:', results.length);
+        LOG.info('✅ Results count:', results.length);
         return results;
       } catch (error) {
-        console.error('❌ Error:', error.message);
+        LOG.error('❌ Error:', error.message);
         return req.error(400, 'Invalid customer identifier');
       }
     });
