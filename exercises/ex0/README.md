@@ -401,6 +401,7 @@ When the scan completed, Claude Code displayed the following summary in the term
   Final Results: 6 Findings (7 reviewed and validated; 1 excluded by policy)
 
 ```
+
 | # | Severity   | Finding | OWASP Category | Component |
 |:-:|:---------|---------|---------------|-----------|
 | 1 | 🔴 Critical | SQL Injection in `AdminService.fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
@@ -439,8 +440,6 @@ secure_incident_management/
 
 **Expected result:** The `.owasp-scan` folder contains 11 files. If the folder is missing or empty, notify your session instructor.
 
-> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
-
 ### Step 2 — Open the Reviewed Findings Report
 
 Click on **`2026-10-12_secure_incident_management_REPORT.html'** to open the curated security report. 
@@ -454,8 +453,8 @@ the interactive dashboard renders like this:
   <b></b>
 </p>
 
+> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
 
-![OWASP Top 10 (2025) Reviewed Security Findings report for secure_incident_management — 6 total findings (3 Critical, 2 High, 1 Medium)](images/owasp-report-html.png)
 
 ### Step 3 — Identify the Exercise Targets
 
