@@ -49,7 +49,7 @@ Every exercise module is a self-contained lab focused on a specific vulnerabilit
 
 💡In step 4, you will replace the vulnerable version of the code with a corrected version. In most cases you will have to open the corrected file and copy the full content into the development environment. If you only copy the code snippet explaining the fixes, your application won't work. To copy the content of the file, use the button "Copy raw file" in the toolbar above the file content.
 
-This structure is designed to help you understand a vulnerability from an attacker's perspective and a defender's, see how it can impact a CAP application, and learn actionable steps to mitigate it with SAP BTP best practices. 
+This structure is designed to help you understand a vulnerability from an attacker's perspective and a defender's, see how it can impact a CAP application, and learn actionable steps to mitigate it with SAP BTP best practices. In the final exercise, you will use the AI OWASP Scanner Assistant to assess your application, verify your manual remediations, and generate a structured security report.
 
 - [Getting Started](exercises/ex0#getting-started)
 - [Exercise 1 - Broken Access Control](exercises/ex1#exercise-1---broken-access-control)
@@ -59,6 +59,7 @@ This structure is designed to help you understand a vulnerability from an attack
 - [Exercise 3 - Security Logging and Monitoring Failures](exercises/ex3/README.md)
     - [Exercise 3.1 - Audit Logging for Sensitive Data Access in Local Development](exercises/ex3/ex3.1/README.md)
     - [Exercise 3.2 - Security Event Monitoring in SAP BTP Production Environment](exercises/ex3/ex3.2/README.md)
+- [Exercise 4 - Validate Security with the AI OWASP Scanner Assistant](exercises/ex4/README.md#exercise-4---validate-security-with-the-ai-owasp-scanner-assistant)
 - [Additional Resources](exercises/resources/README.md)
 
 
