@@ -475,9 +475,6 @@ are real vulnerabilities documented in the report. They are not covered in the h
 > **Note:** A live scan takes 10-20 minutes and consumes AI Core credits. The pre-generated results are sufficient for all exercises.
 
 
-Now you are ready to start the exercises. 
-
-
 ## Summary
 
 Now that you have made yourself familiar with the setup,
