@@ -383,50 +383,35 @@ Before launching SAP Build Work Zone, verify that the backend application is run
 
 ## Review Pre-Generated AI Security Scan Results
 
-Before the workshop, an AI-powered security scan was executed against the vulnerable `secure_incident_management` codebase using the OWASP Scanner plugin for Claude Code. The scan results are **pre-populated** in your workspace to save session time and ensure consistent findings across all participants.
+Before the workshop, **AI OWASP Scanner Assistant** was executed against the vulnerable `secure_incident_management` codebase using the OWASP Scanner plugin for Claude Code. The scan results are **pre-populated** in your workspace to save session time and ensure consistent findings across all participants.
 
-> **Why pre-generated?** A live AI scan takes 5-8 minutes and produces variable results depending on LLM response timing. Pre-generating the report ensures every participant starts from the same baseline and can immediately focus on understanding the findings rather than waiting for a scan to complete.
+> **Why pre-generated?** A live AI scan takes 10-15 minutes and produces variable results depending on LLM response timing. Pre-generating the report ensures every participant starts from the same baseline and can immediately focus on understanding the findings rather than waiting for a scan to complete.
 
 When the scan completed, Claude Code displayed the following summary in the terminal:
 
 ```
   OWASP Security Scan Complete
 
-  Target: secure_incident_management (SAP CAP / BTP incident management app)
-  Date: 2026-09-29
-  Output: .owasp-scan/ directory — 10 files generated, all validated
+  Target:  secure_incident_management (SAP CAP / BTP incident management app)
+  Date:    2026-10-12
+  Edition: OWASP Top 10:2025
+  Stack:   SAP CAP · Node.js · HANA · XSUAA
+  Output:  .owasp-scan/ directory — 11 files generated, all validated
 
-  Final Results: 8 Findings
-
-  The scan identified **8 security findings** across 8 OWASP Top 10 (2025) categories. Review the findings table below:
+  Final Results: 6 Findings (7 reviewed and validated; 1 excluded by policy)
 
 ```
-
 | # | Severity   | Finding | OWASP Category | Component |
 |:-:|:---------|---------|---------------|-----------|
-| 1 | 🔴 Critical | SQL Injection via raw string concatenation in `fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
-| 2 | 🔴 Critical | Missing row-level access control on Incidents — any support user sees all records | **A01 Broken Access Control** | Backend (`srv/services.cds`) |
-| 3 | 🔴 Critical | Hardcoded mock credentials and auth bypass (`password: "initial"` in `package.json`) | **A07 Authentication Failures**, **A02 Security Misconfiguration** | Configuration (`package.json`) |
-| 4 | 🟠 High   | Pre-built `.mtar` binary artifacts committed to the repository | **A03 Supply Chain Failures** | Repository (`mta_archives/`) |
-| 5 | 🔴 Critical | PII and credit card data stored and served without encryption | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
-| 6 | 🟡 Medium   | No structured security logging or alerting — zero audit trail | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
-| 7 | 🟡 Medium   | Dev sandbox CDN scripts loaded without Subresource Integrity (SRI) | **A08 Data Integrity Failures** | Frontend (`webapp/index.html`) |
-| 8 | 🟡 Medium   | No rate limiting or brute-force protection on any endpoint | **A06 Insecure Design** | Backend (`srv/services.js`) |
+| 1 | 🔴 Critical | SQL Injection in `AdminService.fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
+| 2 | 🔴 Critical | Hardcoded plaintext credentials in source code (`package.json`) | **A07 Authentication Failures** | Configuration (`package.json`) |
+| 3 | 🔴 Critical | Missing row-level access control on Incidents (horizontal + vertical escalation) | **A01 Broken Access Control**, **A06 Insecure Design** | Backend (`srv/services.cds`) |
+| 4 | 🟠 High | Credit card numbers & PII stored without encryption or `@PersonalData` annotations | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
+| 5 | 🟠 High | No application-level security event logging | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
+| 6 | 🟡 Medium | Committed binary artifacts, no supply chain controls, missing security headers | **A03 Supply Chain Failures**, **A08 Data Integrity Failures**, **A02 Security Misconfiguration** | Repository (`mta_archives/`), Frontend (`webapp/index.html`) |
 
-**Severity Summary:** 4 Critical, 1 High, 3 Medium
+**Severity Summary:** 3 Critical, 2 High, 1 Medium
 
-```
- Top Priorities
-
-  1. Fix the SQL injection immediately — srv/services.js fetchCustomer has two
-     deliberately vulnerable code paths with a working exploit. Replace raw SQL
-     with CAP's parameterized query API.
-  2. Add row-level security — ProcessorService.Incidents exposes every incident
-     to any support user. Add @restrict with a where clause.
-  3. Remove hardcoded credentials — password: "initial" in package.json must be
-     moved out of source control.
-  4. Encrypt/mask creditCardNo — PCI-sensitive field stored and served as
-     plain text.
 ```
 
 The sections below walk through the generated report files in detail.
@@ -438,25 +423,39 @@ In the BAS Explorer, expand the following path:
 ```
 secure_incident_management/
   └── .owasp-scan/
-        ├── 2026-09-29_secure_incident_management_FINDINGS.md
-        ├── 2026-09-29_secure_incident_management_FINDINGS.json
-        ├── 2026-09-29_secure_incident_management_FINDINGS_VALIDATED.json
-        ├── 2026-09-29_secure_incident_management_FINDINGS_VALIDATION_REPORT.json
-        ├── 2026-09-29_secure_incident_management_LANDSCAPE.json
-        ├── 2026-09-29_secure_incident_management_LANDSCAPE.md
-        ├── 2026-09-29_secure_incident_management_REVIEWED_FINDINGS.md          ← primary report
-        ├── 2026-09-29_secure_incident_management_REVIEWED_FINDINGS.json
-        ├── 2026-09-29_secure_incident_management_REVIEWED_FINDINGS_FINAL.json
-        └── 2026-09-29_secure_incident_management_REVIEWED_FINDINGS_VALIDATED.json
-```
+        ├── 2026-10-12_secure_incident_management_FINDINGS.md
+        ├── 2026-10-12_secure_incident_management_FINDINGS.json
+        ├── 2026-10-12_secure_incident_management_FINDINGS_VALIDATED.json
+        ├── 2026-10-12_secure_incident_management_FINDINGS_validation_report.json
+        ├── 2026-10-12_secure_incident_management_LANDSCAPE.md
+        ├── 2026-10-12_secure_incident_management_LANDSCAPE.json
+        ├── **2026-10-12_secure_incident_management_REPORT.html                 ← interactive report**
+        ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS.md          ← primary report
+        ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS.json
+        ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS_VALIDATED.json
+        └── 2026-10-12_secure_incident_management_REVIEWED_report.json
+       
+  ```
 
-**Expected result:** The `.owasp-scan` folder contains 10 files. If the folder is missing or empty, notify your session instructor.
+**Expected result:** The `.owasp-scan` folder contains 11 files. If the folder is missing or empty, notify your session instructor.
 
 > **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
 
 ### Step 2 — Open the Reviewed Findings Report
 
-Click on **`2026-09-29_secure_incident_management_REVIEWED_FINDINGS.md`** to open the curated security report. This is the final output of the three-phase AI scan pipeline:
+Click on **`2026-10-12_secure_incident_management_REPORT.html'** to open the curated security report. 
+
+When you open **`2026-10-12_secure_incident_management_REPORT.html`** in Live Preview,
+the interactive dashboard renders like this:
+
+<p align="center">
+  <img src="images/btp-subaccount-instances-subscriptions.png" alt="" width="900"/>
+  <br>
+  <b></b>
+</p>
+
+
+![OWASP Top 10 (2025) Reviewed Security Findings report for secure_incident_management — 6 total findings (3 Critical, 2 High, 1 Medium)](images/owasp-report-html.png)
 
 | Phase | Name | Purpose |
 |-------|------|---------|
