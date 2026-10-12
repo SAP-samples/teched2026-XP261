@@ -413,9 +413,8 @@ When the scan completed, Claude Code displayed the following summary in the term
 
 **Severity Summary:** 3 Critical, 2 High, 1 Medium
 
-```
 
-The sections below walk through the generated report files in detail.
+The sections below walk through the generated report files .
 
 ### Step 1 — Locate the Scan Results
 
@@ -430,22 +429,20 @@ secure_incident_management/
         ├── 2026-10-12_secure_incident_management_FINDINGS_validation_report.json
         ├── 2026-10-12_secure_incident_management_LANDSCAPE.md
         ├── 2026-10-12_secure_incident_management_LANDSCAPE.json
-        ├── **2026-10-12_secure_incident_management_REPORT.html                 ← interactive report**
+        ├── 2026-10-12_secure_incident_management_REPORT.html                   ← interactive report
         ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS.md          ← primary report
         ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS.json
         ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS_VALIDATED.json
         └── 2026-10-12_secure_incident_management_REVIEWED_report.json
-       
-  ```
+
+```
 
 **Expected result:** The `.owasp-scan` folder contains 11 files. If the folder is missing or empty, notify your session instructor.
 
 ### Step 2 — Open the Reviewed Findings Report
 
-Click on **`2026-10-12_secure_incident_management_REPORT.html'** to open the curated security report. 
+Download and open the curated security report **`2026-10-12_secure_incident_management_REPORT.html'**. 
 
-When you open **`2026-10-12_secure_incident_management_REPORT.html`** in Live Preview,
-the interactive dashboard renders like this:
 
 <p align="center">
   <img src="images/secure_incident_management_REPORT.png" alt="" width="900"/>
