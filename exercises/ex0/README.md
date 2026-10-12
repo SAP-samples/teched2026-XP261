@@ -450,7 +450,7 @@ Download and open the curated security report **`2026-10-12_secure_incident_mana
   <b></b>
 </p>
 
-> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.md` file.
+> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.html` file.
 
 
 ### Step 3 — Identify the Exercise Targets
@@ -459,41 +459,20 @@ Three of the 6 findings map directly to the hands-on exercises you will complete
 
 | Finding | Severity | OWASP Category | Your Exercise |
 |---------|----------|---------------|---------------|
-| #2 — Missing row-level access control on Incidents | 🔴 Critical | **A01 Broken Access Control** | [Exercise 1](../ex1/README.md) |
-| #1 — SQL Injection via raw string concatenation | 🔴 Critical | **A05 Injection** | [Exercise 2](../ex2/README.md) |
-| #6 — No structured security logging or alerting | 🟡 Medium | **A09 Logging & Alerting Failures** | [Exercise 3](../ex3/README.md) |
+| #3 — Missing row-level access control on Incidents | 🔴 Critical | **A01 Broken Access Control** | [Exercise 1](../ex1/README.md) |
+| #1 — SQL Injection in `AdminService.fetchCustomer` | 🔴 Critical | **A05 Injection** | [Exercise 2](../ex2/README.md) |
+| #5 — No application-level security event logging | 🟠 High | **A09 Logging & Alerting Failures** | [Exercise 3](../ex3/README.md) |
 
-The remaining 5 findings (hardcoded credentials and auth bypass, pre-built binary artifacts, plaintext PII/credit card data, missing SRI, no rate limiting) are real vulnerabilities documented in the report. They are not covered in the hands-on exercises but represent common security gaps in cloud applications that should be addressed in a production environment.
 
-### How the Scan Was Generated (Reference)
+The remaining 3 findings :
 
-For reference, the pre-populated scan was produced using the following command in the Claude Code terminal:
+- Hardcoded plaintext credentials in source code
+- Credit card numbers & PII stored without encryption
+- Committed binary artifacts, no supply chain controls, missing security headers
 
-```
-/owasp-analysis
-```
-
-This invokes the OWASP Scanner plugin at `owasp-scan/skills/`, which reads the `secure_incident_management` codebase and executes the three-phase pipeline. The command file is located at `.claude/commands/owasp-analysis.md`.
-
-If you wish to **re-run the scan** at any point during the workshop (for example, after applying fixes), delete the existing results and run the command again:
-
-```bash
-rm -rf ~/projects/workshop-xp261/secure_incident_management/.owasp-scan/
-```
-
-Then in Claude Code:
-
-```
-/owasp-analysis
-```
+are real vulnerabilities documented in the report. They are not covered in the hands-on exercises but represent common security gaps in cloud applications that should be addressed in a production environment.
 
 > **Note:** A live scan takes 10-20 minutes and consumes AI Core credits. The pre-generated results are sufficient for all exercises.
-
-### Key Takeaway
-
-The AI scanner identified every critical vulnerability in the application — including the three you will remediate in the following exercises — in a single automated pass. This demonstrates how AI-assisted security review can compress hours of manual code review into minutes. However, the findings still require human expertise to understand, prioritize, validate in context, and fix correctly. That is what the remaining exercises will teach you.
-
----
 
 
 Now you are ready to start the exercises. 
