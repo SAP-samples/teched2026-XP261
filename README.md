@@ -9,7 +9,10 @@ This repository contains the material for the SAP TechEd 2026 session called "XP
 ## 🔎 Overview
 
 Welcome to this hands-on workshop dedicated to embedding security into your SAP BTP applications. Try it out.
-In an era where data breaches and cyber threats are constant, building secure software is not an option - it's a requirement. This workshop is designed for developers working with the SAP Cloud Application Programming Model (CAP) and Node.js. 
+In an era where data breaches and cyber threats are constant, building secure software is not an option - it's a requirement. This workshop is designed for developers working with the SAP Cloud Application Programming Model (CAP) and Node.js.
+By completing the exercises, you will gain practical experience in identifying and manually remediating common security risks from the OWASP Top 10. 
+To complete the secure development cycle, you will use the AI OWASP Scanner Assistant to assess the application, verify your remediations, and generate a structured security report with actionable, code-specific findings and supporting evidence.
+
 
 By completing the exercises, you will gain the practical skills to identify and mitigate common security risks as defined by the [OWASP Top 10 vulnerabilities](https://owasp.org/Top10/). 
 
