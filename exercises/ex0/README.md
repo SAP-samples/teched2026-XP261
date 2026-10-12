@@ -449,7 +449,7 @@ When you open **`2026-10-12_secure_incident_management_REPORT.html`** in Live Pr
 the interactive dashboard renders like this:
 
 <p align="center">
-  <img src="images/btp-subaccount-instances-subscriptions.png" alt="" width="900"/>
+  <img src="images/secure_incident_management_REPORT.png" alt="" width="900"/>
   <br>
   <b></b>
 </p>
@@ -457,17 +457,9 @@ the interactive dashboard renders like this:
 
 ![OWASP Top 10 (2025) Reviewed Security Findings report for secure_incident_management — 6 total findings (3 Critical, 2 High, 1 Medium)](images/owasp-report-html.png)
 
-| Phase | Name | Purpose |
-|-------|------|---------|
-| Phase 1 | **Discovery** | Mapped the codebase architecture: components, data flows, trust boundaries, dependencies |
-| Phase 2 | **Analysis** | Scanned the codebase against all 10 OWASP Top 10 (2025) categories with evidence-grounded findings |
-| Phase 3 | **Review** | A senior-reviewer pass that verified every finding against the code, removed false positives, and curated the final report |
-
-The review phase consolidated overlapping findings and validated each against the source code. The final report contains **8 confirmed findings** — all validated with code-level evidence.
-
 ### Step 3 — Identify the Exercise Targets
 
-Three of the 8 findings map directly to the hands-on exercises you will complete next. These are the vulnerabilities you will learn to exploit and remediate:
+Three of the 6 findings map directly to the hands-on exercises you will complete next. These are the vulnerabilities you will learn to exploit and remediate:
 
 | Finding | Severity | OWASP Category | Your Exercise |
 |---------|----------|---------------|---------------|
