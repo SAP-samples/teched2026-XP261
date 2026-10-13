@@ -59,7 +59,7 @@ This structure is designed to help you understand a vulnerability from an attack
 - [Exercise 3 - Security Logging and Monitoring Failures](exercises/ex3/README.md)
     - [Exercise 3.1 - Audit Logging for Sensitive Data Access in Local Development](exercises/ex3/ex3.1/README.md)
     - [Exercise 3.2 - Security Event Monitoring in SAP BTP Production Environment](exercises/ex3/ex3.2/README.md)
-- [Exercise 4 - Validate Security with the AI OWASP Scanner Assistant](exercises/ex4/README.md#exercise-4---validate-security-with-the-ai-owasp-scanner-assistant)
+- [Exercise 4 - Validate Security with the AI OWASP Scanner Assistant](exercises/ex4/README.md#exercise-4--validate-security-with-the-ai-owasp-scanner-assistant)
 - [Additional Resources](exercises/resources/README.md)
 
 
