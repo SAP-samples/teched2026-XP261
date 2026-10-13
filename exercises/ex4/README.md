@@ -5,9 +5,8 @@
 1. [📖 Overview](#-1-overview)
 2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works) #%EF%B8%8F-3-environment-verification
 3. [⚙️ Environment Verification](#%EF%B8%8F-3-environment-verification)
-4. [📂 Baseline Review](#-4-baseline-review)
-5. [🔄 Post-Remediation Live Verification](#-5-post-remediation-live-verification)
-6. [🏁 Summary & Next Steps](#-6-summary--next-steps)
+4. [🔄 Post-Remediation Live Verification](#-5-post-remediation-live-verification)
+5. [📌 Summary & Next Steps](#-6-summary--next-steps)
 
 ---
 
@@ -192,5 +191,120 @@ Claude Code CLI  →  LiteLLM (port 4000)  →  SAP AI Core  →  LLM
 | **2** | `./start-claude.sh` | Running — prompt active, replies to `Hello`. Keep open. |
 
 > **✅ Environment ready.** All components are installed, the LiteLLM proxy is bridging to SAP AI Core, and Claude Code answers through the full chain. Next, in **Section 4 — Baseline Review**, you'll examine the pre-generated scan findings.
+
+## 🔄 5. Post-Remediation Live Verification
+
+You have fixed three vulnerabilities by hand — **Broken Access Control** (Exercise 1), **SQL Injection** (Exercise 2), and **Security Logging** (Exercise 3). Now you will run the scanner **live** against your changed code and compare the result to the **Exercise 0 baseline** to prove the fixes worked.
+
+### 5.1 Run the Live Scan
+
+The scanner skips any phase whose output already exists, so delete the previous results first to force a full re-scan. In **Terminal 0**:
+
+```bash
+rm -rf ~/projects/workshop-xp261/secure_incident_management/.owasp-scan/
+```
+
+In **Terminal 2** (Claude Code), start the scan and confirm the target when prompted:
+
+```text
+/owasp-analysis
+```
+
+> **⚠️ Note:** A live scan takes **10–15 minutes** and uses SAP AI Core credits. Watch the four phases run in order (Discovery → Analysis → Review → Policy Exclusions) and wait for the **"OWASP Security Scan Complete"** message before opening the report.
+
+### 5.2 Open the Report
+
+When the scan finishes, open the regenerated interactive report:
+
+```text
+secure_incident_management/.owasp-scan/2026-10-13_secure_incident_management_REPORT.html
+```
+
+The dashboard header summarizes the new result:
+
+| Total | 🔴 Critical | 🟠 High | 🟡 Medium |
+| :---: | :---: | :---: | :---: |
+| **8** | **4** | **1** | **3** |
+
+A sample of the report you should expect is attached below.
+
+### 5.3 Validate Your Fixes — Baseline (Ex0) vs. Live Scan
+
+The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** in the live scan:
+
+| Exercise 0 Baseline Finding | OWASP | Your Exercise | Status in Live Scan |
+| --- | :---: | :---: | --- |
+| Missing row-level access control on Incidents | A01 | Exercise 1 | ✅ **Resolved — not detected** |
+| SQL Injection in `AdminService.fetchCustomer` | A05 | Exercise 2 | ✅ **Resolved — not detected** |
+| No application-level security event logging | A09 | Exercise 3 | ✅ **Resolved — not detected** |
+
+> **✅ Validation result:** The scanner independently re-checked the code and found **no evidence** of the A01, A05, or A09 issues. The report explicitly notes that *"the prior A09 … finding was resolved in this scan period."* Your three fixes are confirmed.
+
+### 5.4 Read the Numbers Carefully
+
+| Metric | Exercise 0 Baseline | Post-Remediation Live Scan |
+| --- | :---: | :---: |
+| **Total findings** | 6 | 8 |
+| 🔴 **Critical** | 3 | 4 |
+| 🟠 **High** | 2 | 1 |
+| 🟡 **Medium** | 1 | 3 |
+| **Targeted vulns (A01 / A05 / A09)** | 3 present | **0 remaining** ✅ |
+
+> **📌 The win is specific, not global.** Your three targeted vulnerabilities are gone, but the overall Critical count did **not** drop to zero. Two things explain this:
+> 1. **Findings you did not fix remain** — they were never part of the hands-on labs (hardcoded credentials, plaintext credit-card data, missing headers, no rate limiting, supply-chain gaps).
+> 2. **The deeper re-scan is more precise** — it re-rated the plaintext credit-card finding (A04) up to *Critical* (PCI-DSS), promoted *Missing HTTP Security Headers* (A02) and *No Rate Limiting* (A06) to *Critical*, and split the old combined supply-chain item into separate A03 findings. These are sharper findings, not new vulnerabilities you introduced.
+
+### 5.5 Findings That Remain (Out of Scope for the Labs)
+
+| # | Severity | Finding | OWASP | Production Fix |
+| :---: | :---: | --- | :---: | --- |
+| 1 | 🔴 Critical | Plaintext credit-card numbers in database seed data | A04 | Encrypt/mask PANs; stop seeding real-format card numbers |
+| 2 | 🔴 Critical | Missing HTTP security headers on Express server | A02 | Add Helmet middleware |
+| 3 | 🔴 Critical | Hardcoded development credentials with known admin password | A07 | Move secrets out of `package.json`; enforce XSUAA |
+| 4 | 🟡 Medium | External UI5 scripts loaded without Subresource Integrity | A08 | Pin CDN scripts with SRI hashes |
+| 5 | 🔴 Critical | No rate limiting on any service endpoint | A06 | Add throttling / brute-force protection |
+| 6 | 🟡 Medium | Binary build artifact not excluded by `.gitignore` | A03 | Remove `.mtar`; add it to `.gitignore` |
+| 7 | 🟠 High | No Software Composition Analysis (SCA) tooling configured | A03 | Add dependency/SCA scanning to CI |
+| 8 | 🟡 Medium | Vestigial `method` parameter in `fetchCustomer` widens attack surface | A06 | Remove the unused parameter left over from the SQL-injection fix |
+
+> **💡 Takeaway:** A clean result on your targeted categories does **not** mean the app is fully secure — it means the *specific* risks you set out to fix are gone. These eight findings are your production backlog.
+
+---
+
+## 📌 5. Summary & Next Steps
+
+### What You Accomplished
+
+- Ran a **live OWASP Top 10 (2025) scan** against your own remediated code.
+- **Validated that the three targeted vulnerabilities are eliminated:** A01 Broken Access Control, A05 Injection, and A09 Logging & Alerting Failures.
+- Learned to **read a report critically** — telling confirmed fixes apart from accepted risks and out-of-scope findings, and understanding why a deeper re-scan can re-rate or surface additional issues.
+
+### Why the AI Security Assistant Helped
+
+| Benefit | What it meant in this exercise |
+| --- | --- |
+| ⚡ **Instant feedback loop** | You validated real code fixes in minutes, in the same workspace — no waiting for an external audit cycle. |
+| 🧠 **Context-aware analysis** | The scanner understands SAP CAP / CDS / BTP semantics (`@restrict`, projections, `@PersonalData`, XSUAA), so it recognised your fixed access-control model instead of raising false alarms. |
+| 📝 **Remediation guidance** | Every finding ships with code-level evidence (file + line), an attack precondition, and a concrete fix — the report is a work plan, not just a verdict. |
+| 🔍 **Evidence-grounded & auditable** | The four-phase pipeline plus the validation gate means no finding exists without proof, and every accepted risk is logged. |
+
+### The Bigger Picture — Security in the SSDLC
+
+You now have a repeatable inner-loop pattern for secure development on SAP BTP:
+
+```text
+write  →  scan (/owasp-analysis)  →  remediate  →  re-scan  →  validate
+```
+
+This shifts security **left** — from a late, external gate to a fast, context-aware step the developer runs alongside coding.
+
+### Next Steps
+
+- Address the **remaining findings** from Section 5.5 before any production deployment, starting with the Critical items (A04 plaintext PANs, A02 headers, A07 credentials, A06 rate limiting).
+- Add `/owasp-analysis` to your team's definition of done, and wire SCA/dependency scanning into CI.
+- Continue to the workshop wrap-up and **Additional Resources** to go deeper on SAP BTP security services.
+
+> **🎉 Congratulations — you have completed Exercise 4 and the XP261 workshop.** You can now build, scan, remediate, and continuously validate secure SAP CAP applications on BTP.
+
 
 
