@@ -32,7 +32,7 @@ Welcome to the final exercise. Here you move from *fixing* vulnerabilities to *p
 
 ## 2. How AI-Driven Security Scanning Works
 
-Rather than a pattern-only linter, this workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the **OWASP Top 10 (2025)**. You invoke it from the Claude Code prompt with a single command:
+This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the **OWASP Top 10 (2025)**. You invoke it from the Claude Code prompt with a single command:
 
 ```text
 /owasp-analysis
@@ -55,7 +55,7 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage is a focused su
 
 | Phase | Role | What happens |
 | :---: | --- | --- |
-| **1 · Discovery** | Software Architect | Maps components, data flows, trust boundaries, actors, and the tech stack. Every claim must cite a real file/path. |
+| **1 · Discovery** | Software Architect |Identifies the app's components, data flows, trust boundaries, and technologies. Every finding points to the actual file where it was found. |
 | **2 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10). **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by feel." |
 | **3 · Review** | Senior Reviewer | Re-verifies each finding against the code, removes false positives, and **deduplicates** overlapping issues. Emits Markdown, JSON, and an interactive HTML report. |
 | **4 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit. |
