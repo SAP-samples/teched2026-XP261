@@ -222,9 +222,12 @@ secure_incident_management/.owasp-scan/2026-10-13_secure_incident_management_REP
 
 The dashboard header summarizes the new result:
 
-| Total | 🔴 Critical | 🟠 High | 🟡 Medium |
-| :---: | :---: | :---: | :---: |
-| **8** | **4** | **1** | **3** |
+  <p align="center">
+    <img src="images/secure_incident_management_REPORT-final.png" alt="" width="900"/>
+    <br>
+    <b></b>
+  </p>
+
 
 A sample of the report you should expect is attached below.
 
