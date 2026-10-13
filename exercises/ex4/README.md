@@ -26,7 +26,7 @@ Welcome to the final exercise. Here you move from *fixing* vulnerabilities to *p
 | --- | --- |
 | 🧩 **Application under test** | `secure_incident_management` — an SAP **CAP · Node.js · HANA · XSUAA** incident-management app. |
 | ✅ **Prerequisite** | Exercises 1–3 complete: **A01** Broken Access Control, **A05** Injection, and **A09** Logging & Alerting Failures remediated. |
-| ⏱️ **Time** | ~20–25 minutes (a live scan runs 5–8 minutes). |
+| ⏱️ **Time** | ~20–25 minutes (a live scan runs 10–15 minutes). |
 
 ---
 
@@ -72,3 +72,125 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage is a focused su
 | **Minor** | Low | Low | Medium | Medium |
 
 > **✅ You now have the mental model.** Next, in **Section 2 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
+
+## ⚙️ 3. Environment Verification
+
+Before scanning, confirm the AI Security Assistant is installed and connected end-to-end. The request chain you are validating is:
+
+```text
+Claude Code CLI  →  LiteLLM proxy (localhost:4000)  →  SAP AI Core  →  LLM (claude-sonnet-5)
+```
+
+You will use three terminals in SAP Business Application Studio (BAS). Open each with **Terminal → New Terminal**.
+
+| Terminal | Purpose |
+| :---: | --- |
+| **Terminal 0** | Run verification commands |
+| **Terminal 1** | Run the LiteLLM proxy (stays open) |
+| **Terminal 2** | Run Claude Code (stays open) |
+
+---
+
+### 3.1 Check the Pre-Installed Components — Terminal 0
+
+From the workspace root `~/projects/workshop-xp261`, run each command and confirm the expected result.
+
+```bash
+# 1. Claude Code CLI is installed
+claude --version
+#    Expected: a version string, e.g.  2.0.14 (Claude Code)
+
+# 2. LiteLLM proxy is present in its virtual environment
+ls litellm-proxy-ai-core/.venv/bin/litellm
+#    Expected: the path prints back (the file exists)
+
+# 3. OWASP Scanner plugin is present
+ls owasp-scan/skills/SKILL.md
+#    Expected: owasp-scan/skills/SKILL.md
+
+# 4. Environment variables are configured
+cat litellm-proxy-ai-core/.env
+#    Expected: three exports — LITELLM_MASTER_KEY, AICORE_RESOURCE_GROUP, AICORE_SERVICE_KEY
+```
+
+> **🔒 Security note:** `.env` holds live SAP AI Core credentials. Do not commit it or share your screen while it is open.
+
+---
+
+### 3.2 Start the LiteLLM Proxy — Terminal 1
+
+The proxy connects Claude Code to SAP AI Core. Start it and leave the terminal running for the whole exercise.
+
+```bash
+cd ~/projects/workshop-xp261
+./start-litellm.sh
+```
+
+**Expected result** — the log ends with the Uvicorn startup banner:
+
+```text
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:4000 (Press CTRL+C to quit)
+```
+
+Seeing `Uvicorn running on http://0.0.0.0:4000` means the proxy is listening on **port 4000**.
+
+> **⚠️ Troubleshooting**
+> - **`Not logged in to Cloud Foundry`** → the script runs `cf login --sso`. Open the link, copy the one-time passcode, and paste it back.
+> - **`Address already in use` (port 4000)** → an old proxy is still running. Run `pkill -9 -f "bin/litellm"` in Terminal 0, then start the script again.
+
+---
+
+### 3.3 Launch Claude Code — Terminal 2
+
+In a third terminal, start Claude Code. It auto-detects the proxy on port 4000.
+
+```bash
+cd ~/projects/workshop-xp261
+./start-claude.sh
+#    Expected: "LiteLLM detected on port 4000"
+```
+
+On the **first launch only**, answer four one-time prompts:
+
+| # | Prompt | Your answer |
+| :---: | --- | --- |
+| 1 | Confirm API key | Type **`Y`** and press Enter |
+| 2 | Terminal settings | Accept the recommended **`Shift+Enter`** keybinding |
+| 3 | Workspace trust | Select **`Yes, I trust this folder`** |
+| 4 | Bypass permissions warning | Select **`Yes, I accept`** |
+
+---
+
+### 3.4 Test the Connection
+
+At the Claude Code prompt, type a short message and press Enter:
+
+```text
+Hello
+```
+
+**Expected result:** Claude Code replies with a normal greeting. A valid reply proves the full chain works:
+
+```text
+Claude Code CLI  →  LiteLLM (port 4000)  →  SAP AI Core  →  LLM
+```
+
+> **⚠️ Troubleshooting**
+> - **`LiteLLM proxy not detected`** → Terminal 1 is not running. Go back to **3.2** and start it.
+> - **`Connection refused`** → the proxy is not reachable. In Terminal 0, run `curl http://127.0.0.1:4000/health/readiness` to confirm it responds.
+> - **HTTP 400 (Bad Request)** → a credential issue. Check that `AICORE_SERVICE_KEY` in `.env` is complete (step 3.1), then restart the proxy.
+
+---
+
+### Final State
+
+| Terminal | Command | State |
+| :---: | --- | --- |
+| **0** | `claude --version`, `ls …`, `cat …` | Idle at the prompt |
+| **1** | `./start-litellm.sh` | Running — shows `Uvicorn … 0.0.0.0:4000`. Keep open. |
+| **2** | `./start-claude.sh` | Running — prompt active, replies to `Hello`. Keep open. |
+
+> **✅ Environment ready.** All components are installed, the LiteLLM proxy is bridging to SAP AI Core, and Claude Code answers through the full chain. Next, in **Section 4 — Baseline Review**, you'll examine the pre-generated scan findings.
+
+
