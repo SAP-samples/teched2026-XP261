@@ -157,7 +157,7 @@ On the **first launch only**, answer four one-time prompts:
 | :---: | --- | --- |
 | 1 | Confirm API key | Type **`Y`** and press Enter |
 | 2 | Terminal settings | Accept the recommended **`Shift+Enter`** keybinding |
-| 3 | Workspace trust | Select **`Yes, I trust this folder`** |
+| 3 | Workspace trust | Select **`Yes, I trust this folder` workshop-xp261 ** |
 | 4 | Bypass permissions warning | Select **`Yes, I accept`** |
 
 ---
