@@ -402,6 +402,6 @@ In this exercise, you have accomplished:
 
 🎉 **Congratulations!** You have successfully remediated the **[A09:2021-Security Logging and Monitoring Failures](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/)** vulnerability and transformed your application into an **enterprise-grade, audit-compliant system** ready for production use and regulatory scrutiny.
 
-- Continue to [Exercise 4 - Validate Security with the AI OWASP Scanner Assistant](exercises/ex4/README.md#exercise-4--validate-security-with-the-ai-owasp-scanner-assistant)
+- Continue to [Exercise 4 - Validate Security with the AI OWASP Scanner Assistant](../../ex4/README.md#exercise-4--validate-security-with-the-ai-owasp-scanner-assistant)
 
 
