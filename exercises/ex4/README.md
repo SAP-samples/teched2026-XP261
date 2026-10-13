@@ -71,7 +71,7 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage is a focused su
 | **Moderate** | Low | Medium | Medium | High |
 | **Minor** | Low | Low | Medium | Medium |
 
-> **✅ You now have the mental model.** Next, in **Section 2 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
+> **✅ You now have the mental model.** Next, in **Section 3 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
 
 ## ⚙️ 3. Environment Verification
 
