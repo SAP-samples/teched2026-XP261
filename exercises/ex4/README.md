@@ -30,7 +30,7 @@ Welcome to the final exercise. Here you move from *fixing* vulnerabilities to *p
 
 ---
 
-## 2. How AI-Driven Security Scanning Works
+## 🔍 2. How AI-Driven Security Scanning Works
 
 This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the **OWASP Top 10 (2025)**. You invoke it from the Claude Code prompt with a single command:
 
