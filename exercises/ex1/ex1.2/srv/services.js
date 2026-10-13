@@ -60,7 +60,7 @@ class ProcessorService extends cds.ApplicationService {
     // Auto-assign to the creating support user
     if (incident.status_code === 'A' && req.user) {
       incident.assignedTo = req.user.id;
-      console.log(`📝 Auto-assigned incident to ${req.user.id}`);
+      console.log(`📝 Incident auto-assigned to creator`);
     }
 
     // Title-driven urgency (may set urgency to High)
