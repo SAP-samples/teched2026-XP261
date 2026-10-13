@@ -439,7 +439,7 @@ secure_incident_management/
 
 **Expected result:** The `.owasp-scan` folder contains 11 files. If the folder is missing or empty, notify your session instructor.
 
-### Step 2 — Open the Reviewed Findings Report
+### Step 2 — Open the Reviewed Security Report
 
 Download and open the curated security report **`2026-10-12_secure_incident_management_REPORT.html'**. 
 
