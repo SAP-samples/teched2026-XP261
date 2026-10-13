@@ -291,7 +291,7 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
 | 📝 **Remediation guidance** | Every finding ships with code-level evidence (file + line), an attack precondition, and a concrete fix — the report is a work plan, not just a verdict. |
 | 🔍 **Evidence-grounded & auditable** | The four-phase pipeline plus the validation gate means no finding exists without proof, and every accepted risk is logged. |
 
-### The Bigger Picture — Security in the SSDLC
+### The Bigger Picture — Security in the SSDLC (Secure Software Development Lifecycle)
 
 You now have a repeatable inner-loop pattern for secure development on SAP BTP:
 
