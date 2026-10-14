@@ -16,7 +16,7 @@ Welcome to the final exercise. Here you move from *fixing* vulnerabilities to *p
 
 ### 🎯 Key Learning Objectives
 
-- Understand the four-phase AI scanning pipeline behind the OWASP Scanner Assistant.
+- Understand the three-phase AI scanning pipeline behind the OWASP Scanner Assistant.
 - Verify that the **AI Security Assistant environment** is operational and connected end-to-end to SAP AI Core.
 - Run a **live OWASP scan** to prove your Exercise 1–3 fixes (A01, A05, A09) actually closed the vulnerabilities.
 - Read a security report critically — distinguishing confirmed fixes from **accepted risks** and out-of-scope findings.
@@ -37,29 +37,28 @@ This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (
 /owasp-analysis
 ```
 
-It runs a **four-stage, evidence-grounded pipeline**. Each stage is a focused subagent that writes its output into the project's `.owasp-scan/` folder before the next stage begins:
+It runs a **three-stage, evidence-grounded pipeline**. Each stage is a focused subagent that writes its output into the project's `.owasp-scan/` folder before the next stage begins:
 
 ```text
 
     /owasp-analysis
            │
            ▼
-┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐
-│ Phase 1            │     │ Phase 2            │     │ Phase 3            │     │ Phase 4            │
-│ DISCOVERY          │     │ ANALYSIS           │     │ REVIEW             │     │ POLICY EXCLUSIONS  │
-│ Architect          │ ──> │ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │
-│ LANDSCAPE          │     │ FINDINGS           │     │ REVIEWED + HTML    │     │ Final report       │
-└────────────────────┘     └────────────────────┘     └────────────────────┘     └────────────────────┘
+┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐
+│ Phase 1            │     │ Phase 2            │     │ Phase 3            │
+│ ANALYSIS           │     │ REVIEW             │     │ POLICY EXCLUSIONS  │
+│ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │
+│ FINDINGS           │     │ REVIEWED + HTML    │     │ Final report       │
+└────────────────────┘     └────────────────────┘     └────────────────────┘
 ```
 
 | Phase | Role | What happens |
 | :---: | --- | --- |
-| **1 · Discovery** | Software Architect |Identifies the app's components, data flows, trust boundaries, and technologies. Every finding points to the actual file where it was found. |
-| **2 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10). **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by feel." |
-| **3 · Review** | Senior Reviewer | Re-verifies each finding against the code, removes false positives, and **deduplicates** overlapping issues. Emits Markdown, JSON, and an interactive HTML report. |
-| **4 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit. |
+| **1 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10), exploring the codebase directly. **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by feel." |
+| **2 · Review** | Senior Reviewer | Re-verifies each finding against the code, removes false positives, and **deduplicates** overlapping issues. Emits Markdown, JSON, and an interactive HTML report. |
+| **3 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit. |
 
-> **🔍 Validation gate:** Between Phase 2 and Phase 3, a script (`validation/validate.py`) checks every finding against a JSON schema for structure, risk-score consistency, and component grounding. Anything that fails is dropped — so the final report contains only evidence-backed findings.
+> **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
 
 **How severity is decided.** Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
 
@@ -210,7 +209,7 @@ In **Terminal 2** (Claude Code), start the scan and confirm the target when prom
 /owasp-analysis
 ```
 
-> **⚠️ Note:** A live scan takes **10–15 minutes** and uses SAP AI Core credits. Watch the four phases run in order (Discovery → Analysis → Review → Policy Exclusions) and wait for the **"OWASP Security Scan Complete"** message before opening the report.
+> **⚠️ Note:** A live scan takes **10–15 minutes** and uses SAP AI Core credits. Watch the three phases run in order (Analysis → Review → Policy Exclusions) and wait for the **"OWASP Security Scan Complete"** message before opening the report.
 
 ### 5.2 Open the Report
 
@@ -289,7 +288,7 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
 | ⚡ **Instant feedback loop** | You validated real code fixes in minutes, in the same workspace — no waiting for an external audit cycle. |
 | 🧠 **Context-aware analysis** | The scanner understands SAP CAP / CDS / BTP semantics (`@restrict`, projections, `@PersonalData`, XSUAA), so it recognised your fixed access-control model instead of raising false alarms. |
 | 📝 **Remediation guidance** | Every finding ships with code-level evidence (file + line), an attack precondition, and a concrete fix — the report is a work plan, not just a verdict. |
-| 🔍 **Evidence-grounded & auditable** | The four-phase pipeline plus the validation gate means no finding exists without proof, and every accepted risk is logged. |
+| 🔍 **Evidence-grounded & auditable** | The three-phase pipeline plus the validation gate means no finding exists without proof, and every accepted risk is logged. |
 
 ### The Bigger Picture — Security in the SSDLC (Secure Software Development Lifecycle)
 
@@ -308,6 +307,3 @@ This shifts security **left** — from a late, external gate to a fast, context-
 - Continue to the workshop wrap-up and **Additional Resources** to go deeper on SAP BTP security services.
 
 > **🎉 Congratulations — you have completed Exercise 4 and the XP261 workshop.** You can now build, scan, remediate, and continuously validate secure SAP CAP applications on BTP.
-
-
-
