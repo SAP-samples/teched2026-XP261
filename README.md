@@ -17,7 +17,7 @@ By completing the exercises, you will gain the practical skills to identify and 
 To close the loop, you'll work with the **AI OWASP Scanner Assistant** to assess the application, verify your remediations, and generate a structured security report that gives you clear evidence, and code-level guidance you can actually act on.
 
 <p align="center">
-  <img src="images/top10-owasp.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
+  <img src="images/owasp-top10.gif" alt="Top 10 OWASP Vulnerabilities" width="900"/>
   <br>
   <b>Top 10 OWASP Vulnerabilities</b>
 </p>
