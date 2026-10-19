@@ -55,20 +55,12 @@ annotate service.Incidents with @(
             Value : title,
             Label : '{i18n>Title}',
             // 🔄 NEW: Added UI annotations for dynamic resizing
-            UI.LineItem : {
-                $Type : 'UI.LineItemType',
-                Width : 'auto', // Set to auto to allow dynamic resizing
-            }
         },
         // ✅ ADDED: Show assigned user in the list view
         {
             $Type : 'UI.DataField',
             Value : assignedTo,
             Label : '{i18n>AssignedTo}',
-            UI.LineItem : {
-                $Type : 'UI.LineItemType',
-                Width : 'auto',
-            }
         },
 
         {
@@ -76,28 +68,16 @@ annotate service.Incidents with @(
             Value : status.descr,
             Label : '{i18n>Status}',
             Criticality : status.criticality,
-            UI.LineItem : {
-                $Type : 'UI.LineItemType',
-                Width : 'auto',
-            }
         },
         {
             $Type : 'UI.DataField',
             Value : urgency.descr,
             Label : '{i18n>Urgency}',
-            UI.LineItem : {
-                $Type : 'UI.LineItemType',
-                Width : 'auto',
-            }
         },
         {
             $Type : 'UI.DataField',
             Value : customer.name,
             Label : '{i18n>Customer}',
-            UI.LineItem : {
-                $Type : 'UI.LineItemType',
-                Width : 'auto',
-            }
         },
     ],
     
@@ -105,25 +85,7 @@ annotate service.Incidents with @(
     UI.PresentationVariant: {
         $Type: 'UI.PresentationVariantType',
         Visualizations: [
-            {
-                $Type: 'UI.Chart', // Or 'UI.Table' if your main visualization is a table
-                Qualifier: 'IncidentsList', // Use the correct qualifier if different (e.g., your list report's qualifier)
-                Visualization: {
-                    $Type: 'UI.Table',
-                    ColumnOrder: [
-                        { Value: title },
-                        { Value: assignedTo },
-                        { Value: urgency.descr },
-                        { Value: status.descr },
-                        { Value: customer.name }
-                    ],
-                    // 🔄 NEW: Added UI annotations for dynamic resizing
-                    UI.TableSettings : {
-                        $Type : 'UI.TableSettingsType',
-                        AutoResizeColumns : true, // Enable auto-resizing of columns
-                    }
-                }
-            }
+            '@UI.LineItem',
         ]
     },
 
