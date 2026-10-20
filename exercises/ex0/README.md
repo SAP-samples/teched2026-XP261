@@ -45,7 +45,7 @@ The solution diagram illustrates the key components and their interactions withi
   </p>
 
 ## Access your SAP BTP Subaccount
-- Access your SAP BTP account for the session xp261 using this link: [Global Account: SAP-TechEd-2025 – Account Explorer](https://emea.cockpit.btp.cloud.sap/cockpit?idp=akihlqzx8.accounts.ondemand.com#/globalaccount/4c772782-0751-42ee-93c3-897452fdcb63/accountModel&//?section=HierarchySection&view=TreeTableView).
+- Access your SAP BTP account for the session xp261 using this link: [Global Account: SAP-TechEd-2026 – Account Explorer](https://emea.cockpit.btp.cloud.sap/cockpit/?idp=akihlqzx8.accounts.ondemand.com#/globalaccount/33a7ade5-6a9f-4ba4-a424-d111a7513f58/subaccount/847ea82e-059d-47eb-953b-f515e550c67c).
 
 - ⚠️ **Note:** You will use an SAP BTP subaccount with subaccount admin privileges. We use the Identity Authentication service tenant **akihlqzx8.accounts.ondemand.com** as custom identity provider, both for platform and application users.
 
