@@ -102,7 +102,7 @@ The solution diagram illustrates the key components and their interactions withi
   - Confirm the Following Role Collections Are Assigned :
       - **Business_Application_Studio_Administrator**
       - **Business_Application_Studio_Developer**
-      - **o	Business_Application_Studio_Extension_Deployer**
+      - **Business_Application_Studio_Extension_Deployer**
       - **Launchpad_Admin**
 
   <p align="center">
