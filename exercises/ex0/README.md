@@ -154,7 +154,7 @@ Click on the **Platform User** representation and confirm the following role col
 
 ## Review the Development Environment
  
-1- As we are using Cloud Foundry, check under **Cloud Foundry > Org Members**, if your platform user **xp261-0XX@education.cloud.sap** has **Org Manager, Org User** under **Org Roles**. 
+1- As we are using Cloud Foundry, check under **Cloud Foundry > Org Members**, if your platform user **xp261-0XX@education.cloud.sap** has **Org User** under **Org Roles**. 
 
  <p align="center">
     <img src="images/btp-subaccount-org-members.png" alt="" width="900"/>
