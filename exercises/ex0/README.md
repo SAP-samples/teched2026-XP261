@@ -170,7 +170,7 @@ Click on the **Platform User** representation and confirm the following role col
     <b></b>
   </p>
 
-3- Under Space **xp261-0XX > Space Members**, verify if your platform user **xp261-0XX@education.cloud.sap** has **Space Developer, Space Manager** under **Space Roles**.
+3- Under Space **xp261-0XX > Space Members**, verify if your platform user **xp261-0XX@education.cloud.sap** has **Space Developer, Space Auditor** under **Space Roles**.
 
  <p align="center">
     <img src="images/btp-subaccount-space-members.png" alt="" width="900"/>
