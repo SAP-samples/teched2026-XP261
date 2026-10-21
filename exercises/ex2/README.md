@@ -351,7 +351,7 @@ Authorization: Basic incident.support@tester.sap.com:initial
   - This confirms that the SQL Injection vulnerability has been successfully mitigated.
 
 ### 🪜 Step 3: SQL Injection -  multiple sql statements
-- ▶️ Action: Execute the **Test C3** by clicking on "Send Request" above line 42:
+- ▶️ Action: Execute the **Test C3** by clicking on "Send Request" above line 36:
 
 ```
 ### 🛡️ Test C3: Multi-statement attempt (safe) → expect 0 rows (treated as literal parameter)
