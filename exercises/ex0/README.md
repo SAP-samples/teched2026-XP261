@@ -92,19 +92,45 @@ The solution diagram illustrates the key components and their interactions withi
 
 - ⚠️ **Note:** In this workshop, your account **xp261-0xx@education.cloud.sap** fulfills two key roles: as a **platform administrator** for configuring role collections and infrastructure, and as a **business application user** for developing and testing secure Incident Management features. This duality simplifies the training environment by eliminating constant re-logins during exercises, but in real-world systems, strict role separation,  ensuring users hold only necessary permissions is essential.
 
-1- Check the users under **Security > Users**.
+#### Step 1 — Navigate to User Management
 
-2- Check your user **xp261-0XX@education.cloud.sap**. There will be two representations in the cockpit, one as **platform users** and one as **application users**. 
+In the SAP BTP Cockpit, go to **Security → Users**.
 
-3- Check **Role Collections** for the application Users
-  - Locate and click on the application users representation in the user management interface.
-  - Open the Role Collection Details in the right frame.
-  - Confirm the Following Role Collections Are Assigned :
-      - **Business_Application_Studio_Administrator**
-      - **Business_Application_Studio_Developer**
-      - **Business_Application_Studio_Extension_Deployer**
-      - **Launchpad_Admin**
+---
 
+#### Step 2 — Locate Your User
+
+Find your user: **`xp261-0XX@education.cloud.sap`**
+
+> **Note:** Your user will appear **twice** in the cockpit — once as a **Platform User** and once as an **Application User**. Each representation has a different set of role collections and serves a distinct purpose.
+
+---
+
+#### Step 3 — Verify Platform User Role Collection
+
+Click on the **Platform User** representation and confirm the following role collection is assigned:
+
+| Role Collection | Purpose |
+|---|---|
+| `Subaccount Viewer` | Grants read-only access to the subaccount |
+
+---
+
+#### Step 4 — Verify Application User Role Collections
+
+1. Click on the **Application User** representation in the user management interface.
+2. Open the **Role Collection Details** panel on the right.
+3. Confirm that **all** of the following role collections are assigned:
+
+| Role Collection | Purpose |
+|---|---|
+| `Business_Application_Studio_Administrator` | Manage BAS user data and dev spaces |
+| `Business_Application_Studio_Developer` | Develop and build applications in BAS |
+| `Business_Application_Studio_Extension_Deployer` | Deploy custom extensions |
+| `Launchpad_Admin` | Manage SAP Build Work Zone / Launchpad |
+
+> **Important:** If any role collections are missing, contact your instructor to have them assigned before proceeding.
+          
   <p align="center">
     <img src="images/btp-configured_platform_user.png" alt="" width="900"/>
     <br>
