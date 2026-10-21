@@ -90,20 +90,20 @@ The solution diagram illustrates the key components and their interactions withi
 
 ### Review the Configured User Access:
 
-- ⚠️ **Note:** In this workshop, your account **xp261-0xx@education.cloud.sap** fulfills two key roles: as a **platform administrator** for configuring role collections and infrastructure, and as a **business application user** for developing and testing secure Incident Management features. This duality simplifies the training environment by eliminating constant re-logins during exercises, but in real-world systems, strict role separation ensuring users hold only necessary permissions is essential.
+- ⚠️ **Note:** In this workshop, your account **xp261-0xx@education.cloud.sap** fulfills two key roles: as a **platform administrator** for configuring role collections and infrastructure, and as a **business application user** for developing and testing secure Incident Management features. This duality simplifies the training environment by eliminating constant re-logins during exercises, but in real-world systems, strict role separation,  ensuring users hold only necessary permissions is essential.
 
 1- Check the users under **Security > Users**.
 
-2- Check your user **xp261-0XX@education.cloud.sap**. There will be two representations in the cockpit, one as **platform user** and one as **business user**. 
+2- Check your user **xp261-0XX@education.cloud.sap**. There will be two representations in the cockpit, one as **platform users** and one as **application users**. 
 
-3- Check **Role Collections** for the Business User
-  - Locate and click on the business user representation in the user management interface.
+3- Check **Role Collections** for the application Users
+  - Locate and click on the application users representation in the user management interface.
   - Open the Role Collection Details in the right frame.
   - Confirm the Following Role Collections Are Assigned :
-      - **BAS_Administrator**
-      - **BAS Developer**
+      - **Business_Application_Studio_Administrator**
+      - **Business_Application_Studio_Developer**
+      - **o	Business_Application_Studio_Extension_Deployer**
       - **Launchpad_Admin**
-      - **XP261**
 
   <p align="center">
     <img src="images/btp-configured_platform_user.png" alt="" width="900"/>
