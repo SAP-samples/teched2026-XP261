@@ -221,7 +221,7 @@ annotate my.Addresses with @PersonalData : {
 As part of audit logs, there can be cases where you want to generate custom audit logs. For example, if you want to log 403 - Forbidden events when a user is not having roles but is still trying to access certain data. This can be achieved by adding custom handlers in a CAP application.
 
 - ▶️ Action:
-  - Create a new file '/srv/server.js' in your project on root-level, underneath 'secure-incident-management'
+  - Create a new file '/srv/server.js' in your project.
   - Copy the contents of [server.js](./srv/server.js) into the '/srv/server.js' file.
   - Open 'server.js' from your project and make sure that the 403-audit logic (non-batch + batch sub-requests) are present exactly as shown here:
 
