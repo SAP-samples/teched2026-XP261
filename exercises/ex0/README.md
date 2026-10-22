@@ -128,6 +128,7 @@ Click on the **Platform User** representation and confirm the following role col
 | `Business_Application_Studio_Developer` | Develop and build applications in BAS |
 | `Business_Application_Studio_Extension_Deployer` | Deploy custom extensions |
 | `Launchpad_Admin` | Manage SAP Build Work Zone / Launchpad |
+| `auditlog-viewer` | View audit logs via the SAP Audit Log Viewer service |
 
 > **Important:** If any role collections are missing, contact your instructor to have them assigned before proceeding.
           
