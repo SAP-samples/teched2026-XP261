@@ -239,7 +239,7 @@ Now after these checks, you can open the SAP Business Application Studio.
   <b></b>
 </p>
 
-- In the workspace on the right side, you will find your incident management application in the list of projects.
+- In the explorer on the right side, you will find your incident management application in the list of projects.
  <p align="center">
   <img src="images/btp-subaccount-open-BAS-folder-explorer.png" alt="" width="900"/>
   <br>
