@@ -231,9 +231,8 @@ Now after these checks, you can open the SAP Business Application Studio.
 
   - **Click the Explorer icon** in the left activity bar to open the Explorer panel.
   - **Click the Open Folder button** — this opens a folder selection dialog at the top of the screen.
-  - **Enter the following path** in the folder input field: /home/user/projects/workshop-xp261/
+  - **Enter the following path** in the folder input field: **/home/user/projects/workshop-xp261/**
   - **Click OK** to confirm and open the project in your workspace.
-  - Select **`secure_incident_management`** to navigate into the project folder.
 
  <p align="center">
   <img src="images/btp-subaccount-open-BAS-open-secure-incident-management.png" alt="" width="900"/>
