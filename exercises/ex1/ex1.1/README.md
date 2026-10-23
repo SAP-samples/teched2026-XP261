@@ -414,11 +414,8 @@ This section outlines the steps to confirm that the remediation for the Horizont
   cf login -a https://api.cf.eu10-005.hana.ondemand.com  --origin akihlqzx8-platform
   
   ```
-  - Click on provided URL to get a one-time passcode.
-  - If prompted for login, enter the origin key **akihlqzx8-platform** and click on **Sign in with alternative identity provider**.
-  - Return to terminal and type/paste the code.
-  - As you are only assigned to one org and one space, these are selected automatically.
-  - Start the build and deploy the new version. These steps may take a few minutes.
+
+- Start the build and deploy the new version. These steps may take a few minutes.
    
   ```
   mbt build
