@@ -502,8 +502,9 @@ Download and open the curated security report **`2026-10-12_secure_incident_mana
   <b></b>
 </p>
 
-> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through the detailed descriptions in the `.html` file.
-
+> **Note:**  Open 2026-10-21_secure_incident_management_REPORT.html in your browser by right-clicking the file in the BAS Explorer and selecting Download.
+The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through it before continuing 
+— understanding the evidence now will make the hands-on exercises much clearer.
 
 ### Step 3 — Identify the Exercise Targets
 
@@ -511,9 +512,9 @@ Three of the 6 findings map directly to the hands-on exercises you will complete
 
 | Finding | Severity | OWASP Category | Your Exercise |
 |---------|----------|---------------|---------------|
-| #3 — Missing row-level access control on Incidents | 🔴 Critical | **A01 Broken Access Control** | [Exercise 1](../ex1/README.md) |
 | #1 — SQL Injection in `AdminService.fetchCustomer` | 🔴 Critical | **A05 Injection** | [Exercise 2](../ex2/README.md) |
-| #5 — No application-level security event logging | 🟠 High | **A09 Logging & Alerting Failures** | [Exercise 3](../ex3/README.md) |
+| #2 — Missing row-level access control on Incidents | 🔴 Critical | **A01 Broken Access Control** | [Exercise 1](../ex1/README.md) |
+| #5 — No security audit logging| 🟡 Medium | **A09 Logging & Alerting Failures** | [Exercise 3](../ex3/README.md) |
 
 
 The remaining 3 findings :
