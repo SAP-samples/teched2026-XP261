@@ -521,7 +521,7 @@ The remaining 5 findings :
 
 - Hardcoded plaintext credentials in source code
 - Plaintext credit card Primary Account Number (PAN) in seed data CSV & PII stored without encryption
-- Committed binary artifacts, no supply chain controls.
+- No automated build validation: Pre-built .mtar binary artifacts are committed directly to the repository instead of being generated dynamically from source code in a secure CI/CD pipeline, violating supply chain integrity (OWASP A03: Supply Chain Failures).
 - No Software Composition Analysis (SCA) tool configured to scan the project's dependencies—such as libraries, packages, and modules—against Common Vulnerabilities and Exposures (CVE) databases.
 - No Subresource Integrity (SRI) configured for external SAPUI5 CDN resources, allowing unverified third-party JavaScript execution without cryptographic hash checks.
 
