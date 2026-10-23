@@ -3,8 +3,8 @@
 ## Contents
 
 1. [📖 Overview](#-1-overview)
-2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works) #%EF%B8%8F-3-environment-verification
-3. [⚙️ Environment Verification](#%EF%B8%8F-3-environment-verification)
+2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works)
+3. [⚙️ Environment Verification](#-3-environment-verification)
 4. [🔄 Post-Remediation Live Verification](#-5-post-remediation-live-verification)
 5. [📌 Summary & Next Steps](#-6-summary--next-steps)
 
