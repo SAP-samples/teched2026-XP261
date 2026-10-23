@@ -75,9 +75,7 @@ It runs a **three-stage, evidence-grounded pipeline**. Each stage is a focused s
 
 Before scanning, confirm the AI Security Assistant is installed and connected end-to-end. The request chain you are validating is:
 
-```text
 Claude Code CLI  →  LiteLLM proxy (localhost:4000)  →  SAP AI Core  →  LLM (claude-sonnet-5)
-```
 
 You will use three terminals in SAP Business Application Studio (BAS). Open each with **Terminal → New Terminal**.
 
@@ -87,7 +85,6 @@ You will use three terminals in SAP Business Application Studio (BAS). Open each
 | **Terminal 1** | Run the LiteLLM proxy (stays open) |
 | **Terminal 2** | Run Claude Code (stays open) |
 
----
 
 ### 3.1 Check the Pre-Installed Components — Terminal 0
 
