@@ -422,7 +422,7 @@ Before launching SAP Build Work Zone, verify that the backend application is run
   <b></b>
 </p>
 
-4- Click on the tile to open the incident management application and **bookmark the URL**. 
+5- Click on the tile to open the incident management application and **bookmark the URL**. 
 
 <p align="center">
   <img src="images/btp-subaccount-open-SAP-Build-Work-Zone-open-incident-management.png" alt="" width="900"/>
