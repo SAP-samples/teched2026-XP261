@@ -249,9 +249,9 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
 | 🟡 **Medium** | 1 | 3 |
 | **Targeted vulns (A01 / A05 / A09)** | 3 present | **0 remaining** ✅ |
 
-> **📌 The win is specific, not global.** Your three targeted vulnerabilities are gone, but the overall Critical count did **not** drop to zero. Two things explain this:
+> **📌 There is an improvement, but some issues remain.** Your three targeted vulnerabilities are gone, but the overall Critical count did **not** drop to zero. Two things explain this:
 > 1. **Findings you did not fix remain** — they were never part of the hands-on labs (hardcoded credentials, plaintext credit-card data, missing headers, no rate limiting, supply-chain gaps).
-> 2. **The deeper re-scan is more precise** — it re-rated the plaintext credit-card finding (A04) up to *Critical* (PCI-DSS), promoted *Missing HTTP Security Headers* (A02) and *No Rate Limiting* (A06) to *Critical*, and split the old combined supply-chain item into separate A03 findings. These are sharper findings, not new vulnerabilities you introduced.
+> 2. **The deeper re-scan is more precise** — it re-rated the plaintext credit-card finding (A04) up to *Critical* (PCI-DSS), promoted *Missing HTTP Security Headers* (A02) and *No Rate Limiting* (A06) to *Critical*, and split the old combined supply-chain item into separate A03 findings. These are more detailed findings, not new vulnerabilities you introduced.
 
 ### 5.5 Findings That Remain (Out of Scope for the Labs)
 
