@@ -414,13 +414,13 @@ Before launching SAP Build Work Zone, verify that the backend application is run
   - Open an **InPrivate / Incognito window** in your browser and paste the link.
   - Log in to the application using the business user **alice.jones@bestrun.com**.
 
-**Tip:** Using a private window allows you to run two active sessions at the same time and prevents you from being automatically logged out of your platform user (xp261-0xx@education.cloud.sap) in the SAP BTP Cockpit.
-
 <p align="center">
   <img src="images/btp-subaccount-open-SAP-Build-Work-Zone-login.png" alt="" width="900"/>
   <br>
   <b></b>
 </p>
+
+**Tip:** Using a private window allows you to run two active sessions at the same time and prevents you from being automatically logged out of your platform user (xp261-0xx@education.cloud.sap) in the SAP BTP Cockpit.
 
 5- Click on the tile to open the incident management application and **bookmark the URL**. 
 
