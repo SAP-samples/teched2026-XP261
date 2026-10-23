@@ -54,7 +54,7 @@ It runs a **three-stage, evidence-grounded pipeline**. Each stage is a focused s
 
 | Phase | Role | What happens |
 | :---: | --- | --- |
-| **1 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10), exploring the codebase directly. **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by feel." |
+| **1 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10), exploring the codebase directly. **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by gut feeling." |
 | **2 · Review** | Senior Reviewer | Re-verifies each finding against the code, removes false positives, and **deduplicates** overlapping issues. Emits Markdown, JSON, and an interactive HTML report. |
 | **3 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit. |
 
