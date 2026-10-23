@@ -508,7 +508,7 @@ The full report contains detailed evidence for each finding, including exact fil
 
 ### Step 3 — Identify the Exercise Targets
 
-Three of the 6 findings map directly to the hands-on exercises you will complete next. These are the vulnerabilities you will learn to exploit and remediate:
+Three of the 8 findings map directly to the hands-on exercises you will complete next. These are the vulnerabilities you will learn to exploit and remediate:
 
 | Finding | Severity | OWASP Category | Your Exercise |
 |---------|----------|---------------|---------------|
@@ -517,11 +517,13 @@ Three of the 6 findings map directly to the hands-on exercises you will complete
 | #5 — No security audit logging| 🟡 Medium | **A09 Logging & Alerting Failures** | [Exercise 3](../ex3/README.md) |
 
 
-The remaining 3 findings :
+The remaining 5 findings :
 
 - Hardcoded plaintext credentials in source code
-- Credit card numbers & PII stored without encryption
-- Committed binary artifacts, no supply chain controls, missing security headers
+- Plaintext credit card Primary Account Number (PAN) in seed data CSV & PII stored without encryption
+- Committed binary artifacts, no supply chain controls.
+- No Software Composition Analysis (SCA) tool configured to scan the project's dependencies—such as libraries, packages, and modules—against Common Vulnerabilities and Exposures (CVE) databases.
+- No Subresource Integrity (SRI) configured for external SAPUI5 CDN resources, allowing unverified third-party JavaScript execution without cryptographic hash checks.
 
 are real vulnerabilities documented in the report. They are not covered in the hands-on exercises but represent common security gaps in cloud applications that should be addressed in a production environment.
 
