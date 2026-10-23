@@ -91,7 +91,8 @@ The Identity Authentication tenant **akihlqzx8.accounts.ondemand.com** is config
 
 ### Review the Configured User Access:
 
-- ⚠️ **Note:** In this workshop, your account **xp261-0xx@education.cloud.sap** fulfills two key roles: as a **platform administrator** for configuring role collections and infrastructure, and as a **business application user** for developing and testing secure Incident Management features. This duality simplifies the training environment by eliminating constant re-logins during exercises, but in real-world systems, strict role separation,  ensuring users hold only necessary permissions is essential.
+- ⚠️ **Note:** In this workshop, your account **xp261-0xx@education.cloud.sap** fulfills two key roles: as a **platform user** with Subaccount Viewer access for monitoring platform resources, and as
+ **application user** for developing and testing secure Incident Management features. This setup simplifies the training environment by eliminating constant re-logins during exercises. In real-world systems, however, strict role separation is essential — users should hold only the permissions required for their specific tasks.
 
 #### Step 1 — Navigate to User Management
 
