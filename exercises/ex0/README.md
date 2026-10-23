@@ -50,7 +50,7 @@ The solution diagram illustrates the key components and their interactions withi
 - ⚠️ **Note:** You will work in your own SAP BTP subaccount with read-only (Viewer) access at the subaccount level and Cloud Foundry Org User / Space Developer rights, which allow you to deploy and run the application. 
 The Identity Authentication tenant **akihlqzx8.accounts.ondemand.com** is configured as the custom identity provider for both platform and application users.
 
-- Login to open your subaccount **xp261_0XX**, where **XX** is your seat number: 
+- [Login to open your subaccount **xp261_0XX**](https://emea.cockpit.btp.cloud.sap/cockpit/?idp=akihlqzx8.accounts.ondemand.com#/globalaccount/33a7ade5-6a9f-4ba4-a424-d111a7513f58/), where **XX** is your seat number: 
   - Username: **xp261-0XX@education.cloud.sap** ( with XX depending on your seat from 01 - 40 )
   - Password: Will be given to you as part of the session.
   - In the list of directories and subaccounts, click on the entry for your subaccount.
