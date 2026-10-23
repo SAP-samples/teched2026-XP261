@@ -442,26 +442,30 @@ When the scan completed, Claude Code displayed the following summary in the term
   OWASP Security Scan Complete
 
   Target:  secure_incident_management (SAP CAP / BTP incident management app)
-  Date:    2026-10-12
+  Date:    2026-10-21
   Edition: OWASP Top 10:2025
   Stack:   SAP CAP · Node.js · HANA · XSUAA
-  Output:  .owasp-scan/ directory — 11 files generated, all validated
+  Output directory:.owasp-scan/`
 
-  Final Results: 6 Findings (7 reviewed and validated; 1 excluded by policy)
+  Final findings summary — 8 findings after review
 
 ```
 
-| # | Severity   | Finding | OWASP Category | Component |
-|:-:|:---------|---------|---------------|-----------|
-| 1 | 🔴 Critical | SQL Injection in `AdminService.fetchCustomer` | **A05 Injection** | Backend (`srv/services.js`) |
-| 2 | 🔴 Critical | Hardcoded plaintext credentials in source code (`package.json`) | **A07 Authentication Failures** | Configuration (`package.json`) |
-| 3 | 🔴 Critical | Missing row-level access control on Incidents (horizontal + vertical escalation) | **A01 Broken Access Control**, **A06 Insecure Design** | Backend (`srv/services.cds`) |
-| 4 | 🟠 High | Credit card numbers & PII stored without encryption or `@PersonalData` annotations | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
-| 5 | 🟠 High | No application-level security event logging | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
-| 6 | 🟡 Medium | Committed binary artifacts, no supply chain controls, missing security headers | **A03 Supply Chain Failures**, **A08 Data Integrity Failures**, **A02 Security Misconfiguration** | Repository (`mta_archives/`), Frontend (`webapp/index.html`) |
+# OWASP Security Findings
 
-**Severity Summary:** 3 Critical, 2 High, 1 Medium
+| # | Severity | Finding | OWASP Category | Component |
+|---|----------|---------|----------------|-----------|
+| 1 | 🔴 Critical | SQL Injection in `AdminService.fetchCustomer` — raw SQL string interpolation passed to `cds.run()` | **A05 Injection** | Backend (`srv/services.js`) |
+| 2 | 🔴 Critical | Missing Row-Level Access Control on Incidents — no `@restrict where` (horizontal) + no DELETE handler (vertical) | **A01 Broken Access Control**, **A06 Insecure Design** | Backend (`srv/services.cds`) |
+| 3 | 🔴 Critical | Hardcoded mocked credentials with admin role committed in `package.json` | **A07 Authentication Failures** | Configuration (`package.json`) |
+| 4 | 🔴 Critical | Plaintext credit card PANs in seed data CSV, no `@PersonalData` annotation | **A04 Cryptographic Failures** | Database (`db/schema.cds`) |
+| 5 | 🟡 Medium | No SCA tool configured; all deps use `^` ranges, no Dependabot/Snyk | **A03 Supply Chain Failures** | Configuration (`package.json`) |
+| 6 | 🟡 Medium | External SAPUI5 CDN script loaded without Subresource Integrity | **A08 Data Integrity Failures** | Frontend (`webapp/index.html`) |
+| 7 | 🟡 Medium | No security audit logging; `console.log`-only, no audit-log binding in `mta.yaml` | **A09 Logging & Alerting Failures** | Backend (`srv/services.js`) |
+| 8 | ⚪ Low | Pre-built `.mtar` binary artifact committed to repository | **A03 Supply Chain Failures** | Repository (`mta_archives/`) |
 
+
+**Severity Summary:** 4 Critical, 3 Medium, 1 low
 
 The sections below walk through the generated report files .
 
@@ -472,21 +476,20 @@ In the BAS Explorer, expand the following path:
 ```
 secure_incident_management/
   └── .owasp-scan/
-        ├── 2026-10-12_secure_incident_management_FINDINGS.md
-        ├── 2026-10-12_secure_incident_management_FINDINGS.json
-        ├── 2026-10-12_secure_incident_management_FINDINGS_VALIDATED.json
-        ├── 2026-10-12_secure_incident_management_FINDINGS_validation_report.json
-        ├── 2026-10-12_secure_incident_management_LANDSCAPE.md
-        ├── 2026-10-12_secure_incident_management_LANDSCAPE.json
-        ├── 2026-10-12_secure_incident_management_REPORT.html                   ← interactive report
-        ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS.md          ← primary report
-        ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS.json
-        ├── 2026-10-12_secure_incident_management_REVIEWED_FINDINGS_VALIDATED.json
-        └── 2026-10-12_secure_incident_management_REVIEWED_report.json
-
+        | File | Purpose |
+        |------|---------|
+        ├──  `2026-10-21_secure_incident_management_FINDINGS.md` | Phase 1 analysis report (human-readable) |
+        ├──  `2026-10-21_secure_incident_management_FINDINGS.json` | Phase 1 machine-readable findings |
+        ├──  `2026-10-21_secure_incident_management_FINDINGS_VALIDATED.json` | Validated Phase 1 findings ✅ |
+        ├──  `2026-10-21_secure_incident_management_VALIDATION_REPORT.json` | Phase 1 validation log |
+        ├──  `2026-10-21_secure_incident_management_REVIEWED_FINDINGS.md` | Phase 2 reviewed report (primary report) |
+        ├──  `2026-10-21_secure_incident_management_REVIEWED_FINDINGS.json` | Phase 2 machine-readable findings |
+        ├──  `2026-10-21_secure_incident_management_REVIEWED_FINDINGS_VALIDATED.json` | Validated Phase 2 findings ✅ |
+        ├──  `2026-10-21_secure_incident_management_REVIEWED_VALIDATION_REPORT.json` | Phase 2 validation log |
+        └──  `2026-10-21_secure_incident_management_REPORT.html` | Interactive HTML dashboard |
 ```
 
-**Expected result:** The `.owasp-scan` folder contains 11 files. If the folder is missing or empty, notify your session instructor.
+**Expected result:** The `.owasp-scan` folder contains 9 files. If the folder is missing or empty, notify your session instructor.
 
 ### Step 2 — Open the Reviewed Security Report
 
