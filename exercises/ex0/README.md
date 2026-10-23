@@ -417,7 +417,7 @@ Before launching SAP Build Work Zone, verify that the backend application is run
 **Tip:** Using a private window allows you to run two active sessions at the same time and prevents you from being automatically logged out of your platform user (xp261-0xx@education.cloud.sap) in the SAP BTP Cockpit.
 
 <p align="center">
-  <img src="images/btp-subaccount-open-SAP-Build-Work-Zone-sign-out.png" alt="" width="900"/>
+  <img src="images/btp-subaccount-open-SAP-Build-Work-Zone-login.png" alt="" width="900"/>
   <br>
   <b></b>
 </p>
