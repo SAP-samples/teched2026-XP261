@@ -309,6 +309,8 @@ Once you have SAP Business Application Studio open with your secure incident man
 </p>
 
 8. Once connected, a notification message pops up in the status bar in the SAP Business Application Studio confirming that your Cloud Foundry organization and space have been set and are ready for use.
+9. In the Explorer panel, right-click the **secure-incident-management** project and select Open in Integrated Terminal.
+A terminal window opens at the bottom of your workspace, already pointing to the secure-incident-management directory.
 
 <p align="center">
   <img src="images/btp-subaccount-open-BAS-dev-UI-login-message.png" alt="" width="900"/>
