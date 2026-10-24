@@ -222,7 +222,7 @@ As part of audit logs, there can be cases where you want to generate custom audi
 
 - ▶️ Action:
   - Create a new file '/srv/server.js' in your project.
-  - Copy the contents of [server.js](./srv/server.js) into the '/srv/server.js' file.
+  - Copy the contents of [server.js](./srv/server.js) into the '/secure_incident_management/srv/server.js' file.
   - Open 'server.js' from your project and make sure that the 403-audit logic (non-batch + batch sub-requests) are present exactly as shown here:
 
 ```
