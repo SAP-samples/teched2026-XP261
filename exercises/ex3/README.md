@@ -1,7 +1,7 @@
 # Exercise 3 - Security Logging and Monitoring Failures
 
 ## 📖 Overview
-Security Logging and Monitoring Failures is a critical web application security risk, according to the [OWASP Top 10 2021 list (A09)](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/). It occurs when an application fails to properly log security events, monitor for suspicious activities, or detect unauthorized access attempts. Without adequate logging and monitoring, organizations cannot detect breaches, investigate incidents, or maintain compliance with regulatory requirements. This can manifest itself in several ways:
+Security Logging and Monitoring Failures is a critical web application security risk, according to the [OWASP Top 10 2025 list (A09)](https://top10.owasp.org/2025/A09_2025-Security_Logging_and_Alerting_Failures/). It occurs when an application fails to properly log security events, monitor for suspicious activities, or detect unauthorized access attempts. Without adequate logging and monitoring, organizations cannot detect breaches, investigate incidents, or maintain compliance with regulatory requirements. This can manifest itself in several ways:
 
 - Missing Audit Logging
 - Inadequate Log Detail
