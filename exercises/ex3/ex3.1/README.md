@@ -89,7 +89,7 @@ In this workshop, a **Security Logging and Monitoring Failures** vulnerability i
 
 ### 🪜 Step 1: Start Local Development Server
 
-- ▶️ Action : Open a Terminal under folder secure_incident_management and run the following command (within SAP Business Application Studio or your local environment):
+- ▶️ Action : Open a Terminal under  **secure_incident_management** folder and run the following command (within SAP Business Application Studio or your local environment):
   
 ```
  cds watch 
@@ -327,7 +327,7 @@ This section evaluates the implementation of audit logging and data protection i
 #### 🪜 Step 2: Set Up Local Server
 - ▶️ Action:
 
-   - Start the CDS server in watch mode from SAP Business Application Studio command line:
+   - Start the CDS server in watch mode from SAP Business Application Studio command line under **secure_incident_management** folder:
     ```
     cds watch
     ```
