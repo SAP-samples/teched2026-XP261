@@ -229,7 +229,7 @@ In **Terminal 2** (Claude Code), start the scan and confirm the target when prom
 When the scan finishes, download and open the regenerated interactive report secure_incident_management/.owasp-scan/2026-10-13_secure_incident_management_REPORT.html.
 
 
-The dashboard header summarizes the new result, see  [Sample interactive HTML security dashboard repor](https://htmlpreview.github.io/?https://github.com/SAP-samples/teched2026-XP261/blob/main/exercises/ex4/2026-10-25_secure_incident_management_REPORT.html)
+The dashboard header summarizes the new result, see  [Sample interactive HTML security dashboard report](https://htmlpreview.github.io/?https://github.com/SAP-samples/teched2026-XP261/blob/main/exercises/ex4/2026-10-25_secure_incident_management_REPORT.html)
 
 
 ### 5.3 Validate Your Fixes — Baseline (Ex0) vs. Live Scan
