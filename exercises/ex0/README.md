@@ -493,7 +493,7 @@ secure_incident_management/
 
 ### Step 2 — Open the Reviewed Security Report
 
-Open the curated [security report](https://htmlpreview.github.io/?https://github.com/SAP-samples/teched2026-XP261/blob/main/exercises/ex0/2026-10-21_secure_incident_management_REPORT.html)
+Open the curated [Interactive HTML dashboard security report](https://htmlpreview.github.io/?https://github.com/SAP-samples/teched2026-XP261/blob/main/exercises/ex0/2026-10-21_secure_incident_management_REPORT.html)
 
 <p align="center">
   <img src="images/secure_incident_management_REPORT.png" alt="" width="900"/>
