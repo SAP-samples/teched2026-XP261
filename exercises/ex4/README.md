@@ -31,13 +31,25 @@ Welcome to the final exercise. Here you move from *fixing* vulnerabilities to *p
 
 ## 🔍 2. How AI-Driven Security Scanning Works
 
-This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the [**OWASP Top 10 (2025)**](https://top10.owasp.org/2025/). You invoke it from the Claude Code prompt with a single command:
+This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the [**OWASP Top 10 (2025)**](https://top10.owasp.org/2025/). You invoke it from the Claude Code prompt with a single command  (an optional path defaults to the current project):
 
 ```text
-/owasp-analysis
+/owasp-analysis  [path/to/project]
 ```
 
-It runs a **three-stage, evidence-grounded pipeline**. Each stage is a focused subagent that writes its output into the project's `.owasp-scan/` folder before the next stage begins:
+It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its output into the project's .owasp-scan/ folder before the next stage begins: `.owasp-scan/` folder before the next stage begins:
+
+```
+    /owasp-analysis
+           │
+           ▼
+┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐
+│ Phase 1            │     │ Phase 2            │     │ Phase 3            │     │ Phase 4            │
+│ ANALYSIS           │     │ REVIEW             │     │ POLICY EXCLUSIONS  │     │ HTML DASHBOARD     │
+│ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │ ──> │ Interactive report │
+│ FINDINGS           │     │ REVIEWED + JSON    │     │ Final report       │     │ _REPORT.html       │
+└────────────────────┘     └────────────────────┘     └────────────────────┘     └────────────────────┘
+```
 
 ```text
 
