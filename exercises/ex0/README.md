@@ -517,15 +517,7 @@ Three of the 8 findings map directly to the hands-on exercises you will complete
 | #5 — No security audit logging| 🟡 Medium | **A09 Logging & Alerting Failures** | [Exercise 3](../ex3/README.md) |
 
 
-The remaining 5 findings :
-
-- Hardcoded plaintext credentials in source code
-- Plaintext credit card Primary Account Number (PAN) in seed data CSV & PII stored without encryption
-- No automated build validation: Pre-built .mtar binary artifacts are committed directly to the repository instead of being generated dynamically from source code in a secure CI/CD pipeline, violating supply chain integrity (OWASP A03: Supply Chain Failures).
-- No Software Composition Analysis (SCA) tool configured to scan the project's dependencies—such as libraries, packages, and modules—against Common Vulnerabilities and Exposures (CVE) databases.
-- No Subresource Integrity (SRI) configured for external SAPUI5 CDN resources, allowing unverified third-party JavaScript execution without cryptographic hash checks.
-
-are real vulnerabilities documented in the report. They are not covered in the hands-on exercises but represent common security gaps in cloud applications that should be addressed in a production environment.
+The remaining 5 findings are real vulnerabilities documented in the report. They are not covered in the hands-on exercises but represent common security gaps in cloud applications that should be addressed in a production environment.
 
 > **Note:** A live scan takes 10-20 minutes and consumes AI Core credits. The pre-generated results are sufficient for all exercises.
 
