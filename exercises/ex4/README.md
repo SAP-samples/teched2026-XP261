@@ -36,7 +36,7 @@ This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (
 /owasp-analysis [path/to/project]
 ```
 
-### The Four-Stage Pipeline
+### 🔄 The Four-Stage Pipeline
 
 It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its output into the project's `.owasp-scan/` folder before the next stage begins:
 
@@ -61,7 +61,7 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 
 > **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
 
-### How Severity Is Decided
+### 🧮 How Severity Is Decided
 
 Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
 
