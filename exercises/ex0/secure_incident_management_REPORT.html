@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>secure_incident_management — OWASP Security Report</title>
+<style>
+/*
+  Layout: sticky header + scrollable content, card-per-finding with severity rail
+  Color: slate-navy ground, amber/red/green semantic severity, cool-white surface
+  Type: Inter (data/UI) + Fraunces (report title accent)
+*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap');
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f6;
+  --border: #dde1ea;
+  --fg: #1a1d27;
+  --fg-2: #4a5068;
+  --fg-3: #7a8099;
+  --accent: #3b5bdb;
+
+  --crit: #c92a2a;
+  --crit-bg: #fff5f5;
+  --crit-border: #ffa8a8;
+
+  --high: #d9480f;
+  --high-bg: #fff4ed;
+  --high-border: #ffc078;
+
+  --med: #e67700;
+  --med-bg: #fffbf0;
+  --med-border: #ffe066;
+
+  --low: #2f9e44;
+  --low-bg: #f0fff4;
+  --low-border: #8ce99a;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface-2: #1f2335;
+    --border: #2c3152;
+    --fg: #e8eaf2;
+    --fg-2: #9ba3c4;
+    --fg-3: #5c6480;
+    --accent: #748ffc;
+
+    --crit: #ff6b6b;
+    --crit-bg: #1f0a0a;
+    --crit-border: #6b1717;
+
+    --high: #ff922b;
+    --high-bg: #1f0f04;
+    --high-border: #6b3205;
+
+    --med: #ffd43b;
+    --med-bg: #1a1500;
+    --med-border: #6b5800;
+
+    --low: #69db7c;
+    --low-bg: #051209;
+    --low-border: #1a4a23;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1117;
+  --surface: #181c27;
+  --surface-2: #1f2335;
+  --border: #2c3152;
+  --fg: #e8eaf2;
+  --fg-2: #9ba3c4;
+  --fg-3: #5c6480;
+  --accent: #748ffc;
+
+  --crit: #ff6b6b;
+  --crit-bg: #1f0a0a;
+  --crit-border: #6b1717;
+
+  --high: #ff922b;
+  --high-bg: #1f0f04;
+  --high-border: #6b3205;
+
+  --med: #ffd43b;
+  --med-bg: #1a1500;
+  --med-border: #6b5800;
+
+  --low: #69db7c;
+  --low-bg: #051209;
+  --low-border: #1a4a23;
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 16px;
+  padding-block: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100%;
+}
+
+/* ── Header ── */
+.site-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 52px;
+}
+
+.site-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: .01em;
+}
+
+.site-header .logo svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.header-meta {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+.badge-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+.badge-count.crit { background: var(--crit-bg); color: var(--crit); border: 1px solid var(--crit-border); }
+.badge-count.high { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); }
+.badge-count.med  { background: var(--med-bg);  color: var(--med);  border: 1px solid var(--med-border);  }
+
+/* ── Page wrap ── */
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-block: 40px;
+}
+
+/* ── Hero ── */
+.hero {
+  margin-bottom: 36px;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  text-wrap: balance;
+  color: var(--fg);
+}
+
+.hero h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--fg-2);
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--fg-2);
+  max-width: 540px;
+  line-height: 1.65;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+.meta-row span strong {
+  color: var(--fg-2);
+  font-weight: 600;
+}
+
+/* ── Summary tiles ── */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tile::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+.tile.crit::before { background: var(--crit); }
+.tile.high::before { background: var(--high); }
+.tile.med::before  { background: var(--med);  }
+.tile.total::before { background: var(--accent); }
+
+.tile-num {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.tile.crit .tile-num { color: var(--crit); }
+.tile.high .tile-num { color: var(--high); }
+.tile.med  .tile-num { color: var(--med);  }
+.tile.total .tile-num { color: var(--accent); }
+
+.tile-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/* ── Section heading ── */
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Finding cards ── */
+.findings { display: flex; flex-direction: column; gap: 12px; margin-bottom: 44px; }
+
+.finding-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.finding-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.finding-header:hover { background: var(--surface-2); }
+
+.sev-rail {
+  width: 4px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  align-self: stretch;
+  margin-top: 2px;
+  min-height: 20px;
+}
+.crit .sev-rail { background: var(--crit); }
+.high .sev-rail { background: var(--high); }
+.med  .sev-rail { background: var(--med);  }
+
+.finding-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+  margin-top: 1px;
+}
+
+.finding-main { flex: 1; min-width: 0; }
+
+.finding-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.finding-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  line-height: 1.3;
+}
+
+.sev-pill {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+.crit .sev-pill { background: var(--crit-bg); color: var(--crit); border: 1px solid var(--crit-border); }
+.high .sev-pill { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); }
+.med  .sev-pill { background: var(--med-bg);  color: var(--med);  border: 1px solid var(--med-border);  }
+
+.finding-meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-size: 11px;
+  color: var(--fg-3);
+  font-weight: 500;
+}
+.chip strong { color: var(--fg-2); font-weight: 600; }
+
+.chevron {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--fg-3);
+  transition: transform .2s ease;
+  margin-top: 3px;
+}
+.finding-card.open .chevron { transform: rotate(180deg); }
+
+/* ── Finding body (collapsible) ── */
+.finding-body {
+  display: none;
+  padding: 0 18px 18px 18px;
+  border-top: 1px solid var(--border);
+}
+.finding-card.open .finding-body { display: block; }
+
+.finding-body h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin: 16px 0 6px;
+}
+
+.finding-body p {
+  font-size: 13px;
+  color: var(--fg-2);
+  margin: 0 0 10px;
+  line-height: 1.65;
+}
+
+.evidence-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evidence-list li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: var(--fg-2);
+}
+
+.evidence-list li::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.rec-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--fg-2);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.rec-box ol {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.rec-box ol li {
+  margin-bottom: 4px;
+}
+
+.precond-box {
+  background: var(--surface-2);
+  border-left: 3px solid var(--border);
+  border-radius: 0 6px 6px 0;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: var(--fg-2);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+/* ── Review log ── */
+.review-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.review-table th {
+  background: var(--surface-2);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.review-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-2);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.review-table tr:last-child td { border-bottom: none; }
+
+.disp {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  padding: 2px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.disp.kept    { background: var(--low-bg);  color: var(--low);  border: 1px solid var(--low-border);  }
+.disp.mod     { background: var(--med-bg);  color: var(--med);  border: 1px solid var(--med-border);  }
+.disp.removed { background: var(--surface-2); color: var(--fg-3); border: 1px solid var(--border); }
+
+/* ── Policy exclusions note ── */
+.policy-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 36px;
+  font-size: 13px;
+  color: var(--fg-2);
+}
+
+.policy-note h3 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin: 0 0 10px;
+}
+
+.excl-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.excl-label {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--fg-3);
+  margin-top: 1px;
+}
+
+/* ── Footer ── */
+.report-footer {
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--fg-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 500px) {
+  .site-header { padding: 0 16px; gap: 8px; }
+  .header-meta { display: none; }
+  .page { padding-block: 28px; }
+  .finding-header { gap: 10px; }
+  .finding-num { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="logo">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 2L3 5.5V10C3 13.866 6.13401 17.396 10 18C13.866 17.396 17 13.866 17 10V5.5L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    OWASP Top 10:2025 Security Report
+  </div>
+  <div class="header-meta">
+    <span class="badge-count crit">3 Critical</span>
+    <span class="badge-count high">2 High</span>
+    <span class="badge-count med">3 Medium</span>
+  </div>
+</header>
+
+<!-- Main content -->
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Security Findings Report</div>
+    <h1>secure_incident_management<br><em>Reviewed Security Findings</em></h1>
+    <p class="hero-sub">8 findings across 6 OWASP Top 10:2025 categories. Critical risks include confirmed SQL injection with two attack vectors, complete absence of row-level access control on incidents, and plaintext credit card storage. Requires immediate remediation.</p>
+    <div class="meta-row">
+      <span><strong>Project:</strong> secure_incident_management</span>
+      <span><strong>Date:</strong> 2026-10-25</span>
+      <span><strong>Edition:</strong> OWASP Top 10:2025</span>
+      <span><strong>Stack:</strong> SAP CAP · Node.js · HANA · BTP</span>
+    </div>
+  </div>
+
+  <!-- Summary tiles -->
+  <div class="tiles">
+    <div class="tile total">
+      <div class="tile-num">8</div>
+      <div class="tile-label">Total Findings</div>
+    </div>
+    <div class="tile crit">
+      <div class="tile-num">3</div>
+      <div class="tile-label">Critical</div>
+    </div>
+    <div class="tile high">
+      <div class="tile-num">2</div>
+      <div class="tile-label">High</div>
+    </div>
+    <div class="tile med">
+      <div class="tile-num">3</div>
+      <div class="tile-label">Medium</div>
+    </div>
+  </div>
+
+  <!-- Findings -->
+  <div class="section-title">Reviewed Findings</div>
+  <div class="findings">
+
+    <!-- Finding 1: SQL Injection -->
+    <div class="finding-card crit" id="f1">
+      <div class="finding-header" onclick="toggle('f1')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">1</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">SQL Injection in fetchCustomer</span>
+            <span class="sev-pill">Critical</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A05:2025</strong> Injection</span>
+            <span class="chip">Impact: <strong>Severe</strong></span>
+            <span class="chip">Ease: <strong>Easy</strong></span>
+            <span class="chip">AdminService</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p><code>AdminService.fetchCustomer</code> in <code>srv/services.js</code> accepts a user-supplied <code>customerID</code> parameter and interpolates it directly into raw SQL strings via template literals, then executes them via <code>cds.run()</code>. Both the <code>concat</code> method (line 40) and the <code>tagged</code> method (line 62) are vulnerable — the tagged method uses a pseudo-tagged template helper that degrades to plain string concatenation. An attacker supplying <code>' OR '1'='1</code> causes the WHERE clause to evaluate as always-true, returning all customer records including credit card numbers, email addresses, and phone numbers.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">srv/services.js:40</span> — <code>`SELECT * FROM sap_capire_incidents_Customers WHERE ID = '${customerID}'`</code> — direct template literal interpolation into SQL (concat method)</span></li>
+          <li><span><span class="code-ref">srv/services.js:62</span> — same interpolation via pseudo-tagged template that returns a plain string (tagged method)</span></li>
+          <li><span><span class="code-ref">srv/services.js:43</span> — <code>cds.run(vulnerableQuery)</code> executes the raw SQL string</span></li>
+          <li><span>In-code comments at lines 36 and 52 explicitly flag both methods as <code>❌ VULNERABLE</code></span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">Attacker holds the <strong>admin</strong> role (XSUAA JWT in production). In development mocked-auth mode, <code>incident.support@tester.sap.com</code> / <code>initial</code> is assigned the admin role and can exploit this immediately without any additional steps.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Replace both query methods with CAP's parameterized query builder: <code>SELECT.from(Customers).where({ ID: customerID })</code></li>
+            <li>Never pass user-supplied values as raw SQL string fragments to <code>cds.run()</code></li>
+            <li>Remove the <code>method</code> parameter entirely and implement a single secure lookup path</li>
+            <li>Add input validation (UUID or alphanumeric format check) on <code>customerID</code> at the API boundary</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 2: Missing Row-Level Access Control -->
+    <div class="finding-card crit" id="f2">
+      <div class="finding-header" onclick="toggle('f2')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">2</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">Missing Row-Level Access Control on Incidents — Horizontal &amp; Vertical Escalation</span>
+            <span class="sev-pill">Critical</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A01:2025</strong> Broken Access Control</span>
+            <span class="chip"><strong>A06:2025</strong> Insecure Design</span>
+            <span class="chip">Impact: <strong>Significant</strong></span>
+            <span class="chip">Ease: <strong>Easy</strong></span>
+            <span class="chip">ProcessorService</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p><strong>🔁 Horizontal Escalation — Exercise 1.1:</strong> <code>ProcessorService.Incidents</code> in <code>srv/services.cds:8</code> is annotated with only <code>@requires: 'support'</code> — no <code>@restrict where</code> clause. Any authenticated support user can read, update, or delete <em>any</em> incident in the system, with no ownership restriction.</p>
+        <p><strong>⬆️ Vertical Escalation — Exercise 1.2 (DELETE):</strong> <code>srv/services.js:6</code> registers <code>this.before("UPDATE", "Incidents", ...)</code> only. No <code>this.before("DELETE", ...)</code> guard exists. A support user can DELETE a closed incident, bypassing the immutability business rule.</p>
+        <p><strong>⬆️ Vertical Escalation — Exercise 1.2 (Urgency Close):</strong> The <code>onUpdate</code> handler at lines 24–27 fetches only <code>status_code</code> and rejects already-closed incidents. It does not check <code>urgency_code === 'H'</code> before permitting a support user to set <code>status_code = 'C'</code> on a High-urgency incident — an admin-only operation.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">srv/services.cds:8–10</span> — <code>@requires: 'support'</code> with no <code>@restrict where</code> clause; confirmed via grep returning zero results for <code>@restrict</code></span></li>
+          <li><span><span class="code-ref">srv/services.js:6</span> — <code>this.before("UPDATE", "Incidents", ...)</code> — only UPDATE registered, no DELETE handler present</span></li>
+          <li><span><span class="code-ref">srv/services.js:24–27</span> — <code>onUpdate</code> queries only <code>status_code</code>; no <code>urgency_code</code> fetch or <code>req.user.is('admin')</code> check</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">Horizontal: any <strong>support</strong> role holder — no additional steps required. Vertical (DELETE closed): support user + UUID of a closed incident via standard OData DELETE. Vertical (urgency close): support user sends UPDATE with <code>status_code = 'C'</code> on a High-urgency incident.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Add <code>@restrict: [{ grant: 'READ', to: 'support' }, { grant: ['UPDATE', 'DELETE'], to: 'support', where: 'assignedTo = $user or assignedTo is null' }]</code> to <code>Incidents</code> in <code>srv/services.cds</code></li>
+            <li>Extend handler registration to cover DELETE: <code>this.before(["UPDATE", "DELETE"], "Incidents", ...)</code></li>
+            <li>In the handler, also query <code>urgency_code</code> and add: if incoming <code>status_code === 'C'</code> and current <code>urgency_code === 'H'</code>, verify <code>req.user.is('admin')</code> — reject with 403 if not</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 3: Plaintext Credit Cards -->
+    <div class="finding-card crit" id="f3">
+      <div class="finding-header" onclick="toggle('f3')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">3</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">Plaintext Credit Card Numbers in Seed Data and Schema</span>
+            <span class="sev-pill">Critical</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A04:2025</strong> Cryptographic Failures</span>
+            <span class="chip">Impact: <strong>Significant</strong></span>
+            <span class="chip">Ease: <strong>Easy</strong></span>
+            <span class="chip">Data Layer / Database Schema</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p><code>db/data/sap.capire.incidents-Customers.csv</code> commits three real-format 16-digit PANs to source control in plaintext. The schema defines <code>creditCardNo: String(16)</code> with no encryption annotation and no <code>@PersonalData.IsPotentiallySensitive</code> label — so CAP's automatic audit-log and data-privacy manager integration is not activated. In production, the HANA database stores these values unencrypted. Database backups and the SQL injection in Finding #1 provide direct exfiltration paths.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">db/data/sap.capire.incidents-Customers.csv:2–4</span> — PANs <code>4111111111111111</code>, <code>5500000000000004</code>, <code>3400000000000094</code> in plaintext source-controlled CSV</span></li>
+          <li><span><span class="code-ref">db/schema.cds:31</span> — <code>creditCardNo: String(16)</code> with no encryption annotation</span></li>
+          <li><span>grep for <code>@PersonalData</code> across all .cds and .js files returns zero results</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">Read access to the git repository (for seed data). In production: read access to HANA database or its backups. Via Finding #1: any admin-role user can exfiltrate all customer records including PANs via SQL injection.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Remove real card numbers from seed data — replace with synthetic test values (e.g., <code>4111111111111111</code> → <code>0000000000000000</code>)</li>
+            <li>Annotate <code>creditCardNo</code> with <code>@PersonalData.IsPotentiallySensitive</code> in <code>db/schema.cds</code></li>
+            <li>Add <code>@cap-js/audit-logging</code> and bind to SAP Audit Log Service to activate automatic field-access audit trails</li>
+            <li>Implement field-level encryption or masking via SAP BTP data-privacy capabilities</li>
+            <li>Restrict <code>creditCardNo</code> projection to roles that genuinely require it</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 4: No Security Headers -->
+    <div class="finding-card high" id="f4">
+      <div class="finding-header" onclick="toggle('f4')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">4</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">No Security Headers Middleware</span>
+            <span class="sev-pill">High</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A02:2025</strong> Security Misconfiguration</span>
+            <span class="chip">Impact: <strong>Moderate</strong></span>
+            <span class="chip">Ease: <strong>Easy</strong></span>
+            <span class="chip">Express Application Server</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p>The application uses Express via <code>@sap/cds</code> but no security header middleware is configured. <code>helmet</code> is not listed as a dependency and is not imported or registered anywhere. No Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, or Strict-Transport-Security headers are set. All HTTP responses are served without protective browser-security headers, leaving users vulnerable to clickjacking, MIME-sniffing, and protocol downgrade attacks.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">srv/services.js</span> — no <code>helmet</code> import or <code>app.use(helmet())</code> registration</span></li>
+          <li><span><span class="code-ref">package.json</span> — <code>helmet</code> absent from both dependencies and devDependencies</span></li>
+          <li><span>grep for <code>helmet</code>, <code>Content-Security-Policy</code>, <code>X-Frame-Options</code> across <code>srv/</code> returns zero matches</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">Any user accessing the application in a browser. Clickjacking requires only an attacker-controlled page that embeds the application in an iframe. No authentication required.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Add <code>helmet</code> to production dependencies: <code>npm install helmet</code></li>
+            <li>Register it in the CAP bootstrap: <code>cds.on('bootstrap', app =&gt; app.use(require('helmet')()))</code></li>
+            <li>Configure a Content Security Policy appropriate to the SAP UI5 frontend (allow ui5.sap.com, SAP CDN origins)</li>
+            <li>Enable HSTS with <code>includeSubDomains</code> for production BTP deployments</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 5: No Audit Logging -->
+    <div class="finding-card high" id="f5">
+      <div class="finding-header" onclick="toggle('f5')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">5</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">No Audit or Structured Security Event Logging</span>
+            <span class="sev-pill">High</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A09:2025</strong> Security Logging &amp; Alerting Failures</span>
+            <span class="chip">Impact: <strong>Moderate</strong></span>
+            <span class="chip">Ease: <strong>Easy</strong></span>
+            <span class="chip">Application Logging</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p>The application has no structured security event logging. All logging uses <code>console.log</code> and <code>console.error</code> — not tamper-evident, not persistent, and not routed to a SIEM. <code>srv/services.js:41</code> logs the full raw SQL query string including user-supplied input to stdout, potentially leaking injected payloads into log aggregators. No <code>@PersonalData</code> annotations exist, so CAP's automatic audit-log integration is not enabled. No <code>@cap-js/audit-logging</code> or SAP Audit Log Service binding is present in <code>mta.yaml</code>. 403 rejections, auth failures, and sensitive data access leave no persistent audit trail.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">srv/services.js:38,41,44,47,54,57,63,66,69</span> — all logging via <code>console.log</code>/<code>console.error</code></span></li>
+          <li><span><span class="code-ref">srv/services.js:41</span> — <code>console.log('❌ Vulnerable query constructed:', vulnerableQuery)</code> — logs raw SQL including user input</span></li>
+          <li><span><span class="code-ref">mta.yaml</span> — no <code>@cap-js/audit-logging</code> module or SAP Audit Log Service resource binding</span></li>
+          <li><span>grep for <code>@PersonalData</code> across all .cds and .js files returns zero results</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">No precondition — the absence of logging means all attacks and anomalies go undetected regardless of sophistication or scale.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Add <code>@cap-js/audit-logging</code> to dependencies and bind to SAP Audit Log Service in <code>mta.yaml</code></li>
+            <li>Annotate PII/sensitive fields with <code>@PersonalData.IsPotentiallySensitive</code> in <code>db/schema.cds</code></li>
+            <li>Replace <code>console.*</code> with structured CDS logging: <code>const LOG = cds.log('security')</code></li>
+            <li>Log all 403/401 events with user identity, endpoint, and timestamp</li>
+            <li>Never log raw SQL query strings containing user-supplied input</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 6: Mocked Auth -->
+    <div class="finding-card med" id="f6">
+      <div class="finding-header" onclick="toggle('f6')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">6</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">Mocked Authentication with Hardcoded Credentials in Source Control</span>
+            <span class="sev-pill">Medium</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A07:2025</strong> Authentication Failures</span>
+            <span class="chip">Impact: <strong>Significant</strong></span>
+            <span class="chip">Ease: <strong>Complex</strong></span>
+            <span class="chip">Authentication / package.json</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p><code>package.json</code> lines 31–50 define a <code>[development]</code> CDS profile with <code>auth.kind: "mocked"</code> containing hardcoded users: <code>incident.support@tester.sap.com</code> with <code>password: "initial"</code> and the <code>admin</code> role, and <code>alice</code> / <code>bob</code> with the <code>support</code> role — all committed to version control. If the application is accidentally started in development mode in a network-accessible environment, these credentials bypass XSUAA entirely and grant full admin access without any token validation.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">package.json:31–50</span> — <code>auth.kind: "mocked"</code> with hardcoded users, passwords, and role assignments committed to source control</span></li>
+          <li><span><span class="code-ref">package.json:36</span> — <code>"password": "initial"</code> for the admin-role user</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">Application started with <code>NODE_ENV=development</code> or <code>CDS_ENV=development</code> in a network-accessible environment, or repository read access to harvest credentials for other attack vectors.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Move all development auth configuration to <code>.cdsrc-private.json</code> or <code>.env</code> — both excluded from source control via <code>.gitignore</code></li>
+            <li>Never commit passwords to <code>package.json</code></li>
+            <li>Enforce production XSUAA auth mode in CI/CD by validating <code>CDS_ENV=production</code> before any deployment step</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 7: Committed .mtar -->
+    <div class="finding-card med" id="f7">
+      <div class="finding-header" onclick="toggle('f7')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">7</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">Committed Pre-Built Binary Artifact (.mtar)</span>
+            <span class="sev-pill">Medium</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A03:2025</strong> Software Supply Chain Failures</span>
+            <span class="chip">Impact: <strong>Moderate</strong></span>
+            <span class="chip">Ease: <strong>Complex</strong></span>
+            <span class="chip">Supply Chain / Build Artifacts</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p><code>mta_archives/incident-management_1.0.0.mtar</code> is a pre-built Multi-Target Application archive committed to the repository. Binary artifacts cannot be audited from source — their contents may differ from the current codebase, include outdated or vulnerable dependency versions, or have been tampered with after build. Additional zip build artifacts are also committed under <code>gen/app/</code>, <code>app/incidents/dist/</code>, and <code>resources/</code>.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">mta_archives/incident-management_1.0.0.mtar</span> — binary .mtar committed to repository root</span></li>
+          <li><span><span class="code-ref">gen/app/incidents.zip</span>, <span class="code-ref">app/incidents/dist/incidents.zip</span>, <span class="code-ref">resources/incidents.zip</span> — committed build output artifacts</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">The <code>.mtar</code> is deployed to SAP BTP instead of a freshly built artifact, or an attacker with repository write access substitutes a malicious archive that is then deployed without source-build validation.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Add <code>mta_archives/</code> to <code>.gitignore</code> and remove the committed binary from version control</li>
+            <li>Build the <code>.mtar</code> in the CI/CD pipeline using <code>mbt build</code></li>
+            <li>Add a checksum verification step to the deployment pipeline</li>
+            <li>Consider signing build artifacts and verifying signatures at deploy time</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 8: No SCA -->
+    <div class="finding-card med" id="f8">
+      <div class="finding-header" onclick="toggle('f8')">
+        <div class="sev-rail"></div>
+        <div class="finding-num">8</div>
+        <div class="finding-main">
+          <div class="finding-title-row">
+            <span class="finding-title">No SCA Scanning and Floating Dependency Version Ranges</span>
+            <span class="sev-pill">Medium</span>
+          </div>
+          <div class="finding-meta-chips">
+            <span class="chip"><strong>A03:2025</strong> Software Supply Chain Failures</span>
+            <span class="chip">Impact: <strong>Moderate</strong></span>
+            <span class="chip">Ease: <strong>Advanced</strong></span>
+            <span class="chip">Supply Chain / package.json</span>
+          </div>
+        </div>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="finding-body">
+        <h4>Description</h4>
+        <p>No Software Composition Analysis tool is configured in the repository (no <code>.snyk</code>, <code>dependabot.yml</code>, or <code>renovate.json</code>). All four production dependencies use caret (<code>^</code>) version ranges, permitting automatic resolution of minor and patch versions that may introduce vulnerabilities without detection. No SBOM is generated. The <code>mta.yaml</code> build commands run only <code>npm ci</code> and <code>npx cds build</code> — no SCA step is present.</p>
+        <h4>Evidence</h4>
+        <ul class="evidence-list">
+          <li><span><span class="code-ref">package.json:9–12</span> — <code>"@sap/cds": "^10"</code>, <code>"express": "^4"</code>, <code>"@cap-js/hana": "^3"</code>, <code>"@sap/xssec": "^4"</code> — all caret ranges</span></li>
+          <li><span>No <code>.snyk</code>, <code>dependabot.yml</code>, or <code>renovate.json</code> found in the repository</span></li>
+          <li><span><span class="code-ref">mta.yaml:13–14</span> — build commands: <code>npm ci</code> and <code>npx cds build --production</code> only, no SCA step</span></li>
+        </ul>
+        <h4>Attack Precondition</h4>
+        <div class="precond-box">A dependency (direct or transitive) is updated to a version containing a vulnerability or malicious code. Without SCA, this goes undetected until active exploitation occurs.</div>
+        <h4>Recommendation</h4>
+        <div class="rec-box">
+          <ol>
+            <li>Configure Snyk or GitHub Dependabot for automated vulnerability scanning on every PR</li>
+            <li>Add an SCA step (e.g., <code>npx snyk test</code>) to <code>mta.yaml</code> build commands before the build step</li>
+            <li>Generate an SBOM with <code>npm sbom</code> on each release</li>
+            <li>Consider pinning critical production dependencies to exact versions</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /findings -->
+
+  <!-- Policy exclusions -->
+  <div class="section-title">Policy Exclusions Applied</div>
+  <div class="policy-note">
+    <h3>Accepted Risks — Not Reported in Dashboard</h3>
+    <div class="excl-row">
+      <span class="excl-label">Excl-3</span>
+      <span><strong>Customer Credit Card / PII Exposure via ProcessorService.Customers (A01)</strong> — The A01 access-control aspect of <code>creditCardNo</code> being readable by the <code>support</code> role through <code>ProcessorService.Customers</code> is deferred to Exercise 3 by design. The A04 plaintext-storage finding is retained as Finding #3.</span>
+    </div>
+    <div class="excl-row">
+      <span class="excl-label">Excl-12</span>
+      <span><strong>Test / HTTP Request Files Not Used as Primary Evidence</strong> — <code>test/http/fetchCustomer-sqlinject-exploit.http</code> exists and demonstrates the SQL injection attack, but is a development artefact not deployed to production. The SQL injection finding (Finding #1) is based solely on production source code evidence in <code>srv/services.js</code>.</span>
+    </div>
+    <div class="excl-row">
+      <span class="excl-label">Excl-13</span>
+      <span><strong>Alert Notification / Incident-Response Pipeline Out of Scope</strong> — The absence of an alerting pipeline (BTP Alert Notification Service, PagerDuty, Slack webhooks, SIEM) is a deployment-ops concern, not an application-code concern. The A09 logging finding (Finding #5) is retained for the missing code-level audit logging, which is in scope.</span>
+    </div>
+  </div>
+
+  <!-- Review log -->
+  <div class="section-title">Review Log</div>
+  <div class="review-table-wrap">
+    <table class="review-table">
+      <thead>
+        <tr>
+          <th style="width:42px">Orig #</th>
+          <th>Original Threat</th>
+          <th>Disposition</th>
+          <th>Reason</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>SQL Injection in fetchCustomer</td>
+          <td><span class="disp kept">KEPT → #1</span></td>
+          <td>Evidence verified at <code>srv/services.js:40,62</code>. Both injection paths confirmed in production source. Test .http file excluded per Exclusion 12.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Missing Row-Level Access Control on Incidents</td>
+          <td><span class="disp mod">MODIFIED → #2</span></td>
+          <td>Merged with Originals #4 and #5 per Row-Level Escalation Grouping Rule into single grouped finding. @restrict verified absent; Exclusion 5 does not apply.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Plaintext Credit Card Numbers in Seed Data and Schema</td>
+          <td><span class="disp kept">KEPT → #3</span></td>
+          <td>A04 finding retained. Exclusion 3 covers only the A01 access-control angle; plaintext storage under A04 is explicitly not excluded.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Closed-Incident Protection Missing for DELETE</td>
+          <td><span class="disp removed">REMOVED: Duplicate</span></td>
+          <td>Merged into Finding #2 as Vertical Escalation — Exercise 1.2a. Evidence verified: no <code>this.before("DELETE", ...)</code> guard in <code>srv/services.js</code>.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Missing Urgency-Based Close Restriction</td>
+          <td><span class="disp removed">REMOVED: Duplicate</span></td>
+          <td>Merged into Finding #2 as Vertical Escalation — Exercise 1.2. Evidence verified: <code>onUpdate</code> at lines 24–27 checks only <code>status_code</code>; no <code>urgency_code</code> or role check.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>No Security Headers Middleware</td>
+          <td><span class="disp kept">KEPT → #4</span></td>
+          <td>Evidence verified: <code>helmet</code> absent from <code>package.json</code>, no security header middleware in <code>srv/services.js</code>.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>No Audit or Structured Security Event Logging</td>
+          <td><span class="disp kept">KEPT → #5</span></td>
+          <td>Evidence verified: <code>console.*</code> logging only, no audit-log binding in <code>mta.yaml</code>, no <code>@PersonalData</code> annotations. Exclusion 13 applies to alerting half only.</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Mocked Authentication with Hardcoded Credentials</td>
+          <td><span class="disp kept">KEPT → #6</span></td>
+          <td>Evidence verified at <code>package.json:31–50</code>. Credentials committed to source control.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Committed Pre-Built Binary Artifact (.mtar)</td>
+          <td><span class="disp kept">KEPT → #7</span></td>
+          <td>Evidence verified: <code>mta_archives/incident-management_1.0.0.mtar</code> confirmed via find. Exclusion 12 does not apply (this is a build artifact, not a test .http file).</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>No SCA Scanning and Floating Dependency Versions</td>
+          <td><span class="disp kept">KEPT → #8</span></td>
+          <td>Evidence verified: no SCA config files, caret ranges in <code>package.json:9–12</code>, no SCA step in <code>mta.yaml</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="report-footer">
+    <span>secure_incident_management · OWASP Top 10:2025 · 2026-10-25</span>
+    <span>8 findings (3 Critical · 2 High · 3 Medium) · Validation: PASSED</span>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+function toggle(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
