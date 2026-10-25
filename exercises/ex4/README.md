@@ -26,18 +26,19 @@ Welcome to the final exercise. Here you move from *fixing* vulnerabilities to *p
 | 🧩 **Application under test** | `secure_incident_management` — an SAP **CAP · Node.js · HANA · XSUAA** incident-management app. |
 | ✅ **Prerequisite** | Exercises 1–3 complete: **A01** Broken Access Control, **A05** Injection, and **A09** Logging & Alerting Failures remediated. |
 | ⏱️ **Time** | ~20–25 minutes (a live scan runs 10–15 minutes). |
-
 ---
 
-## 🔍 2. How AI-Driven Security Scanning Works
+## 2. How AI-Driven Security Scanning Works
 
-This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the [**OWASP Top 10 (2025)**](https://top10.owasp.org/2025/). You invoke it from the Claude Code prompt with a single command  (an optional path defaults to the current project):
+This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (at `owasp-scan/skills/`) that reasons about your code *with evidence*, assessing it against the [**OWASP Top 10 (2025)**](https://top10.owasp.org/2025/). You invoke it from the Claude Code prompt with a single command (an optional path defaults to the current project):
 
 ```text
-/owasp-analysis  [path/to/project]
+/owasp-analysis [path/to/project]
 ```
 
-It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its output into the project's .owasp-scan/ folder before the next stage begins: `.owasp-scan/` folder before the next stage begins:
+### The Four-Stage Pipeline
+
+It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its output into the project's `.owasp-scan/` folder before the next stage begins:
 
 ```
     /owasp-analysis
@@ -49,7 +50,6 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 │ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │ ──> │ Interactive report │
 │ FINDINGS           │     │ REVIEWED + JSON    │     │ Final report       │     │ _REPORT.html       │
 └────────────────────┘     └────────────────────┘     └────────────────────┘     └────────────────────┘
-
 ```
 
 | Phase | Role | What happens |
@@ -59,10 +59,11 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 | **3 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit, then updates the Markdown and JSON. |
 | **4 · HTML Dashboard** | Report generation | Builds the interactive HTML report (`_REPORT.html`) from the **final, post-exclusion** findings — so the dashboard always matches the curated result. |
 
-
 > **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
 
-**How severity is decided.** Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
+### How Severity Is Decided
+
+Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
 
 | Impact \ Ease | Very Complex | Complex | Advanced | Easy |
 | --- | :---: | :---: | :---: | :---: |
@@ -73,24 +74,6 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 
 > **✅ You now have the mental model.** Next, in **Section 3 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
 
-| Phase | Role | What happens |
-| :---: | --- | --- |
-| **1 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10), exploring the codebase directly. **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by gut feeling." |
-| **2 · Review** | Senior Reviewer | Re-verifies each finding against the code, removes false positives, and **deduplicates** overlapping issues. Emits Markdown, JSON, and an interactive HTML report. |
-| **3 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit. |
-
-> **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
-
-**How severity is decided.** Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
-
-| Impact \ Ease | Very Complex | Complex | Advanced | Easy |
-| --- | :---: | :---: | :---: | :---: |
-| **Severe** | High | High | **Critical** | **Critical** |
-| **Significant** | Medium | Medium | High | **Critical** |
-| **Moderate** | Low | Medium | Medium | High |
-| **Minor** | Low | Low | Medium | Medium |
-
-> **✅ You now have the mental model.** Next, in **Section 3 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
 
 ## ⚙️ 3. Environment Verification
 
