@@ -159,7 +159,7 @@ cd ~/projects/workshop-xp261
 You may see this yellow warning when Claude Code starts:
 
 ```text
-⚠ Cross-session messaging is off: its socket directory could not be set up: '/tmp' is world-writable without the sticky bit…
+> -  ⚠ Cross-session messaging is off: its socket directory could not be set up: '/tmp' is world-writable without the sticky bit…
 ```
 For this workshop we run a single Claude Code session, so cross-session messaging is never used. The warning has no impact on the OWASP security scan.
 
