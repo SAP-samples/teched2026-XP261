@@ -49,20 +49,29 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 │ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │ ──> │ Interactive report │
 │ FINDINGS           │     │ REVIEWED + JSON    │     │ Final report       │     │ _REPORT.html       │
 └────────────────────┘     └────────────────────┘     └────────────────────┘     └────────────────────┘
+
 ```
 
-```text
+| Phase | Role | What happens |
+| :---: | --- | --- |
+| **1 · Analysis** | Security Expert | One thorough pass over all ten categories (A01–A10), exploring the codebase directly. **No finding without evidence** (file + line). Severity comes from the criticality matrix — never "by gut feeling." |
+| **2 · Review** | Senior Reviewer | Re-verifies each finding against the code, removes false positives, and **deduplicates** overlapping issues. Emits Markdown and JSON. |
+| **3 · Policy Exclusions** | Accepted-risk pass | Removes findings that match the documented accepted risks in `policy-exclusions.md` and logs them for audit, then updates the Markdown and JSON. |
+| **4 · HTML Dashboard** | Report generation | Builds the interactive HTML report (`_REPORT.html`) from the **final, post-exclusion** findings — so the dashboard always matches the curated result. |
 
-    /owasp-analysis
-           │
-           ▼
-┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐
-│ Phase 1            │     │ Phase 2            │     │ Phase 3            │
-│ ANALYSIS           │     │ REVIEW             │     │ POLICY EXCLUSIONS  │
-│ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │
-│ FINDINGS           │     │ REVIEWED + HTML    │     │ Final report       │
-└────────────────────┘     └────────────────────┘     └────────────────────┘
-```
+
+> **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
+
+**How severity is decided.** Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
+
+| Impact \ Ease | Very Complex | Complex | Advanced | Easy |
+| --- | :---: | :---: | :---: | :---: |
+| **Severe** | High | High | **Critical** | **Critical** |
+| **Significant** | Medium | Medium | High | **Critical** |
+| **Moderate** | Low | Medium | Medium | High |
+| **Minor** | Low | Low | Medium | Medium |
+
+> **✅ You now have the mental model.** Next, in **Section 3 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
 
 | Phase | Role | What happens |
 | :---: | --- | --- |
