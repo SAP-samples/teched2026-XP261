@@ -493,7 +493,8 @@ secure_incident_management/
 
 ### Step 2 — Open the Reviewed Security Report
 
-Download and open the curated security report [**`2026-10-21_secure_incident_management_REPORT.html'**](./2026-10-21_secure_incident_management_REPORT.html). 
+Download and open the curated security report [Open the rendered report](https://htmlpreview.github.io/?https://github.com/SAP-samples/teched2026-XP261/blob/main/exercises/ex0/2026-10-21_secure_incident_management_REPORT.html)
+[**`2026-10-21_secure_incident_management_REPORT.html'**](./2026-10-21_secure_incident_management_REPORT.html). 
 
 
 <p align="center">
