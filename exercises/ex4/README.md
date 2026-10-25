@@ -247,33 +247,39 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
 ### 5.4 Read the Numbers Carefully
 
 | Metric | Exercise 0 Baseline | Post-Remediation Live Scan |
-| --- | :---: | :---: |
-| **Total findings** | 6 | 8 |
-| 🔴 **Critical** | 3 | 4 |
-| 🟠 **High** | 2 | 1 |
-| 🟡 **Medium** | 1 | 3 |
-| **Targeted vulns (A01 / A05 / A09)** | 3 present | **0 remaining** ✅ |
+|---|---|---|
+| **Total findings** | 8 | **6** |
+| 🔴 Critical | 4 | **1** |
+| 🟠 High | 0 | **4** |
+| 🟡 Medium | 3 | **1** |
+| ⚪ Low | 1 | **0** |
+| **Targeted vulns (A01 / A05 / A09)** | 3 present | **0 remaining ✅** |
 
-> **📌 There is an improvement, but some issues remain.** Your three targeted vulnerabilities are gone, but the overall Critical count did **not** drop to zero. Two things explain this:
-> 1. **Findings you did not fix remain** — they were never part of the hands-on labs (hardcoded credentials, plaintext credit-card data, missing headers, no rate limiting, supply-chain gaps).
-> 2. **The deeper re-scan is more precise** — it re-rated the plaintext credit-card finding (A04) up to *Critical* (PCI-DSS), promoted *Missing HTTP Security Headers* (A02) and *No Rate Limiting* (A06) to *Critical*, and split the old combined supply-chain item into separate A03 findings. These are more detailed findings, not new vulnerabilities you introduced.
+> 📌 **Real improvement —** Two numbers moved in the right direction: your **total findings fell from 8 to 6**, and your **Critical count fell from 4 to 1**. Most importantly, all **three vulnerabilities you set out to fix in the hands-on labs are gone**:
+>
+> - **A05 – SQL Injection** in `AdminService.fetchCustomer` ✅ remediated
+> - **A01 / A06 – Missing Row-Level Access Control** on Incidents ✅ remediated
+> - **A09 – Missing Security Audit Logging** ✅ remediated (audit-log binding + `.catch()` now in place)
 
-### 5.5 Findings That Remain (Out of Scope for the Labs)
+## 5.5 Findings That Remain (Out of Scope for the Labs)
 
 | # | Severity | Finding | OWASP | Production Fix |
-| :---: | :---: | --- | :---: | --- |
-| 1 | 🔴 Critical | Plaintext credit-card numbers in database seed data | A04 | Encrypt/mask PANs; stop seeding real-format card numbers |
-| 2 | 🔴 Critical | Missing HTTP security headers on Express server | A02 | Add Helmet middleware |
-| 3 | 🔴 Critical | Hardcoded development credentials with known admin password | A07 | Move secrets out of `package.json`; enforce XSUAA |
-| 4 | 🟡 Medium | External UI5 scripts loaded without Subresource Integrity | A08 | Pin CDN scripts with SRI hashes |
-| 5 | 🔴 Critical | No rate limiting on any service endpoint | A06 | Add throttling / brute-force protection |
-| 6 | 🟡 Medium | Binary build artifact not excluded by `.gitignore` | A03 | Remove `.mtar`; add it to `.gitignore` |
-| 7 | 🟠 High | No Software Composition Analysis (SCA) tooling configured | A03 | Add dependency/SCA scanning to CI |
-| 8 | 🟡 Medium | Vestigial `method` parameter in `fetchCustomer` widens attack surface | A06 | Remove the unused parameter left over from the SQL-injection fix |
+|---|---|---|---|---|
+| 1 | 🔴 Critical | Committed compiled deployment artifact (`.mtar`) in the repository | A03 | Remove the `.mtar`; add it to `.gitignore`; build artifacts in CI, never commit them |
+| 2 | 🟠 High | Credit-card numbers stored in plaintext in seed data | A04 | Encrypt/mask PANs, add `@PersonalData` annotations, and stop seeding real-format card numbers |
+| 3 | 🟠 High | Missing HTTP security headers on the server (`srv/server.js`) | A02 | Add Helmet (or equivalent) middleware for CSP, HSTS, X-Frame-Options, etc. |
+| 4 | 🟠 High | External SAPUI5 script loaded without Subresource Integrity | A08 | Pin CDN scripts with SRI integrity hashes (or self-host them) |
+| 5 | 🟠 High | Mocked authentication with hardcoded password in production configuration | A07 | Remove mocked credentials from `package.json`; enforce XSUAA-based auth |
+| 6 | 🟡 Medium | No Software Composition Analysis (SCA) in the CI/CD pipeline | A03 | Add dependency/SCA scanning (Dependabot/Snyk) to CI and pin dependency versions |
 
-> **💡 Takeaway:** A clean result on your targeted categories does **not** mean the app is fully secure — it means the *specific* risks you set out to fix are gone. These eight findings are your production backlog.
+> 💡 **Takeaway:** A clean result on your targeted categories doesn't mean the app is fully secure — it means the **specific risks you set out to fix are gone** (and your overall Critical count dropped from 4 to 1). These **six findings are your production backlog**: the one remaining Critical (`.mtar`) is the first thing to clear before any real deployment.
 
----
+> - **The deeper re-scan is more precise** — It re-rated the carried-over findings over findings and surfaced one pre-existing gap the first pass had missed:
+ - .mtar (A03) promoted **Low → Critical**
+ - No SRI (A08) re-rated **Medium → High**
+ - Plaintext credit-card (A04) and hardcoded credentials (A07) re-rated **Critical → High**
+ - Missing HTTP Security Headers (A02) is a newly surfaced finding — not present in the Exercise 0 baseline at all; the deeper re-scan detected this pre-existing gap. It is not something you introduced.
+
 
 ## 📌 5. Summary & Next Steps
 
