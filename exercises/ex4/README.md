@@ -64,7 +64,7 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 
 ### 🧮 How Severity Is Decided
 
-When the scanner flags something, the first thing you want to know is simple: *how serious is this?* That's what we mean by **Severity**.
+When the scanner raises a finding, the first thing you want to know is simple: *how serious is this?* That's what we mean by **Severity**.
 The scanner captures that in a single label it calls the **Criticality**, so *Severity* and *Criticality* are the same thing wearing two hats: **severity is the plain-English idea, and Criticality is the exact label the scanner puts on it.**
 
 Every finding gets a **Criticality** — the label that answers "how serious is this?" (`Critical`, `High`, `Medium`, or `Low`). The scanner doesn't decide this by opinion. It works it out from two inputs:
