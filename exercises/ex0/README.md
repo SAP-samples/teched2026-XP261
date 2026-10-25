@@ -451,7 +451,7 @@ When the scan completed, Claude Code displayed the following summary in the term
 
 ```
 
-# OWASP Security Findings
+### OWASP Security Findings
 
 | # | Severity | Finding | OWASP Category | Component |
 |---|----------|---------|----------------|-----------|
