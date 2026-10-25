@@ -493,7 +493,7 @@ secure_incident_management/
 
 ### Step 2 — Open the Reviewed Security Report
 
-Download and open the curated security report **`2026-10-12_secure_incident_management_REPORT.html'**. 
+Download and open the curated security report [**`2026-10-21_secure_incident_management_REPORT.html'**](./2026-10-21_secure_incident_management_REPORT.html). 
 
 
 <p align="center">
