@@ -204,7 +204,7 @@ Claude Code CLI  →  LiteLLM (port 4000)  →  SAP AI Core  →  LLM
 
 > **✅ Environment ready.** All components are installed, the LiteLLM proxy is bridging to SAP AI Core, and Claude Code answers through the full chain.
 
-## 🔄 5. Post-Remediation Live Verification
+## 🔄 4. Post-Remediation Live Verification
 
 You have fixed three vulnerabilities by hand — **Broken Access Control** (Exercise 1), **SQL Injection** (Exercise 2), and **Security Logging** (Exercise 3). Now you will run the scanner **live** against your changed code and compare the result to the **Exercise 0 baseline** to prove the fixes worked.
 
@@ -226,11 +226,8 @@ In **Terminal 2** (Claude Code), start the scan and confirm the target when prom
 
 ### 5.2 Open the Report
 
-When the scan finishes, open the regenerated interactive report:
+When the scan finishes, download and open the regenerated interactive report secure_incident_management/.owasp-scan/2026-10-13_secure_incident_management_REPORT.html.
 
-```text
-secure_incident_management/.owasp-scan/2026-10-13_secure_incident_management_REPORT.html
-```
 
 The dashboard header summarizes the new result:
 
