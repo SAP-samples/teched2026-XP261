@@ -61,9 +61,20 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 
 > **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
 
+
 ### 🧮 How Severity Is Decided
 
-Criticality is a deterministic lookup of **Impact × Ease of Attack**, so two reviewers (or two scans) rate the same issue the same way:
+When the scanner flags something, the first thing you want to know is simple: *how serious is this?* That's what we mean by **Severity**.
+The scanner captures that in a single label it calls the **Criticality**, so *Severity* and *Criticality* are the same thing wearing two hats: **severity is the plain-English idea, and Criticality is the exact label the scanner puts on it.**
+
+Every finding gets a **Criticality** — the label that answers "how serious is this?" (`Critical`, `High`, `Medium`, or `Low`). The scanner doesn't decide this by opinion. It works it out from two inputs:
+
+- **Impact** — *how much damage* if someone exploited this? (`Minor → Moderate → Significant → Severe`)
+- **Ease of Attack** — *how hard* is it to actually pull off? (`Very Complex → Complex → Advanced → Easy`)
+
+That's why **two reviewers (or two scans) rate the same issue the same way**: once they agree on the Impact and the Ease,  the table — not a personal judgment call — produces the final severity. The result is reproducible and free of reviewer bias.
+
+Here's the lookup table the scanner uses:
 
 | Impact \ Ease | Very Complex | Complex | Advanced | Easy |
 | --- | :---: | :---: | :---: | :---: |
