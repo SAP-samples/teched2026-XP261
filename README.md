@@ -1,4 +1,4 @@
-# XP261 - Build Secure Cloud Applications: From Code to Compliance
+# XP261 - From Code to Compliance: Secure Cloud Applications Powered by AI OWASP Scanner Assistant
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/teched2026-XP261)](https://api.reuse.software/info/github.com/SAP-samples/teched2026-XP261)
 
