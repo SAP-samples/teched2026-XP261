@@ -4,7 +4,7 @@
 
 1. [📖 Overview](#-1-overview)
 2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works)
-3. [⚙️ Environment Verification]([#-3-environment-verification](#-3-environment-verification))
+3. [⚙️ Environment Verification](#%EF%B8%8F3-environment-verification)  
 4. [🔄 Post-Remediation Live Verification](#-4-post-remediation-live-verification)
 5. [📌 Summary & Next Steps](#-5-summary--next-steps)
 
@@ -86,7 +86,7 @@ Here's the lookup table the scanner uses:
 > **✅ You now have the mental model.** Next, in **Section 3 — Environment Verification**, you'll confirm the assistant that runs this pipeline is live and connected to SAP AI Core.
 
 
-## ⚙️ 3. Environment Verification
+## ⚙️3. Environment Verification
 
 Before scanning, confirm the AI Security Assistant is installed and connected end-to-end. The request chain you are validating is:
 
