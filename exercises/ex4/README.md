@@ -6,7 +6,7 @@
 2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works)
 3. [⚙️ Environment Verification](#%EF%B8%8F3-environment-verification)  
 4. [🔄 Post-Remediation Live Verification](#-4-post-remediation-live-verification)
-5. [📌 Summary & Next Steps](#-5-summary--next-steps)
+5. [📌 Summary & Next Steps](#-5-summary--next-steps) (#-5-summary--next-steps)
 
 ---
 
@@ -62,10 +62,7 @@ It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its outp
 > **🔍 Validation gate:** Between Phase 1 and Phase 2, a script (`validation/validate.py`) checks every finding against a JSON schema for structure and risk-score consistency. Anything that fails is dropped — so the final report contains only evidence-backed findings.
 
 
-### 🧮 How Severity Is Decided
-
-When the scanner raises a finding, the first thing you want to know is simple: *how serious is this?* That's what we mean by **Severity**.
-The scanner captures that in a single label it calls the **Criticality**, so *Severity* and *Criticality* are the same thing wearing two hats: **severity is the plain-English idea, and Criticality is the exact label the scanner puts on it.**
+### 🧮 How Criticality Is Decided
 
 Every finding gets a **Criticality** — the label that answers "how serious is this?" (`Critical`, `High`, `Medium`, or `Low`). The scanner doesn't decide this by opinion. It works it out from two inputs:
 
@@ -280,7 +277,7 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
  - Missing HTTP Security Headers (A02) is a newly surfaced finding — not present in the Exercise 0 baseline at all; the deeper re-scan detected this pre-existing gap. It is not something you introduced.
 
 
-## 📌 6. Summary & Next Steps
+## 📌 5. Summary & Next Steps
 
 ### What You Accomplished
 
