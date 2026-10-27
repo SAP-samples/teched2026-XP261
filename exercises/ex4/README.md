@@ -6,7 +6,7 @@
 2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works)
 3. [⚙️ Environment Verification](#%EF%B8%8F3-environment-verification)  
 4. [🔄 Post-Remediation Live Verification](#-4-post-remediation-live-verification)
-5. [📌 Summary & Next Steps](#-5-summary--next-steps) (#-5-summary--next-steps)
+5. [📌 Summary & Next Steps](#-5-summary--next-steps)
 
 ---
 
