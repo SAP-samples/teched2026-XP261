@@ -6,7 +6,7 @@
 2. [🔍 How AI-Driven Security Scanning Works](#-2-how-ai-driven-security-scanning-works)
 3. [⚙️ Environment Verification]([#-3-environment-verification](#-3-environment-verification))
 4. [🔄 Post-Remediation Live Verification](#-4-post-remediation-live-verification)
-5. [📌 Summary & Next Steps](#-6-summary--next-steps)
+5. [📌 Summary & Next Steps](#-5-summary--next-steps)
 
 ---
 
@@ -145,7 +145,6 @@ Seeing `Uvicorn running on http://0.0.0.0:4000` means the proxy is listening on 
 > - **`Not logged in to Cloud Foundry`** → runs `cf login -a https://api.cf.eu10-005.hana.ondemand.com --origin akihlqzx8-platform`.
 > - **`Address already in use` (port 4000)** → an old proxy is still running. Run `pkill -9 -f "bin/litellm"` in Terminal 0, then start the script again.
 
----
 
 ### 3.3 Launch Claude Code — Terminal 2
 
@@ -208,7 +207,7 @@ Claude Code CLI  →  LiteLLM (port 4000)  →  SAP AI Core  →  LLM
 
 You have fixed three vulnerabilities by hand — **Broken Access Control** (Exercise 1), **SQL Injection** (Exercise 2), and **Security Logging** (Exercise 3). Now you will run the scanner **live** against your changed code and compare the result to the **Exercise 0 baseline** to prove the fixes worked.
 
-### 5.1 Run the Live Scan
+### 4.1 Run the Live Scan
 
 The scanner skips any phase whose output already exists, so delete the previous results first to force a full re-scan. In **Terminal 0**:
 
@@ -224,7 +223,7 @@ In **Terminal 2** (Claude Code), start the scan and confirm the target when prom
 
 > **⚠️ Note:** A live scan takes **10–15 minutes** and uses SAP AI Core credits. Watch the three phases run in order (Analysis → Review → Policy Exclusions) and wait for the **"OWASP Security Scan Complete"** message before opening the report.
 
-### 5.2 Open the Report
+### 4.2 Open the Report
 
 When the scan finishes, download and open the regenerated interactive report secure_incident_management/.owasp-scan/2026-xx-xx_secure_incident_management_REPORT.html.
 
@@ -232,7 +231,7 @@ When the scan finishes, download and open the regenerated interactive report sec
 The dashboard header summarizes the new result, see  [Sample interactive HTML security dashboard report](https://htmlpreview.github.io/?https://github.com/SAP-samples/teched2026-XP261/blob/main/exercises/ex4/2026-10-25_secure_incident_management_REPORT.html)
 
 
-### 5.3 Validate Your Fixes — Baseline (Ex0) vs. Live Scan
+### 4.3 Validate Your Fixes — Baseline (Ex0) vs. Live Scan
 
 The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** in the live scan:
 
@@ -244,7 +243,7 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
 
 > **✅ Validation result:** The scanner independently re-checked the code and found **no evidence** of the A01, A05, or A09 issues. The report explicitly notes that *"the prior A09 … finding was resolved in this scan period."* Your three fixes are confirmed.
 
-### 5.4 Read the Numbers Carefully
+### 4.4 Read the Numbers Carefully
 
 | Metric | Exercise 0 Baseline | Post-Remediation Live Scan |
 |---|---|---|
@@ -261,7 +260,7 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
 > - **A01 / A06 – Missing Row-Level Access Control** on Incidents ✅ remediated
 > - **A09 – Missing Security Audit Logging** ✅ remediated (audit-log binding + `.catch()` now in place)
 
-## 5.5 Findings That Remain (Out of Scope for the Labs)
+## 4.5 Findings That Remain (Out of Scope for the Labs)
 
 | # | Severity | Finding | OWASP | Production Fix |
 |---|---|---|---|---|
@@ -281,7 +280,7 @@ The three vulnerabilities you targeted in Exercises 1–3 **no longer appear** i
  - Missing HTTP Security Headers (A02) is a newly surfaced finding — not present in the Exercise 0 baseline at all; the deeper re-scan detected this pre-existing gap. It is not something you introduced.
 
 
-## 📌 5. Summary & Next Steps
+## 📌 6. Summary & Next Steps
 
 ### What You Accomplished
 
