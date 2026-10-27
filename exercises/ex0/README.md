@@ -501,8 +501,7 @@ Open the curated [Interactive HTML dashboard security report](https://htmlprevie
   <b></b>
 </p>
 
-> **Note:**  Open 2026-10-21_secure_incident_management_REPORT.html in your browser by right-clicking the file in the BAS Explorer and selecting Download.
-The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through it before continuing 
+> **Note:** The full report contains detailed evidence for each finding, including exact file paths, line numbers, code snippets, attack preconditions, and remediation recommendations. Take a few minutes to read through it before continuing 
 — understanding the evidence now will make the hands-on exercises much clearer.
 
 ### Step 3 — Identify the Exercise Targets
