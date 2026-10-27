@@ -4,7 +4,7 @@
 
 ## 📝Description
 
-This repository contains the material for the SAP TechEd 2026 session called "XP261 - Build Secure Cloud Applications: From Code to Compliance Workshop". Try it out. 
+This repository contains the material for the SAP TechEd 2026 session called "XP261 - From Code to Compliance: Secure Cloud Applications Powered by AI OWASP Scanner Assistant". Try it out. 
 
 ## 🔎 Overview
 
