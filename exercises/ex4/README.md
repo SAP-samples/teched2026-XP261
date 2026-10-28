@@ -93,12 +93,12 @@ You will use three terminals in SAP Business Application Studio (BAS). Open each
 
 | Terminal | Purpose |
 | :---: | --- |
-| **Terminal 0** | Run verification commands |
-| **Terminal 1** | Run the LiteLLM proxy (stays open) |
-| **Terminal 2** | Run Claude Code (stays open) |
+| **Terminal 1** | Run verification commands |
+| **Terminal 2** | Run the LiteLLM proxy (stays open) |
+| **Terminal 3** | Run Claude Code (stays open) |
 
 
-### 3.1 Check the Pre-Installed Components — Terminal 0
+### 3.1 Check the Pre-Installed Components — Terminal 1
 
 From the workspace root `~/projects/workshop-xp261`, run each command and confirm the expected result.
 
@@ -120,7 +120,7 @@ cat litellm-proxy-ai-core/.env
 #    Expected: three exports — LITELLM_MASTER_KEY, AICORE_RESOURCE_GROUP, AICORE_SERVICE_KEY
 ```
 
-### 3.2 Start the LiteLLM Proxy — Terminal 1
+### 3.2 Start the LiteLLM Proxy — Terminal 2
 
 The proxy connects Claude Code to SAP AI Core. Start it and leave the terminal running for the whole exercise.
 
@@ -140,12 +140,22 @@ Seeing `Uvicorn running on http://0.0.0.0:4000` means the proxy is listening on 
 
 > **⚠️ Troubleshooting**
 > - **`Not logged in to Cloud Foundry`** → runs `cf login -a https://api.cf.eu10-005.hana.ondemand.com --origin akihlqzx8-platform`.
-> - **`Address already in use` (port 4000)** → an old proxy is still running. Run `pkill -9 -f "bin/litellm"` in Terminal 0, then start the script again.
+> - **`Address already in use` (port 4000)** → an old proxy is still running. Run `pkill -9 -f "bin/litellm"` in Terminal 2, then start the script again.
 
 
-### 3.3 Launch Claude Code — Terminal 2
+### 3.3 Launch Claude Code — Terminal 3
 
-In a third terminal, start Claude Code. It auto-detects the proxy on port 4000.
+Before launching Claude Code, install the `jsonschema` library in **Terminal 3**.
+The OWASP Scanner's validation gates use it to verify that every finding matches
+the required structure. Without it, structural validation is silently skipped.
+
+```bash
+pip3 install jsonschema
+```
+Expected :
+Successfully installed jsonschema 4.x.x 
+
+In the same **Terminal 3**, start Claude Code. It auto-detects the proxy on port 4000.
 
 ```bash
 cd ~/projects/workshop-xp261
@@ -184,8 +194,8 @@ Claude Code CLI  →  LiteLLM (port 4000)  →  SAP AI Core  →  LLM
 ```
 
 > **⚠️ Troubleshooting**
-> - **`LiteLLM proxy not detected`** → Terminal 1 is not running. Go back to **3.2** and start it.
-> - **`Connection refused`** → the proxy is not reachable. In Terminal 0, run `curl http://127.0.0.1:4000/health/readiness` to confirm it responds.
+> - **`LiteLLM proxy not detected`** → Terminal 2 is not running. Go back to **3.2** and start it.
+> - **`Connection refused`** → the proxy is not reachable. In Terminal 2, run `curl http://127.0.0.1:4000/health/readiness` to confirm it responds.
 > - **HTTP 400 (Bad Request)** → a credential issue, ask the instructor for help.
 
 ---
@@ -206,13 +216,14 @@ You have fixed three vulnerabilities by hand — **Broken Access Control** (Exer
 
 ### 4.1 Run the Live Scan
 
-The scanner skips any phase whose output already exists, so delete the previous results first to force a full re-scan. In **Terminal 0**:
+The scanner skips any phase whose output already exists, so rename the previous results first (.Ex0_owasp-scan) to force a full re-scan. In **Terminal 1**:
 
 ```bash
-rm -rf ~/projects/workshop-xp261/secure_incident_management/.owasp-scan/
+mv ~/projects/workshop-xp261/secure_incident_management/.owasp-scan/ \
+   ~/projects/workshop-xp261/secure_incident_management/.Ex0_owasp-scan/
 ```
 
-In **Terminal 2** (Claude Code), start the scan and confirm the target when prompted:
+In **Terminal 3** (Claude Code), start the scan and confirm the target when prompted:
 
 ```text
 /owasp-analysis
