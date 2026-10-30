@@ -43,7 +43,7 @@ Every exercise module is a self-contained lab focused on a specific vulnerabilit
 <p align="center">
   <img src="images/5-steps-exercise-worflow.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
   <br>
-  <b>Top 10 OWASP Vulnerabilities</b>
+  <b>The 5-Step Exercise Flow</b>
 </p>
 
 - 📖 **1. Overview:** A high-level description of the vulnerability, its impact, and why it's a security risk.
