@@ -145,17 +145,7 @@ Seeing `Uvicorn running on http://0.0.0.0:4000` means the proxy is listening on 
 
 ### 3.3 Launch Claude Code — Terminal 3
 
-Before launching Claude Code, install the `jsonschema` library in **Terminal 3**.
-The OWASP Scanner's validation gates use it to verify that every finding matches
-the required structure. Without it, structural validation is silently skipped.
-
-```bash
-pip3 install jsonschema
-```
-Expected :
-Successfully installed jsonschema 4.x.x 
-
-In the same **Terminal 3**, start Claude Code. It auto-detects the proxy on port 4000.
+In **Terminal 3**, start Claude Code. It auto-detects the proxy on port 4000.
 
 ```bash
 cd ~/projects/workshop-xp261
