@@ -40,6 +40,12 @@ Having some experience with Node.js and GitHub will be helpful.
 
 Every exercise module is a self-contained lab focused on a specific vulnerability. All modules adhere to the following standard structure:
 
+<p align="center">
+  <img src="images/5-steps-exercise-worflow.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
+  <br>
+  <b>Top 10 OWASP Vulnerabilities</b>
+</p>
+
 - 📖 **1. Overview:** A high-level description of the vulnerability, its impact, and why it's a security risk.
 - 🚨 **2. Vulnerable Code:** A snippet of code containing the specific security flaw. We'll analyze why it's insecure.
 - 💥 **3. Exploitation:** A step-by-step guide on how to exploit the vulnerability, demonstrating its real-world impact.
