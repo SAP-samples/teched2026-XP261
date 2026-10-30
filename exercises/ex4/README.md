@@ -40,17 +40,11 @@ This workshop uses the **AI OWASP Scanner Assistant** — a Claude Code plugin (
 
 It runs a **four-stage, evidence-grounded pipeline**. Each stage writes its output into the project's `.owasp-scan/` folder before the next stage begins:
 
-```
-    /owasp-analysis
-           │
-           ▼
-┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐     ┌────────────────────┐
-│ Phase 1            │     │ Phase 2            │     │ Phase 3            │     │ Phase 4            │
-│ ANALYSIS           │     │ REVIEW             │     │ POLICY EXCLUSIONS  │     │ HTML DASHBOARD     │
-│ Security Expert    │ ──> │ Senior Reviewer    │ ──> │ Accepted-risk pass │ ──> │ Interactive report │
-│ FINDINGS           │     │ REVIEWED + JSON    │     │ Final report       │     │ _REPORT.html       │
-└────────────────────┘     └────────────────────┘     └────────────────────┘     └────────────────────┘
-```
+<p align="center">
+  <img src="images/AI-owasp-code-scanner.png" alt="Top 10 OWASP Vulnerabilities" width="900"/>
+  <br>
+  <b>AI OWASP Code Scanner</b>
+</p>
 
 | Phase | Role | What happens |
 | :---: | --- | --- |
