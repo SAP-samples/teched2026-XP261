@@ -79,7 +79,7 @@ class AdminService extends cds.ApplicationService {
     this.on('fetchCustomer', async (req) => {
       const { customerID, method = 'concat' } = req.data;
 
-      // ❌ VULNERABLE: Direct string concatenation (OWASP A03)
+      // ❌ VULNERABLE: Direct string concatenation (OWASP A05)
       if (method === 'concat') {
         console.log('⚠️ Using INSECURE string concatenation method.');
         const vulnerableQuery =
@@ -95,7 +95,7 @@ class AdminService extends cds.ApplicationService {
         }
       }
 
-      // ❌ VULNERABLE: Parenthesized tagged template (OWASP A03)
+      // ❌ VULNERABLE: Parenthesized tagged template (OWASP A05)
       if (method === 'tagged') {
         console.log('⚠️ Using INSECURE parenthesized tagged template method.');
         const sql = (strings) => {
